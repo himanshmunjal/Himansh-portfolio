@@ -1,321 +1,382 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Calendar, Clock, ArrowLeft, Tag, ExternalLink } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+// import React, { useState } from 'react';
+// import { Link } from 'react-router-dom';
+// import { ArrowLeft } from 'lucide-react';
+// import Header from '@/components/Header';
+// import Footer from '@/components/Footer';
+// import { allBlogs } from '@/components/sections/BlogSection';
+// import { useInView } from '@/hooks/useInView';
+
+// const allTags = ['All', 'Java', 'SpringBoot', 'Backend', 'Coding', 'CleanCode', 'MachineLearning', 'DataScience', 'AI', 'Python'];
+
+// const AllBlogs: React.FC = () => {
+//   const { ref, isInView } = useInView({ threshold: 0.05 });
+//   const [selectedTag, setSelectedTag] = useState('All');
+
+//   const filteredBlogs = selectedTag === 'All'
+//     ? allBlogs
+//     : allBlogs.filter(blog => blog.tags.some(tag => tag.toLowerCase().includes(selectedTag.toLowerCase())));
+
+//   return (
+//     <div className="min-h-screen">
+//       <Header />
+
+//       <main className="pt-24 pb-20" ref={ref}>
+//         <div className="container mx-auto px-4">
+//           {/* Back Link */}
+//           <Link
+//             to="/"
+//             className={`inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8 ${isInView ? 'animate-fade-in' : 'opacity-0'}`}
+//           >
+//             <ArrowLeft className="w-4 h-4" />
+//             Back to Home
+//           </Link>
+
+//           {/* Section Heading */}
+//           <h1 className={`text-4xl md:text-5xl font-bold mb-4 ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.1s' }}>
+//             <span className="gradient-text">All Blog Posts</span>
+//           </h1>
+
+//           <p className={`text-muted-foreground mb-8 max-w-2xl ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.2s' }}>
+//             Thoughts, tutorials, and insights on software development, data science, and technology.
+//           </p>
+
+//           {/* Tag Filter */}
+//           <div className={`flex flex-wrap gap-2 mb-12 ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.3s' }}>
+//             {allTags.map((tag) => (
+//               <button
+//                 key={tag}
+//                 onClick={() => setSelectedTag(tag)}
+//                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+//                   selectedTag === tag
+//                     ? 'gradient-button'
+//                     : 'glass-card hover:bg-primary/10 text-muted-foreground hover:text-primary'
+//                 }`}
+//               >
+//                 {tag}
+//               </button>
+//             ))}
+//           </div>
+
+//           {/* Blogs Grid */}
+//           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+//             {filteredBlogs.map((blog, index) => (
+//               <div
+//                 key={blog.id}
+//                 className={`glass-card-hover rounded-xl overflow-hidden group ${isInView ? 'animate-fade-in' : 'opacity-0'}`}
+//                 style={{ animationDelay: `${0.3 + index * 0.1}s` }}
+//               >
+//                 {/* Image */}
+//                 <div className="relative h-48 overflow-hidden">
+//                   <img
+//                     src={blog.image}
+//                     alt={blog.title}
+//                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+//                   />
+//                   <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+//                 </div>
+
+//                 {/* Content */}
+//                 <div className="p-6">
+//                   <h3 className="text-lg font-bold text-foreground mb-3 line-clamp-2 group-hover:text-primary transition-colors">
+//                     {blog.title}
+//                   </h3>
+
+//                   <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
+//                     {blog.excerpt}
+//                   </p>
+
+//                   <div className="flex flex-wrap gap-2">
+//                     {blog.tags.map((tag) => (
+//                       <span
+//                         key={tag}
+//                         className="px-2 py-1 text-xs rounded-full bg-primary/10 text-primary border border-primary/20"
+//                       >
+//                         #{tag}
+//                       </span>
+//                     ))}
+//                   </div>
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+
+//           {filteredBlogs.length === 0 && (
+//             <div className="text-center py-12">
+//               <p className="text-muted-foreground">No blogs found with the selected filter.</p>
+//             </div>
+//           )}
+//         </div>
+//       </main>
+
+//       <Footer />
+//     </div>
+//   );
+// };
+
+// export default AllBlogs;
+
+import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowLeft, Sparkles, Filter, Clock, Eye, BookOpen } from 'lucide-react';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import { allBlogs } from '@/components/sections/BlogSection';
+import { useInView } from '@/hooks/useInView';
+
+const allTags = ['All', 'Java', 'SpringBoot', 'Backend', 'Coding', 'CleanCode', 'MachineLearning', 'DataScience', 'AI', 'Python'];
 
 const AllBlogs: React.FC = () => {
-  const navigate = useNavigate();
+  const { ref, isInView } = useInView({ threshold: 0.05 });
+  const [selectedTag, setSelectedTag] = useState('All');
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const allBlogs = [
-    {
-      title: 'Mastering Java: From Basics to Advanced Concepts',
-      excerpt: 'A comprehensive guide to Java programming covering OOP principles, design patterns, and best practices for enterprise development. Learn how to write clean, maintainable Java code.',
-      date: '2024-01-15',
-      readTime: '8 min read',
-      tags: ['Java', 'Programming', 'OOP', 'Design Patterns'],
-      category: 'Programming',
-      featured: true
-    },
-    {
-      title: 'Clean Code Practices Every Developer Should Know',
-      excerpt: 'Essential coding practices that make your code more readable, maintainable, and efficient. Learn the principles that separate good developers from great ones.',
-      date: '2024-01-10',
-      readTime: '6 min read',
-      tags: ['Clean Code', 'Best Practices', 'Development', 'Software Engineering'],
-      category: 'Best Practices',
-      featured: true
-    },
-    {
-      title: 'Spring Boot: Building Scalable Web Applications',
-      excerpt: 'Deep dive into Spring Boot framework, exploring microservices architecture, dependency injection, and building production-ready applications.',
-      date: '2024-01-05',
-      readTime: '12 min read',
-      tags: ['Spring Boot', 'Java', 'Microservices', 'Web Development'],
-      category: 'Framework',
-      featured: true
-    },
-    {
-      title: 'Understanding Data Structures and Algorithms',
-      excerpt: 'Master the fundamental concepts of data structures and algorithms with practical examples and real-world applications.',
-      date: '2023-12-28',
-      readTime: '10 min read',
-      tags: ['DSA', 'Algorithms', 'Data Structures', 'Problem Solving'],
-      category: 'Computer Science',
-      featured: false
-    },
-    {
-      title: 'Machine Learning Fundamentals for Beginners',
-      excerpt: 'Introduction to machine learning concepts, algorithms, and practical implementation using Python and popular ML libraries.',
-      date: '2023-12-20',
-      readTime: '15 min read',
-      tags: ['Machine Learning', 'Python', 'AI', 'Data Science'],
-      category: 'Machine Learning',
-      featured: false
-    },
-    {
-      title: 'Building RESTful APIs with Node.js and Express',
-      excerpt: 'Learn how to create robust and scalable RESTful APIs using Node.js, Express, and MongoDB with authentication and validation.',
-      date: '2023-12-15',
-      readTime: '9 min read',
-      tags: ['Node.js', 'Express', 'REST API', 'Backend'],
-      category: 'Backend Development',
-      featured: false
-    },
-    {
-      title: 'React Hooks: A Complete Guide',
-      excerpt: 'Comprehensive guide to React Hooks including useState, useEffect, custom hooks, and advanced patterns for modern React development.',
-      date: '2023-12-10',
-      readTime: '11 min read',
-      tags: ['React', 'Hooks', 'Frontend', 'JavaScript'],
-      category: 'Frontend Development',
-      featured: false
-    },
-    {
-      title: 'Database Design Best Practices',
-      excerpt: 'Essential principles for designing efficient and scalable databases, covering normalization, indexing, and performance optimization.',
-      date: '2023-12-05',
-      readTime: '7 min read',
-      tags: ['Database', 'SQL', 'Design', 'Performance'],
-      category: 'Database',
-      featured: false
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  // Particle animation
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    interface Particle {
+      x: number;
+      y: number;
+      size: number;
+      speedY: number;
+      opacity: number;
     }
-  ];
 
-  const handleGoBack = () => {
-    navigate('/');
-  };
+    const particles: Particle[] = Array.from({ length: 30 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      size: Math.random() * 3 + 1,
+      speedY: Math.random() * 0.5 + 0.2,
+      opacity: Math.random() * 0.5 + 0.3,
+    }));
 
-  const featuredBlogs = allBlogs.filter(blog => blog.featured);
-  const regularBlogs = allBlogs.filter(blog => !blog.featured);
+    let animationFrameId: number;
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach(particle => {
+        particle.y += particle.speedY;
+        if (particle.y > canvas.height) particle.y = 0;
+
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(168, 85, 247, ${particle.opacity})`;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = 'rgba(168, 85, 247, 0.5)';
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => cancelAnimationFrame(animationFrameId);
+  }, []);
+
+  const filteredBlogs = selectedTag === 'All'
+    ? allBlogs
+    : allBlogs.filter(blog => blog.tags.some(tag => tag.toLowerCase().includes(selectedTag.toLowerCase())));
 
   return (
-    <div className="pt-20 min-h-screen">
-      <div className="container-custom section-padding">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-12"
-        >
-          <motion.button
-            whileHover={{ x: -5 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleGoBack}
-            className="flex items-center space-x-2 text-primary-500 hover:text-primary-600 mb-6 font-medium"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span>Back to Home</span>
-          </motion.button>
+    <div className="min-h-screen relative">
+      {/* Particle Canvas */}
+      <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0" />
 
-          <h1 className="text-4xl lg:text-5xl font-bold text-gradient mb-6">
-            All Blog Posts
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl">
-            Insights, tutorials, and thoughts on programming, software development, and technology. 
-            Sharing knowledge and experiences from my journey in the tech world.
-          </p>
-        </motion.div>
+      {/* Background */}
+      <div className="fixed inset-0 bg-[image:var(--gradient-mesh)] opacity-30 -z-10" />
 
-        {/* Featured Posts */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="mb-16"
-        >
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center">
-            <span className="w-2 h-8 bg-primary-500 rounded-full mr-3"></span>
-            Featured Posts
-          </h2>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredBlogs.map((post, index) => (
-              <motion.article
-                key={post.title}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ y: -10 }}
-                className="glass-card group cursor-pointer overflow-hidden border-2 border-primary-200 dark:border-primary-800"
-              >
-                {/* Blog Image */}
-                <div className="relative overflow-hidden rounded-lg mb-6">
-                  <div className="w-full h-48 bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900/20 dark:to-primary-800/20 flex items-center justify-center">
-                    <div className="text-primary-500 text-6xl font-bold opacity-20">
-                      {post.title.charAt(0)}
-                    </div>
-                  </div>
-                  <div className="absolute top-4 left-4">
-                    <span className="px-3 py-1 bg-primary-500 text-white text-xs font-medium rounded-full">
-                      Featured
-                    </span>
-                  </div>
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
-                </div>
-
-                {/* Blog Content */}
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
-                    <div className="flex items-center space-x-1">
-                      <Calendar className="w-4 h-4" />
-                      <span>{new Date(post.date).toLocaleDateString('en-US', { 
-                        year: 'numeric', 
-                        month: 'short', 
-                        day: 'numeric' 
-                      })}</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Clock className="w-4 h-4" />
-                      <span>{post.readTime}</span>
-                    </div>
-                  </div>
-
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-primary-500 dark:group-hover:text-primary-400 transition-colors duration-200 line-clamp-2">
-                    {post.title}
-                  </h3>
-                  
-                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-3">
-                    {post.excerpt}
-                  </p>
-
-                  <div className="flex flex-wrap gap-2">
-                    {post.tags.slice(0, 3).map((tag, tagIndex) => (
-                      <motion.span
-                        key={tag}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.3, delay: tagIndex * 0.05 }}
-                        className="inline-flex items-center space-x-1 px-2 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-full text-xs font-medium"
-                      >
-                        <Tag className="w-3 h-3" />
-                        <span>{tag}</span>
-                      </motion.span>
-                    ))}
-                    {post.tags.length > 3 && (
-                      <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-full text-xs">
-                        +{post.tags.length - 3}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </motion.article>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* All Posts */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-        >
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center">
-            <span className="w-2 h-8 bg-gray-500 rounded-full mr-3"></span>
-            All Posts
-          </h2>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {regularBlogs.map((post, index) => (
-              <motion.article
-                key={post.title}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ y: -10 }}
-                className="glass-card group cursor-pointer overflow-hidden"
-              >
-                {/* Blog Image */}
-                <div className="relative overflow-hidden rounded-lg mb-6">
-                  <div className="w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 flex items-center justify-center">
-                    <div className="text-gray-400 text-6xl font-bold opacity-20">
-                      {post.title.charAt(0)}
-                    </div>
-                  </div>
-                  <div className="absolute top-4 right-4">
-                    <span className="px-3 py-1 bg-white/90 dark:bg-dark-800/90 text-xs font-medium text-gray-700 dark:text-gray-300 rounded-full">
-                      {post.category}
-                    </span>
-                  </div>
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
-                </div>
-
-                {/* Blog Content */}
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
-                    <div className="flex items-center space-x-1">
-                      <Calendar className="w-4 h-4" />
-                      <span>{new Date(post.date).toLocaleDateString('en-US', { 
-                        year: 'numeric', 
-                        month: 'short', 
-                        day: 'numeric' 
-                      })}</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Clock className="w-4 h-4" />
-                      <span>{post.readTime}</span>
-                    </div>
-                  </div>
-
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-primary-500 dark:group-hover:text-primary-400 transition-colors duration-200 line-clamp-2">
-                    {post.title}
-                  </h3>
-                  
-                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-3">
-                    {post.excerpt}
-                  </p>
-
-                  <div className="flex flex-wrap gap-2">
-                    {post.tags.slice(0, 3).map((tag, tagIndex) => (
-                      <motion.span
-                        key={tag}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.3, delay: tagIndex * 0.05 }}
-                        className="inline-flex items-center space-x-1 px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-xs font-medium"
-                      >
-                        <Tag className="w-3 h-3" />
-                        <span>{tag}</span>
-                      </motion.span>
-                    ))}
-                    {post.tags.length > 3 && (
-                      <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-full text-xs">
-                        +{post.tags.length - 3}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </motion.article>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* External Blog Link */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="text-center"
-        >
-          <motion.a
-            href="https://medium.com/@himansh"
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center space-x-3 glass-card hover:bg-white/20 dark:hover:bg-white/10 transition-all duration-300 text-lg font-medium"
-          >
-            <div className="w-8 h-8 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-sm">M</span>
-            </div>
-            <div>
-              <div className="text-gray-900 dark:text-white">Read More on Medium</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Follow for latest updates</div>
-            </div>
-            <ExternalLink className="w-5 h-5" />
-          </motion.a>
-        </motion.div>
+      {/* Dynamic Gradient Orbs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+        <div 
+          className="gradient-orb gradient-orb-primary w-[500px] h-[500px] -top-40 -left-40 blur-3xl"
+          style={{
+            transform: `translate(${mousePosition.x * 0.02}px, ${mousePosition.y * 0.02}px)`,
+            transition: 'transform 0.3s ease-out',
+          }}
+        />
+        <div 
+          className="gradient-orb gradient-orb-pink w-[450px] h-[450px] top-1/2 -right-40 blur-3xl"
+          style={{ 
+            animationDelay: '3s',
+            transform: `translate(${-mousePosition.x * 0.015}px, ${-mousePosition.y * 0.015}px)`,
+            transition: 'transform 0.3s ease-out',
+          }}
+        />
       </div>
+
+      <Header />
+
+      <main className="pt-32 pb-20 relative z-10" ref={ref}>
+        <div className="container mx-auto px-4">
+          {/* Back Link */}
+          <Link
+            to="/"
+            className={`group inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8 ${isInView ? 'animate-fade-in' : 'opacity-0'}`}
+          >
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            Back to Home
+          </Link>
+
+          {/* Section Heading */}
+          <div className={`mb-12 ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.1s' }}>
+            <div className="flex items-center gap-3 mb-4">
+              <BookOpen className="w-8 h-8 text-primary animate-bounce" />
+              <h1 className="text-4xl md:text-5xl font-bold">
+                <span className="gradient-text-vibrant relative inline-block">
+                  All Blog Posts
+                  <span className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-full animate-gradient-x" />
+                </span>
+              </h1>
+            </div>
+
+            <p className="text-muted-foreground max-w-2xl">
+              Thoughts, tutorials, and insights on software development, data science, and technology
+            </p>
+          </div>
+
+          {/* Tag Filter */}
+          <div className={`mb-12 ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.2s' }}>
+            <div className="flex items-center gap-3 mb-4">
+              <Filter className="w-5 h-5 text-primary" />
+              <span className="text-sm font-medium text-muted-foreground">Filter by topic</span>
+            </div>
+            
+            <div className="flex flex-wrap gap-3">
+              {allTags.map((tag) => (
+                <button
+                  key={tag}
+                  onClick={() => setSelectedTag(tag)}
+                  className={`group relative px-5 py-2.5 rounded-xl text-sm font-medium transition-all transform hover:scale-105 ${
+                    selectedTag === tag
+                      ? 'text-white'
+                      : 'glass-card text-muted-foreground hover:text-primary border border-primary/20 hover:border-primary/40'
+                  }`}
+                >
+                  {selectedTag === tag && (
+                    <>
+                      <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-xl opacity-75 blur-lg" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-xl" />
+                    </>
+                  )}
+                  <span className="relative z-10 flex items-center gap-2">
+                    {tag}
+                    {selectedTag === tag && <Sparkles className="w-3 h-3 animate-pulse" />}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Blogs Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredBlogs.map((blog, index) => (
+              <div
+                key={blog.id}
+                className={`group relative ${isInView ? 'animate-fade-in' : 'opacity-0'}`}
+                style={{ 
+                  animationDelay: `${0.3 + index * 0.05}s`,
+                  perspective: '1000px',
+                }}
+              >
+                {/* Glow effect */}
+                <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 opacity-0 group-hover:opacity-75 blur-xl transition-all duration-500" />
+
+                {/* Card */}
+                <div className="relative glass-card rounded-2xl overflow-hidden backdrop-blur-xl bg-background/40 border border-primary/20 transition-all duration-500 group-hover:bg-background/60 group-hover:border-primary/40 transform group-hover:scale-105">
+                  {/* Shimmer effect */}
+                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" />
+                  
+                  {/* Image */}
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={blog.image}
+                      alt={blog.title}
+                      className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-2"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
+                    
+                    {/* Stats overlay */}
+                    <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                      <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-background/80 backdrop-blur-sm border border-primary/20">
+                        <Clock className="w-3 h-3 text-primary" />
+                        <span className="text-xs text-foreground/80">{blog.readTime}</span>
+                      </div>
+                      <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-background/80 backdrop-blur-sm border border-primary/20">
+                        <Eye className="w-3 h-3 text-primary" />
+                        <span className="text-xs text-foreground/80">{blog.views}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="relative p-6">
+                    <h3 className="text-lg font-bold text-foreground mb-3 line-clamp-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-purple-400 group-hover:to-pink-400 transition-all duration-300">
+                      {blog.title}
+                    </h3>
+
+                    <p className="text-sm text-muted-foreground mb-4 line-clamp-3 leading-relaxed">
+                      {blog.excerpt}
+                    </p>
+
+                    <div className="flex flex-wrap gap-2">
+                      {blog.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors"
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {filteredBlogs.length === 0 && (
+            <div className={`text-center py-20 ${isInView ? 'animate-fade-in' : 'opacity-0'}`}>
+              <div className="inline-flex items-center gap-3 px-6 py-3 rounded-2xl glass-card border border-primary/20">
+                <Sparkles className="w-5 h-5 text-primary" />
+                <p className="text-muted-foreground">No blogs found with the selected filter.</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </main>
+
+      <Footer />
+
+      <style>{`
+        @keyframes gradient-x {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+        .animate-gradient-x {
+          background-size: 200% auto;
+          animation: gradient-x 3s ease infinite;
+        }
+      `}</style>
     </div>
   );
 };

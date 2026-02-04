@@ -1,213 +1,406 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { ExternalLink, Github, ArrowLeft } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+// import React from 'react';
+// import { Link } from 'react-router-dom';
+// import { ArrowLeft, Github } from 'lucide-react';
+// import Header from '@/components/Header';
+// import Footer from '@/components/Footer';
+// import { allProjects } from '@/components/sections/ProjectsSection';
+// import { useInView } from '@/hooks/useInView';
+
+// const AllProjects: React.FC = () => {
+//   const { ref, isInView } = useInView({ threshold: 0.05 });
+
+//   return (
+//     <div className="min-h-screen">
+//       <Header />
+
+//       <main className="pt-24 pb-20" ref={ref}>
+//         <div className="container mx-auto px-4">
+//           {/* Back Link */}
+//           <Link
+//             to="/"
+//             className={`inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8 ${isInView ? 'animate-fade-in' : 'opacity-0'}`}
+//           >
+//             <ArrowLeft className="w-4 h-4" />
+//             Back to Home
+//           </Link>
+
+//           {/* Section Heading */}
+//           <h1 className={`text-4xl md:text-5xl font-bold mb-4 ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.1s' }}>
+//             <span className="gradient-text">All Projects</span>
+//           </h1>
+
+//           <p className={`text-muted-foreground mb-12 max-w-2xl ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.2s' }}>
+//             A collection of my work spanning data science, machine learning, full-stack development, and data visualization.
+//           </p>
+
+//           {/* Projects Grid */}
+//           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+//             {allProjects.map((project, index) => (
+//               <div
+//                 key={project.id}
+//                 className={`glass-card-hover p-6 rounded-xl group ${isInView ? 'animate-fade-in' : 'opacity-0'}`}
+//                 style={{ animationDelay: `${0.2 + index * 0.05}s` }}
+//               >
+//                 <div className="flex items-start justify-between mb-4">
+//                   <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
+//                     {project.title}
+//                   </h3>
+//                   {project.ongoing && (
+//                     <span className="px-2 py-1 text-xs font-medium rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 whitespace-nowrap ml-2">
+//                       Ongoing
+//                     </span>
+//                   )}
+//                 </div>
+
+//                 <p className="text-sm text-muted-foreground mb-4">
+//                   {project.description}
+//                 </p>
+
+//                 <div className="flex flex-wrap gap-2">
+//                   {project.tech.map((t) => (
+//                     <span key={t} className="tech-badge">
+//                       {t}
+//                     </span>
+//                   ))}
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+
+//           {/* GitHub Link */}
+//           <div className={`text-center ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.8s' }}>
+//             <a
+//               href="https://github.com"
+//               target="_blank"
+//               rel="noopener noreferrer"
+//               className="inline-flex items-center gap-3 px-8 py-4 rounded-xl gradient-button hover:opacity-90 transition-all shadow-lg shadow-primary/25"
+//             >
+//               <Github className="w-5 h-5" />
+//               View More on GitHub
+//             </a>
+//           </div>
+//         </div>
+//       </main>
+
+//       <Footer />
+//     </div>
+//   );
+// };
+
+// export default AllProjects;
+
+import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowLeft, Github, Sparkles, Rocket, Code, Zap, Star, ExternalLink } from 'lucide-react';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import { allProjects } from '@/components/sections/ProjectsSection';
+import { useInView } from '@/hooks/useInView';
 
 const AllProjects: React.FC = () => {
-  const navigate = useNavigate();
+  const { ref, isInView } = useInView({ threshold: 0.05 });
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [hoveredProject, setHoveredProject] = useState<number | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const allProjects = [
-    {
-      title: 'Taxi Fare Prediction System',
-      description: 'Machine learning model to predict taxi fares using advanced regression techniques and feature engineering. Implemented with Python, Scikit-learn, and deployed using Flask.',
-      tech: ['Python', 'Scikit-learn', 'Pandas', 'Flask', 'ML'],
-      github: 'https://github.com',
-      demo: 'https://demo.com',
-      category: 'Machine Learning'
-    },
-    {
-      title: 'Job Fit & Skill Gap Intelligence System',
-      description: 'AI-powered platform analyzing job requirements and candidate skills to identify gaps and recommend improvements. Uses NLP for job description analysis.',
-      tech: ['Python', 'NLP', 'TensorFlow', 'React', 'FastAPI'],
-      github: 'https://github.com',
-      demo: 'https://demo.com',
-      category: 'AI/ML'
-    },
-    {
-      title: 'DevConnect – Techies Social Platform',
-      description: 'Social networking platform designed specifically for developers to connect, collaborate, and share knowledge. Features real-time messaging and project collaboration.',
-      tech: ['React', 'Node.js', 'MongoDB', 'Socket.io', 'JWT'],
-      github: 'https://github.com',
-      demo: 'https://demo.com',
-      category: 'Full Stack'
-    },
-    {
-      title: 'Credit Card Fraud Detection System',
-      description: 'Real-time fraud detection system using ensemble learning methods and anomaly detection algorithms. Achieves 99.2% accuracy with minimal false positives.',
-      tech: ['Python', 'Scikit-learn', 'XGBoost', 'Streamlit', 'ML'],
-      github: 'https://github.com',
-      demo: 'https://demo.com',
-      category: 'Machine Learning'
-    },
-    {
-      title: 'E-Commerce Analytics Dashboard',
-      description: 'Comprehensive analytics dashboard for e-commerce businesses with real-time sales tracking, customer behavior analysis, and predictive insights.',
-      tech: ['Python', 'Dash', 'Plotly', 'PostgreSQL', 'Pandas'],
-      github: 'https://github.com',
-      demo: 'https://demo.com',
-      category: 'Data Analytics'
-    },
-    {
-      title: 'Smart Home IoT System',
-      description: 'IoT-based smart home automation system with mobile app control, voice commands, and energy optimization features.',
-      tech: ['Arduino', 'React Native', 'Firebase', 'Node.js', 'IoT'],
-      github: 'https://github.com',
-      demo: 'https://demo.com',
-      category: 'IoT'
-    },
-    {
-      title: 'Stock Price Prediction Model',
-      description: 'Deep learning model for stock price prediction using LSTM networks and technical indicators. Includes backtesting and risk analysis.',
-      tech: ['Python', 'TensorFlow', 'Keras', 'Pandas', 'Matplotlib'],
-      github: 'https://github.com',
-      demo: 'https://demo.com',
-      category: 'Deep Learning'
-    },
-    {
-      title: 'Task Management API',
-      description: 'RESTful API for task management with user authentication, role-based access control, and real-time notifications.',
-      tech: ['Go', 'PostgreSQL', 'JWT', 'Docker', 'REST API'],
-      github: 'https://github.com',
-      demo: 'https://demo.com',
-      category: 'Backend'
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  // Particle animation
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    interface Particle {
+      x: number;
+      y: number;
+      size: number;
+      speedX: number;
+      speedY: number;
+      opacity: number;
+      color: string;
     }
-  ];
 
-  const handleGoBack = () => {
-    navigate('/');
-  };
+    const colors = [
+      'rgba(168, 85, 247, 0.6)',
+      'rgba(236, 72, 153, 0.6)',
+      'rgba(59, 130, 246, 0.6)',
+    ];
+
+    const particles: Particle[] = Array.from({ length: 40 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      size: Math.random() * 3 + 1,
+      speedX: (Math.random() - 0.5) * 0.3,
+      speedY: (Math.random() - 0.5) * 0.3,
+      opacity: Math.random() * 0.5 + 0.3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+    }));
+
+    let animationFrameId: number;
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach(particle => {
+        particle.x += particle.speedX;
+        particle.y += particle.speedY;
+
+        if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1;
+        if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1;
+
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        ctx.fillStyle = particle.color;
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = particle.color;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => cancelAnimationFrame(animationFrameId);
+  }, []);
 
   return (
-    <div className="pt-20 min-h-screen">
-      <div className="container-custom section-padding">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-12"
-        >
-          <motion.button
-            whileHover={{ x: -5 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleGoBack}
-            className="flex items-center space-x-2 text-primary-500 hover:text-primary-600 mb-6 font-medium"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span>Back to Home</span>
-          </motion.button>
+    <div className="min-h-screen relative">
+      {/* Particle Canvas */}
+      <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0" />
 
-          <h1 className="text-4xl lg:text-5xl font-bold text-gradient mb-6">
-            All Projects
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl">
-            A comprehensive collection of my work spanning machine learning, full-stack development, 
-            data analytics, and emerging technologies. Each project represents a unique challenge 
-            and learning experience in my journey as a developer.
-          </p>
-        </motion.div>
+      {/* Background */}
+      <div className="fixed inset-0 bg-[image:var(--gradient-mesh)] opacity-30 -z-10" />
 
-        {/* Projects Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {allProjects.map((project, index) => (
-            <motion.div
-              key={project.title}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              whileHover={{ y: -10 }}
-              className="glass-card group overflow-hidden"
-            >
-              {/* Project Image */}
-              <div className="relative overflow-hidden rounded-lg mb-6">
-                <div className="w-full h-48 bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900/20 dark:to-primary-800/20 flex items-center justify-center">
-                  <div className="text-primary-500 text-6xl font-bold opacity-20">
-                    {project.title.charAt(0)}
-                  </div>
-                </div>
-                <div className="absolute top-4 right-4">
-                  <span className="px-3 py-1 bg-white/90 dark:bg-dark-800/90 text-xs font-medium text-gray-700 dark:text-gray-300 rounded-full">
-                    {project.category}
-                  </span>
-                </div>
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
-                  <div className="flex space-x-4">
-                    <motion.a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                      className="p-3 bg-white/90 rounded-full hover:bg-white transition-colors duration-200"
-                    >
-                      <Github className="w-5 h-5 text-gray-800" />
-                    </motion.a>
-                    <motion.a
-                      href={project.demo}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                      className="p-3 bg-white/90 rounded-full hover:bg-white transition-colors duration-200"
-                    >
-                      <ExternalLink className="w-5 h-5 text-gray-800" />
-                    </motion.a>
-                  </div>
-                </div>
-              </div>
-
-              {/* Project Content */}
-              <div className="space-y-4">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-primary-500 dark:group-hover:text-primary-400 transition-colors duration-200">
-                  {project.title}
-                </h3>
-                
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
-                  {project.description}
-                </p>
-
-                <div className="flex flex-wrap gap-2">
-                  {project.tech.map((tech, techIndex) => (
-                    <motion.span
-                      key={tech}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.3, delay: techIndex * 0.05 }}
-                      className="px-2 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-full text-xs font-medium"
-                    >
-                      {tech}
-                    </motion.span>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* GitHub Redirect Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="text-center"
-        >
-          <motion.a
-            href="https://github.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center space-x-3 glass-card hover:bg-white/20 dark:hover:bg-white/10 transition-all duration-300 text-lg font-medium"
-          >
-            <Github className="w-8 h-8" />
-            <div>
-              <div className="text-gray-900 dark:text-white">View More on GitHub</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Explore my complete repository</div>
-            </div>
-            <ExternalLink className="w-5 h-5" />
-          </motion.a>
-        </motion.div>
+      {/* Dynamic Gradient Orbs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+        <div 
+          className="gradient-orb gradient-orb-pink w-[500px] h-[500px] top-20 -right-40 blur-3xl"
+          style={{ 
+            animationDelay: '2s',
+            transform: `translate(${-mousePosition.x * 0.02}px, ${-mousePosition.y * 0.02}px)`,
+            transition: 'transform 0.3s ease-out',
+          }}
+        />
+        <div 
+          className="gradient-orb gradient-orb-purple w-[450px] h-[450px] bottom-20 -left-40 blur-3xl"
+          style={{ 
+            animationDelay: '4s',
+            transform: `translate(${mousePosition.x * 0.015}px, ${mousePosition.y * 0.015}px)`,
+            transition: 'transform 0.3s ease-out',
+          }}
+        />
       </div>
+
+      <Header />
+
+      <main className="pt-32 pb-20 relative z-10" ref={ref}>
+        <div className="container mx-auto px-4">
+          {/* Back Link */}
+          <Link
+            to="/"
+            className={`group inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8 ${isInView ? 'animate-fade-in' : 'opacity-0'}`}
+          >
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            Back to Home
+          </Link>
+
+          {/* Section Heading */}
+          <div className={`mb-12 ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.1s' }}>
+            <div className="flex items-center gap-3 mb-4">
+              <Rocket className="w-8 h-8 text-primary animate-bounce" />
+              <Code className="w-8 h-8 text-primary animate-bounce" style={{ animationDelay: '0.2s' }} />
+              <h1 className="text-4xl md:text-5xl font-bold">
+                <span className="gradient-text-vibrant relative inline-block">
+                  All Projects
+                  <span className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-full animate-gradient-x" />
+                </span>
+              </h1>
+            </div>
+
+            <p className="text-muted-foreground max-w-2xl">
+              A comprehensive collection of my work spanning data science, machine learning, full-stack development, and data visualization
+            </p>
+          </div>
+
+          {/* Stats */}
+          <div className={`grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.2s' }}>
+            <div className="group glass-card p-4 rounded-xl border border-primary/20 hover:border-primary/40 transition-all">
+              <div className="flex items-center gap-3 mb-2">
+                <Star className="w-5 h-5 text-yellow-400 group-hover:rotate-180 transition-transform duration-500" />
+                <span className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  {allProjects.length}
+                </span>
+              </div>
+              <p className="text-sm text-muted-foreground">Total Projects</p>
+            </div>
+
+            <div className="group glass-card p-4 rounded-xl border border-primary/20 hover:border-primary/40 transition-all">
+              <div className="flex items-center gap-3 mb-2">
+                <Zap className="w-5 h-5 text-yellow-400 group-hover:scale-125 transition-transform" />
+                <span className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
+                  {allProjects.filter(p => p.ongoing).length}
+                </span>
+              </div>
+              <p className="text-sm text-muted-foreground">Ongoing</p>
+            </div>
+
+            <div className="group glass-card p-4 rounded-xl border border-primary/20 hover:border-primary/40 transition-all">
+              <div className="flex items-center gap-3 mb-2">
+                <Code className="w-5 h-5 text-blue-400 group-hover:rotate-12 transition-transform" />
+                <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                  {new Set(allProjects.flatMap(p => p.tech)).size}
+                </span>
+              </div>
+              <p className="text-sm text-muted-foreground">Technologies</p>
+            </div>
+
+            <div className="group glass-card p-4 rounded-xl border border-primary/20 hover:border-primary/40 transition-all">
+              <div className="flex items-center gap-3 mb-2">
+                <Sparkles className="w-5 h-5 text-purple-400 animate-pulse" />
+                <span className="text-2xl font-bold bg-gradient-to-r from-pink-400 to-rose-400 bg-clip-text text-transparent">
+                  {new Set(allProjects.map(p => p.category)).size}
+                </span>
+              </div>
+              <p className="text-sm text-muted-foreground">Categories</p>
+            </div>
+          </div>
+
+          {/* Projects Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            {allProjects.map((project, index) => (
+              <div
+                key={project.id}
+                className={`group relative ${isInView ? 'animate-fade-in' : 'opacity-0'}`}
+                style={{ 
+                  animationDelay: `${0.2 + index * 0.03}s`,
+                  perspective: '1000px',
+                }}
+                onMouseEnter={() => setHoveredProject(project.id)}
+                onMouseLeave={() => setHoveredProject(null)}
+              >
+                {/* Glow effect */}
+                <div className={`absolute -inset-1 rounded-2xl bg-gradient-to-r ${project.color} opacity-0 group-hover:opacity-75 blur-xl transition-all duration-500`} />
+
+                {/* Card */}
+                <div className="relative glass-card rounded-2xl p-6 backdrop-blur-xl bg-background/40 border border-primary/20 overflow-hidden transition-all duration-500 group-hover:bg-background/60 group-hover:border-primary/40 transform group-hover:scale-105">
+                  {/* Shimmer effect */}
+                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                  
+                  {/* Header */}
+                  <div className="flex items-start justify-between mb-4 relative z-10">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${project.color} animate-pulse`} />
+                        <span className="text-xs text-muted-foreground">{project.category}</span>
+                      </div>
+                      <h3 className="text-lg font-bold text-foreground group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-purple-400 group-hover:to-pink-400 transition-all duration-300">
+                        {project.title}
+                      </h3>
+                    </div>
+                    
+                    {project.ongoing && (
+                      <div className="relative">
+                        <span className="px-3 py-1 text-xs font-medium rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 whitespace-nowrap flex items-center gap-1">
+                          <Zap className="w-3 h-3 animate-pulse" />
+                          Ongoing
+                        </span>
+                        <div className="absolute inset-0 rounded-full bg-yellow-500/20 blur-md animate-pulse" />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-sm text-muted-foreground mb-6 leading-relaxed relative z-10">
+                    {project.description}
+                  </p>
+
+                  {/* Tech Stack */}
+                  <div className="flex flex-wrap gap-2 mb-4 relative z-10">
+                    {project.tech.map((t) => (
+                      <span
+                        key={t}
+                        className="px-3 py-1 text-xs font-medium rounded-lg bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 hover:scale-105 transition-all cursor-default"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Action buttons */}
+                  {hoveredProject === project.id && (
+                    <div className="flex items-center gap-3 relative z-10 animate-fade-in">
+                      <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-primary/20 to-purple-500/20 border border-primary/30 hover:from-primary/30 hover:to-purple-500/30 transition-all text-sm font-medium text-primary">
+                        <ExternalLink className="w-4 h-4" />
+                        View
+                      </button>
+                      <button className="flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-r from-primary/20 to-purple-500/20 border border-primary/30 hover:from-primary/30 hover:to-purple-500/30 transition-all">
+                        <Github className="w-4 h-4 text-primary" />
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Decorative elements */}
+                  <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${project.color} opacity-5 rounded-full blur-3xl group-hover:opacity-10 transition-opacity duration-500`} />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* GitHub Link */}
+          <div className={`text-center ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.8s' }}>
+            <a
+              href="https://github.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-xl overflow-hidden"
+            >
+              {/* Animated gradient border */}
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 opacity-75 blur-lg group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 p-[2px] rounded-xl">
+                <div className="w-full h-full rounded-xl bg-background/95 backdrop-blur-xl" />
+              </div>
+              
+              {/* Content */}
+              <Github className="relative z-10 w-6 h-6 text-primary group-hover:rotate-12 transition-transform duration-300" />
+              <span className="relative z-10 font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                View More on GitHub
+              </span>
+              <Sparkles className="relative z-10 w-5 h-5 text-primary animate-pulse" />
+              
+              {/* Shimmer */}
+              <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+            </a>
+          </div>
+        </div>
+      </main>
+
+      <Footer />
+
+      <style>{`
+        @keyframes gradient-x {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+        .animate-gradient-x {
+          background-size: 200% auto;
+          animation: gradient-x 3s ease infinite;
+        }
+      `}</style>
     </div>
   );
 };

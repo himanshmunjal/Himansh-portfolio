@@ -1,145 +1,73 @@
-# Himansh Munjal - Portfolio Website
+# Welcome to your Lovable project
 
-A modern, elegant, and professional personal portfolio website built with React.js, TypeScript, and Tailwind CSS. Features glassmorphism design, smooth animations, and a comprehensive showcase of skills, projects, and experience.
+## Project info
 
-## 🌟 Features
+**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
 
-### Design & UX
-- **Modern Glassmorphism Design** - Elegant glass-like components with backdrop blur effects
-- **Dark/Light Theme Toggle** - Seamless theme switching with system preference detection
-- **Responsive Design** - Optimized for all devices and screen sizes
-- **Smooth Animations** - Framer Motion powered micro-interactions and page transitions
-- **Creative Loading Screen** - Elegant door-opening animation on initial load
+## How can I edit this code?
 
-### Sections
-- **Hero Section** - Dynamic greetings, animated role text, and rotating motivational quotes
-- **About Me** - Professional description with interactive stats cards
-- **Technology Strip** - Auto-scrolling showcase of technical skills
-- **Journey** - Education timeline and professional experience
-- **Skills & Expertise** - Interactive skill cards with proficiency indicators
-- **Inspirational Quote** - Centered motivational section
-- **Featured Projects** - Showcase of top 4 projects with detailed descriptions
-- **Blog Posts** - Latest articles and technical writings
-- **Connect** - Contact form and social media links
-- **Footer** - Social links and back-to-top functionality
+There are several ways of editing your application.
 
-### Technical Features
-- **React Router** - Smooth client-side routing
-- **TypeScript** - Type-safe development
-- **Framer Motion** - Advanced animations and transitions
-- **Lucide React** - Beautiful, consistent icons
-- **Tailwind CSS** - Utility-first styling with custom components
-- **Mobile-First** - Responsive design approach
+**Use Lovable**
 
-## 🚀 Getting Started
+Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
 
-### Prerequisites
-- Node.js (v16 or higher)
-- npm or yarn
+Changes made via Lovable will be committed automatically to this repo.
 
-### Installation
+**Use your preferred IDE**
 
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd himansh-portfolio
-```
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
 
-2. Install dependencies:
-```bash
-npm install
-```
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-3. Start the development server:
-```bash
+Follow these steps:
+
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
+
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
+
+# Step 3: Install the necessary dependencies.
+npm i
+
+# Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
 ```
 
-4. Open your browser and navigate to `http://localhost:5173`
+**Edit a file directly in GitHub**
 
-### Build for Production
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
 
-```bash
-npm run build
-```
+**Use GitHub Codespaces**
 
-The built files will be in the `dist` directory.
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-## 🛠️ Tech Stack
+## What technologies are used for this project?
 
-- **Frontend Framework**: React 19.2.0
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS 3.4.0
-- **Animations**: Framer Motion
-- **Icons**: Lucide React
-- **Routing**: React Router DOM
-- **Build Tool**: Vite
-- **Package Manager**: npm
+This project is built with:
 
-## 📁 Project Structure
+- Vite
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS
 
-```
-src/
-├── components/
-│   ├── sections/          # Page sections (Hero, About, etc.)
-│   ├── Header.tsx         # Navigation header
-│   ├── Footer.tsx         # Site footer
-│   └── LoadingScreen.tsx  # Initial loading animation
-├── pages/
-│   ├── MainPage.tsx       # Main landing page
-│   ├── AllProjects.tsx    # Complete projects showcase
-│   └── AllBlogs.tsx       # All blog posts
-├── context/
-│   └── ThemeContext.tsx   # Theme management
-├── App.tsx                # Main app component
-├── main.tsx              # App entry point
-└── index.css             # Global styles and Tailwind imports
-```
+## How can I deploy this project?
 
-## 🎨 Customization
+Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
 
-### Colors
-The color scheme can be customized in `tailwind.config.js`. The default uses a blue color palette with proper dark mode variants.
+## Can I connect a custom domain to my Lovable project?
 
-### Content
-Update the content in the respective component files:
-- Personal information: `src/components/sections/HeroSection.tsx`
-- About section: `src/components/sections/AboutSection.tsx`
-- Projects: `src/components/sections/ProjectsSection.tsx`
-- Skills: `src/components/sections/SkillsSection.tsx`
+Yes, you can!
 
-### Resume
-Place your resume PDF in the `public` folder and update the download links in the header and about sections.
+To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
-## 📱 Responsive Breakpoints
-
-- **Mobile**: < 768px
-- **Tablet**: 768px - 1024px
-- **Desktop**: > 1024px
-
-## 🌙 Theme Support
-
-The website supports both light and dark themes with:
-- System preference detection
-- Manual toggle in header
-- Persistent theme selection via localStorage
-- Smooth transitions between themes
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome! Feel free to check the issues page.
-
-## 📞 Contact
-
-**Himansh Munjal**
-- Email: himansh.munjal@example.com
-- LinkedIn: [linkedin.com/in/himansh-munjal](https://linkedin.com/in/himansh-munjal)
-- GitHub: [github.com/himansh-munjal](https://github.com/himansh-munjal)
-
----
-
-Built with ❤️ using React & Tailwind CSS
+Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)

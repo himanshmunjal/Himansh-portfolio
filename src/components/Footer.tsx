@@ -1,115 +1,61 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Github, Linkedin, Instagram, ArrowUp, Heart } from 'lucide-react';
+import { Github, Linkedin, Instagram, Twitter, ArrowUp, Heart } from 'lucide-react';
+
+const socialLinks = [
+  { icon: Github, href: 'https://github.com', label: 'GitHub' },
+  { icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn' },
+  { icon: Instagram, href: 'https://instagram.com', label: 'Instagram' },
+  { icon: Twitter, href: 'https://twitter.com', label: 'Twitter' },
+];
 
 const Footer: React.FC = () => {
-  const socialLinks = [
-    { icon: Github, href: 'https://github.com', label: 'GitHub' },
-    { icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn' },
-    { icon: Instagram, href: 'https://instagram.com', label: 'Instagram' }
-  ];
-
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <footer className="bg-dark-900 text-white relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-10 left-10 w-32 h-32 border border-white rounded-full" />
-        <div className="absolute bottom-10 right-10 w-24 h-24 border border-white rounded-full" />
-      </div>
-
-      <div className="container-custom section-padding relative z-10">
-        <div className="flex flex-col md:flex-row items-center justify-between">
-          {/* Left - Social Links */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="flex items-center space-x-6 mb-6 md:mb-0"
-          >
-            {socialLinks.map((social, index) => (
-              <motion.a
+    <footer className="relative border-t border-border/50">
+      <div className="absolute inset-0 glass-card rounded-none opacity-50" />
+      
+      <div className="relative container mx-auto px-4 py-8">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          {/* Social Links */}
+          <div className="flex items-center gap-4">
+            {socialLinks.map((social) => (
+              <a
                 key={social.label}
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.1, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className="p-3 bg-white/10 rounded-full hover:bg-white/20 transition-all duration-300 text-gray-300 hover:text-white"
+                className="p-2 rounded-lg hover:bg-primary/20 transition-colors group"
                 aria-label={social.label}
               >
-                <social.icon className="w-5 h-5" />
-              </motion.a>
+                <social.icon className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+              </a>
             ))}
-          </motion.div>
-
-          {/* Center - Copyright */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="text-center mb-6 md:mb-0"
-          >
-            <p className="text-gray-400 mb-2">
-              © {new Date().getFullYear()} All rights reserved
-            </p>
-            <p className="text-gray-500 flex items-center justify-center space-x-2">
-              <span>Made with</span>
-              <motion.div
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 1, repeat: Infinity }}
-              >
-                <Heart className="w-4 h-4 text-red-500 fill-current" />
-              </motion.div>
-              <span>using React & Tailwind</span>
-            </p>
-          </motion.div>
-
-          {/* Right - Back to Top */}
-          <motion.button
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            viewport={{ once: true }}
-            whileHover={{ scale: 1.1, y: -2 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={scrollToTop}
-            className="p-3 bg-primary-500 hover:bg-primary-600 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl group"
-            aria-label="Back to top"
-          >
-            <ArrowUp className="w-5 h-5 group-hover:animate-bounce" />
-          </motion.button>
-        </div>
-
-        {/* Bottom Border */}
-        <motion.div
-          initial={{ scaleX: 0 }}
-          whileInView={{ scaleX: 1 }}
-          transition={{ duration: 1, delay: 0.6 }}
-          viewport={{ once: true }}
-          className="mt-8 pt-8 border-t border-gray-800"
-        >
-          <div className="text-center">
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.8 }}
-              viewport={{ once: true }}
-              className="text-gray-500 text-sm"
-            >
-              "Building the future, one line of code at a time."
-            </motion.p>
           </div>
-        </motion.div>
+
+          {/* Copyright */}
+          <div className="text-center">
+            <p className="text-sm text-muted-foreground">
+              © 2025 Himansh Munjal. All Rights Reserved.
+            </p>
+            <p className="text-xs text-muted-foreground/70 mt-1 flex items-center justify-center gap-1">
+              Made with <Heart className="w-3 h-3 text-red-500 fill-red-500" /> using React.js & Tailwind CSS
+            </p>
+          </div>
+
+          {/* Back to Top */}
+          <button
+            onClick={scrollToTop}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg glass-card hover:bg-primary/20 transition-all group"
+          >
+            <ArrowUp className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+            <span className="text-sm text-muted-foreground group-hover:text-primary transition-colors">
+              Back to Top
+            </span>
+          </button>
+        </div>
       </div>
     </footer>
   );
