@@ -11,6 +11,7 @@ import QuoteSection from '@/components/sections/QuoteSection';
 import ProjectsSection from '@/components/sections/ProjectsSection';
 import BlogSection from '@/components/sections/BlogSection';
 import ConnectSection from '@/components/sections/ConnectSection';
+import StrengthsSection from '@/components/sections/StrengthsSection'
 
 const Index: React.FC = () => {
   const [showDoorAnimation, setShowDoorAnimation] = useState(true);
@@ -44,6 +45,7 @@ const Index: React.FC = () => {
           <QuoteSection />
           <ProjectsSection />
           <BlogSection />
+          <StrengthsSection />
           <ConnectSection />
         </main>
 

@@ -383,7 +383,7 @@ const AboutSection: React.FC = () => {
                   <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                   
                   <img
-                    src="/images/profile.png"
+                    src="/images/profile.jpeg"
                     alt="Himansh Munjal"
                     className="w-80 h-80 md:w-[360px] md:h-[360px] object-cover rounded-2xl relative z-10 group-hover:scale-105 transition-transform duration-500"
                   />
