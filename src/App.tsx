@@ -10,6 +10,8 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as Sonner } from 'sonner';
+import BlogPost from './pages/Blogpost';
+
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -29,6 +31,7 @@ function App() {
         <Sonner />
         <Router>
           <Routes>
+            <Route path="/blog/:id" element={<BlogPost />} />
             <Route path="/" element={<Index />} />
             <Route path="/projects/all" element={<AllProjects />} />
             <Route path="/blogs/all" element={<AllBlogs />} />

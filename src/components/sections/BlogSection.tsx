@@ -1,120 +1,3 @@
-// import React from 'react';
-// import { Link } from 'react-router-dom';
-// import { ArrowRight } from 'lucide-react';
-// import { useInView } from '@/hooks/useInView';
-
-// export const allBlogs = [
-//   {
-//     id: 1,
-//     title: 'Getting Started with Java Spring Boot – A Beginner\'s Guide',
-//     excerpt: 'Spring Boot has revolutionized the way developers build Java applications. In this post, we explore the basics of setting up your first Spring Boot project, understanding auto-configuration, and building your first REST endpoint with ease...',
-//     image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=400&fit=crop',
-//     tags: ['Java', 'SpringBoot', 'Backend', 'REST', 'BeginnerFriendly'],
-//   },
-//   {
-//     id: 2,
-//     title: 'Clean Code Principles Every Developer Should Know',
-//     excerpt: 'Writing clean code is more than just style — it\'s about maintainability, readability, and collaboration. This blog dives into the most important clean code principles from Robert Martin\'s iconic book and how to apply them daily...',
-//     image: 'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=600&h=400&fit=crop',
-//     tags: ['Coding', 'CleanCode', 'SoftwareEngineering', 'BestPractices', 'Tips'],
-//   },
-//   {
-//     id: 3,
-//     title: 'Demystifying Machine Learning: From Theory to Real Projects',
-//     excerpt: 'Machine learning can feel intimidating at first, but once you break it down into digestible chunks, it becomes one of the most exciting fields in tech. Let\'s walk through the core concepts and see how they map to real-world projects...',
-//     image: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=600&h=400&fit=crop',
-//     tags: ['MachineLearning', 'DataScience', 'AI', 'Python', 'Tutorial'],
-//   },
-// ];
-
-// const BlogCard: React.FC<{
-//   blog: typeof allBlogs[0];
-//   index: number;
-//   isInView: boolean;
-// }> = ({ blog, index, isInView }) => {
-//   return (
-//     <div
-//       className={`glass-card-hover rounded-xl overflow-hidden group ${isInView ? 'animate-fade-in' : 'opacity-0'}`}
-//       style={{ animationDelay: `${0.2 + index * 0.1}s` }}
-//     >
-//       {/* Image */}
-//       <div className="relative h-48 overflow-hidden">
-//         <img
-//           src={blog.image}
-//           alt={blog.title}
-//           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-//         />
-//         <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
-//       </div>
-
-//       {/* Content */}
-//       <div className="p-6">
-//         <h3 className="text-lg font-bold text-foreground mb-3 line-clamp-2 group-hover:text-primary transition-colors">
-//           {blog.title}
-//         </h3>
-
-//         <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
-//           {blog.excerpt}
-//         </p>
-
-//         <div className="flex flex-wrap gap-2">
-//           {blog.tags.map((tag) => (
-//             <span
-//               key={tag}
-//               className="px-2 py-1 text-xs rounded-full bg-primary/10 text-primary border border-primary/20"
-//             >
-//               #{tag}
-//             </span>
-//           ))}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// const BlogSection: React.FC = () => {
-//   const { ref, isInView } = useInView({ threshold: 0.1 });
-
-//   return (
-//     <section id="blog" className="py-20 relative" ref={ref}>
-//       {/* Background */}
-//       <div className="absolute inset-0 bg-[image:var(--gradient-mesh)] opacity-30" />
-      
-//       <div className="container mx-auto px-4 relative z-10">
-//         {/* Section Heading */}
-//         <h2 className={`section-heading ${isInView ? 'animate-fade-in' : 'opacity-0'}`}>
-//           <span className="gradient-text-vibrant">My Blog</span>
-//         </h2>
-
-//         {/* Blog Grid */}
-//         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto mb-12">
-//           {allBlogs.map((blog, index) => (
-//             <BlogCard
-//               key={blog.id}
-//               blog={blog}
-//               index={index}
-//               isInView={isInView}
-//             />
-//           ))}
-//         </div>
-
-//         {/* View All Button */}
-//         <div className={`text-center ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.5s' }}>
-//           <Link
-//             to="/blogs/all"
-//             className="inline-flex items-center gap-2 px-8 py-4 rounded-xl gradient-border-card font-semibold text-foreground hover:text-primary transition-all group"
-//           >
-//             <span className="relative z-10">View All Blogs</span>
-//             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform relative z-10" />
-//           </Link>
-//         </div>
-//       </div>
-//     </section>
-//   );
-// };
-
-// export default BlogSection;
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles, BookOpen, Clock, TrendingUp, Eye } from 'lucide-react';
@@ -256,10 +139,13 @@ const BlogCard: React.FC<{
           </div>
 
           {/* Read more link */}
-          <div className="flex items-center gap-2 text-sm text-primary opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+          <Link
+            to={`/blog/${blog.id}`}
+            className="flex items-center gap-2 text-sm text-primary opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0"
+          >
             <span className="font-medium">Read article</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </div>
+          </Link>
         </div>
 
         {/* Corner accent */}

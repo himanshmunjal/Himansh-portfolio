@@ -1,123 +1,6 @@
-// import React, { useState } from 'react';
-// import { Link } from 'react-router-dom';
-// import { ArrowLeft } from 'lucide-react';
-// import Header from '@/components/Header';
-// import Footer from '@/components/Footer';
-// import { allBlogs } from '@/components/sections/BlogSection';
-// import { useInView } from '@/hooks/useInView';
-
-// const allTags = ['All', 'Java', 'SpringBoot', 'Backend', 'Coding', 'CleanCode', 'MachineLearning', 'DataScience', 'AI', 'Python'];
-
-// const AllBlogs: React.FC = () => {
-//   const { ref, isInView } = useInView({ threshold: 0.05 });
-//   const [selectedTag, setSelectedTag] = useState('All');
-
-//   const filteredBlogs = selectedTag === 'All'
-//     ? allBlogs
-//     : allBlogs.filter(blog => blog.tags.some(tag => tag.toLowerCase().includes(selectedTag.toLowerCase())));
-
-//   return (
-//     <div className="min-h-screen">
-//       <Header />
-
-//       <main className="pt-24 pb-20" ref={ref}>
-//         <div className="container mx-auto px-4">
-//           {/* Back Link */}
-//           <Link
-//             to="/"
-//             className={`inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8 ${isInView ? 'animate-fade-in' : 'opacity-0'}`}
-//           >
-//             <ArrowLeft className="w-4 h-4" />
-//             Back to Home
-//           </Link>
-
-//           {/* Section Heading */}
-//           <h1 className={`text-4xl md:text-5xl font-bold mb-4 ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.1s' }}>
-//             <span className="gradient-text">All Blog Posts</span>
-//           </h1>
-
-//           <p className={`text-muted-foreground mb-8 max-w-2xl ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.2s' }}>
-//             Thoughts, tutorials, and insights on software development, data science, and technology.
-//           </p>
-
-//           {/* Tag Filter */}
-//           <div className={`flex flex-wrap gap-2 mb-12 ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.3s' }}>
-//             {allTags.map((tag) => (
-//               <button
-//                 key={tag}
-//                 onClick={() => setSelectedTag(tag)}
-//                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-//                   selectedTag === tag
-//                     ? 'gradient-button'
-//                     : 'glass-card hover:bg-primary/10 text-muted-foreground hover:text-primary'
-//                 }`}
-//               >
-//                 {tag}
-//               </button>
-//             ))}
-//           </div>
-
-//           {/* Blogs Grid */}
-//           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-//             {filteredBlogs.map((blog, index) => (
-//               <div
-//                 key={blog.id}
-//                 className={`glass-card-hover rounded-xl overflow-hidden group ${isInView ? 'animate-fade-in' : 'opacity-0'}`}
-//                 style={{ animationDelay: `${0.3 + index * 0.1}s` }}
-//               >
-//                 {/* Image */}
-//                 <div className="relative h-48 overflow-hidden">
-//                   <img
-//                     src={blog.image}
-//                     alt={blog.title}
-//                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-//                   />
-//                   <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
-//                 </div>
-
-//                 {/* Content */}
-//                 <div className="p-6">
-//                   <h3 className="text-lg font-bold text-foreground mb-3 line-clamp-2 group-hover:text-primary transition-colors">
-//                     {blog.title}
-//                   </h3>
-
-//                   <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
-//                     {blog.excerpt}
-//                   </p>
-
-//                   <div className="flex flex-wrap gap-2">
-//                     {blog.tags.map((tag) => (
-//                       <span
-//                         key={tag}
-//                         className="px-2 py-1 text-xs rounded-full bg-primary/10 text-primary border border-primary/20"
-//                       >
-//                         #{tag}
-//                       </span>
-//                     ))}
-//                   </div>
-//                 </div>
-//               </div>
-//             ))}
-//           </div>
-
-//           {filteredBlogs.length === 0 && (
-//             <div className="text-center py-12">
-//               <p className="text-muted-foreground">No blogs found with the selected filter.</p>
-//             </div>
-//           )}
-//         </div>
-//       </main>
-
-//       <Footer />
-//     </div>
-//   );
-// };
-
-// export default AllBlogs;
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Sparkles, Filter, Clock, Eye, BookOpen } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Sparkles, Filter, Clock, Eye, BookOpen } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { allBlogs } from '@/components/sections/BlogSection';
@@ -330,15 +213,17 @@ const AllBlogs: React.FC = () => {
 
                   {/* Content */}
                   <div className="relative p-6">
-                    <h3 className="text-lg font-bold text-foreground mb-3 line-clamp-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-purple-400 group-hover:to-pink-400 transition-all duration-300">
-                      {blog.title}
-                    </h3>
+                    <Link to={`/blog/${blog.id}`}>
+                      <h3 className="text-lg font-bold text-foreground mb-3 line-clamp-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-purple-400 group-hover:to-pink-400 transition-all duration-300 cursor-pointer">
+                        {blog.title}
+                      </h3>
+                    </Link>
 
                     <p className="text-sm text-muted-foreground mb-4 line-clamp-3 leading-relaxed">
                       {blog.excerpt}
                     </p>
 
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-2 mb-4">
                       {blog.tags.map((tag) => (
                         <span
                           key={tag}
@@ -348,6 +233,15 @@ const AllBlogs: React.FC = () => {
                         </span>
                       ))}
                     </div>
+
+                    {/* Read more link */}
+                    <Link
+                      to={`/blog/${blog.id}`}
+                      className="flex items-center gap-2 text-sm text-primary opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0"
+                    >
+                      <span className="font-medium">Read article</span>
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </Link>
                   </div>
                 </div>
               </div>
