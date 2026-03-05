@@ -40,13 +40,13 @@ Follow these steps to run the project locally.
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/<your-username>/<repo-name>.git
+git clone https://github.com/himanshmunjal/Himansh-portfolio.git
 ```
 
 ### 2. Navigate to the Project Directory
 
 ```bash
-cd <repo-name>
+cd himansh-portfolio
 ```
 
 ### 3. Install Dependencies
