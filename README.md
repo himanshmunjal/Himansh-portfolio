@@ -1,73 +1,127 @@
-# Welcome to your Lovable project
+# Himansh Munjal — Developer Portfolio
 
-## Project info
+Welcome to my personal developer portfolio. This website showcases my projects, technical skills, and experience as a **Computer Science student specializing in Data Science at VIT Vellore**.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+The portfolio highlights my work in **Full-Stack Development, Artificial Intelligence, Machine Learning, and Software Engineering**, along with selected projects and achievements.
 
-## How can I edit this code?
+🌐 **Live Website:**
+https://himansh-portfolio.vercel.app/
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## Tech Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+This portfolio is built using modern frontend technologies:
 
-Changes made via Lovable will be committed automatically to this repo.
+* React.js
+* TypeScript
+* Vite
+* Tailwind CSS
+* shadcn/ui
+* Vercel (Deployment)
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Features
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+* Modern and clean UI
+* Fully responsive design
+* Projects showcase section
+* Skills and technologies section
+* Contact section for networking
+* Optimized performance with Vite
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## Getting Started
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+Follow these steps to run the project locally.
 
-# Step 3: Install the necessary dependencies.
-npm i
+### 1. Clone the Repository
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
+git clone https://github.com/himanshmunjal/Himansh-portfolio.git
+```
+
+### 2. Navigate to the Project Directory
+
+```bash
+cd himansh-portfolio
+```
+
+### 3. Install Dependencies
+
+```bash
+npm install
+```
+
+### 4. Run the Development Server
+
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The project will start locally at:
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```
+http://localhost:5173
+```
 
-**Use GitHub Codespaces**
+---
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Build for Production
 
-## What technologies are used for this project?
+To create an optimized production build, run:
 
-This project is built with:
+```bash
+npm run build
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
 
-## How can I deploy this project?
+## Project Structure
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+```
+portfolio
+│
+├── public
+│
+├── src
+│   ├── assets
+│   ├── components
+│   ├── hooks
+│   ├── lib
+│   └── pages
+│
+├── index.html
+├── package.json
+└── README.md
+```
 
-## Can I connect a custom domain to my Lovable project?
+---
 
-Yes, you can!
+## Deployment
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+This project is deployed using **Vercel**.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+To deploy your own version:
+
+1. Push the project to GitHub
+2. Import the repository into Vercel
+3. Click **Deploy**
+
+---
+
+## Contact
+
+If you'd like to connect, collaborate, or discuss opportunities:
+
+**Himansh Munjal**
+
+* LinkedIn: (https://www.linkedin.com/in/himansh-munjal/)
+* GitHub: ((https://github.com/himanshmunjal))
+* Email: (munjalhimansh2211@gmail.com)
+
+---
+
+⭐ If you like this project, feel free to **star the repository**.
