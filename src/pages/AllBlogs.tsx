@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { allBlogs } from '@/components/sections/BlogSection';
 import { useInView } from '@/hooks/useInView';
+import SEO from '@/components/common/SEO';
 
 const allTags = ['All', 'Java', 'SpringBoot', 'Backend', 'Coding', 'CleanCode', 'MachineLearning', 'DataScience', 'AI', 'Python'];
 
@@ -81,6 +82,13 @@ const AllBlogs: React.FC = () => {
     : allBlogs.filter(blog => blog.tags.some(tag => tag.toLowerCase().includes(selectedTag.toLowerCase())));
 
   return (
+    <>
+    <SEO
+        title="Blog"
+        description="Technical blog by Himansh Munjal covering AI, Machine Learning, Data Science, and Software Development."
+        url="/blogs/all"
+        keywords={["Himansh Munjal Blog", "AI Blog", "Machine Learning Blog", "Data Science Blog", "Software Development Blog"]}
+      />
     <div className="min-h-screen relative">
       {/* Particle Canvas */}
       <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0" />
@@ -272,6 +280,7 @@ const AllBlogs: React.FC = () => {
         }
       `}</style>
     </div>
+    </>
   );
 };
 

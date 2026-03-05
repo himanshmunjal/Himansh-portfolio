@@ -1,243 +1,86 @@
-// import React, { useState } from 'react';
-// import { Mail, Phone, MapPin, Github, Linkedin, Instagram, Twitter, Send } from 'lucide-react';
-// import { useInView } from '@/hooks/useInView';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Github,
+  Linkedin,
+  Instagram,
+  Twitter,
+  Send,
+  Sparkles,
+  CheckCircle,
+  XCircle,
+} from "lucide-react";
 
-// const contactInfo = [
-//   { icon: Mail, label: 'Email', value: 'himansh.munjal@gmail.com', href: 'mailto:himansh.munjal@gmail.com' },
-//   { icon: Phone, label: 'Phone', value: '+91-XXXXXXXXXX', href: 'tel:+91XXXXXXXXXX' },
-//   { icon: MapPin, label: 'Location', value: 'Vellore, Tamil Nadu, India' },
-// ];
-
-// const socialLinks = [
-//   { icon: Github, href: 'https://github.com', label: 'GitHub' },
-//   { icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn' },
-//   { icon: Instagram, href: 'https://instagram.com', label: 'Instagram' },
-//   { icon: Twitter, href: 'https://twitter.com', label: 'Twitter' },
-// ];
-
-// const ConnectSection: React.FC = () => {
-//   const { ref, isInView } = useInView({ threshold: 0.1 });
-//   const [formData, setFormData] = useState({
-//     name: '',
-//     email: '',
-//     message: '',
-//   });
-
-//   const handleSubmit = (e: React.FormEvent) => {
-//     e.preventDefault();
-//     console.log('Form submitted:', formData);
-//     alert('Thank you for your message! I will get back to you soon.');
-//     setFormData({ name: '', email: '', message: '' });
-//   };
-
-//   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-//     setFormData(prev => ({
-//       ...prev,
-//       [e.target.name]: e.target.value,
-//     }));
-//   };
-
-//   return (
-//     <section id="connect" className="py-20 relative" ref={ref}>
-//       {/* Background */}
-//       <div className="absolute inset-0 bg-[image:var(--gradient-mesh)] opacity-40" />
-      
-//       {/* Gradient Orbs */}
-//       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-//         <div className="gradient-orb gradient-orb-pink w-[400px] h-[400px] -top-10 right-0" style={{ animationDelay: '2s' }} />
-//         <div className="gradient-orb gradient-orb-primary w-[350px] h-[350px] bottom-0 -left-10" style={{ animationDelay: '4s' }} />
-//       </div>
-      
-//       <div className="container mx-auto px-4 relative z-10">
-//         {/* Section Heading */}
-//         <h2 className={`section-heading ${isInView ? 'animate-fade-in' : 'opacity-0'}`}>
-//           <span className="gradient-text-vibrant">Let's Connect</span>
-//         </h2>
-
-//         <div className={`max-w-5xl mx-auto ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.2s' }}>
-//           <div className="animated-gradient-border">
-//             <div className="glass-card p-8 md:p-12 rounded-xl">
-//               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-//                 {/* Contact Info */}
-//                 <div>
-//                   <h3 className="text-xl font-bold mb-6 gradient-text">Get in Touch</h3>
-
-//                   <div className="space-y-6 mb-8">
-//                     {contactInfo.map((info) => (
-//                       <div key={info.label} className="flex items-center gap-4">
-//                         <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/20 to-purple-500/20 flex items-center justify-center">
-//                           <info.icon className="w-5 h-5 text-primary" />
-//                         </div>
-//                         <div>
-//                           <p className="text-sm text-muted-foreground">{info.label}</p>
-//                           {info.href ? (
-//                             <a
-//                               href={info.href}
-//                               className="text-foreground hover:text-primary transition-colors"
-//                             >
-//                               {info.value}
-//                             </a>
-//                           ) : (
-//                             <p className="text-foreground">{info.value}</p>
-//                           )}
-//                         </div>
-//                       </div>
-//                     ))}
-//                   </div>
-
-//                   {/* Social Links */}
-//                   <div>
-//                     <p className="text-sm text-muted-foreground mb-4">Follow me on</p>
-//                     <div className="flex items-center gap-4">
-//                       {socialLinks.map((social) => (
-//                         <a
-//                           key={social.label}
-//                           href={social.href}
-//                           target="_blank"
-//                           rel="noopener noreferrer"
-//                           className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/10 to-purple-500/10 flex items-center justify-center hover:from-primary/20 hover:to-purple-500/20 transition-colors group"
-//                           aria-label={social.label}
-//                         >
-//                           <social.icon className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
-//                         </a>
-//                       ))}
-//                     </div>
-//                   </div>
-//                 </div>
-
-//                 {/* Contact Form */}
-//                 <div>
-//                   <h3 className="text-xl font-bold mb-6 gradient-text">Send a Message</h3>
-
-//                   <form onSubmit={handleSubmit} className="space-y-6">
-//                     <div>
-//                       <label htmlFor="name" className="block text-sm text-muted-foreground mb-2">
-//                         Name
-//                       </label>
-//                       <input
-//                         type="text"
-//                         id="name"
-//                         name="name"
-//                         value={formData.name}
-//                         onChange={handleChange}
-//                         required
-//                         className="w-full px-4 py-3 rounded-lg bg-secondary/50 border border-border/50 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all"
-//                         placeholder="Your name"
-//                       />
-//                     </div>
-
-//                     <div>
-//                       <label htmlFor="email" className="block text-sm text-muted-foreground mb-2">
-//                         Email
-//                       </label>
-//                       <input
-//                         type="email"
-//                         id="email"
-//                         name="email"
-//                         value={formData.email}
-//                         onChange={handleChange}
-//                         required
-//                         className="w-full px-4 py-3 rounded-lg bg-secondary/50 border border-border/50 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all"
-//                         placeholder="your.email@example.com"
-//                       />
-//                     </div>
-
-//                     <div>
-//                       <label htmlFor="message" className="block text-sm text-muted-foreground mb-2">
-//                         Message
-//                       </label>
-//                       <textarea
-//                         id="message"
-//                         name="message"
-//                         value={formData.message}
-//                         onChange={handleChange}
-//                         required
-//                         rows={4}
-//                         className="w-full px-4 py-3 rounded-lg bg-secondary/50 border border-border/50 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all resize-none"
-//                         placeholder="Your message..."
-//                       />
-//                     </div>
-
-//                     <button
-//                       type="submit"
-//                       className="w-full inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg gradient-button-vibrant hover:opacity-90 transition-all glow-vibrant"
-//                     >
-//                       <Send className="w-5 h-5" />
-//                       <span>Send Message</span>
-//                     </button>
-//                   </form>
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </section>
-//   );
-// };
-
-// export default ConnectSection;
-
-import React, { useState, useEffect, useRef } from 'react';
-import { Mail, Phone, MapPin, Github, Linkedin, Instagram, Twitter, Send, Sparkles, MessageCircle, Heart } from 'lucide-react';
-import { useInView } from '@/hooks/useInView';
-
+import { useInView } from "@/hooks/useInView";
+import emailjs from "@emailjs/browser";
 const contactInfo = [
-  { 
-    icon: Mail, 
-    label: 'Email', 
-    value: 'munjalhimansh2211@gmail.com', 
-    href: 'mailto:munjalhimansh2211@gmail.com',
-    color: 'from-blue-500 to-cyan-500',
+  {
+    icon: Mail,
+    label: "Email",
+    value: "munjalhimansh2211@gmail.com",
+    href: "mailto:munjalhimansh2211@gmail.com",
+    color: "from-blue-500 to-cyan-500",
   },
-  { 
-    icon: Phone, 
-    label: 'Phone', 
-    value: '+91-9812445531', 
-    href: 'tel:+919812445531',
-    color: 'from-emerald-500 to-teal-500',
+  {
+    icon: Phone,
+    label: "Phone",
+    value: "+91-9812445531",
+    href: "tel:+919812445531",
+    color: "from-emerald-500 to-teal-500",
   },
-  { 
-    icon: MapPin, 
-    label: 'Location', 
-    value: 'Vellore, Tamil Nadu, India',
-    color: 'from-purple-500 to-pink-500',
+  {
+    icon: MapPin,
+    label: "Location",
+    value: "Vellore, Tamil Nadu, India",
+    color: "from-purple-500 to-pink-500",
   },
 ];
 
 const socialLinks = [
-  { icon: Github, href: 'https://github.com', label: 'GitHub', color: 'from-gray-500 to-gray-700' },
-  { icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn', color: 'from-blue-500 to-blue-600' },
-  { icon: Instagram, href: 'https://instagram.com', label: 'Instagram', color: 'from-pink-500 to-purple-500' },
-  { icon: Twitter, href: 'https://twitter.com', label: 'Twitter', color: 'from-sky-400 to-blue-500' },
+  { icon: Github, href: "https://github.com", label: "GitHub", color: "from-gray-500 to-gray-700" },
+  { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn", color: "from-blue-500 to-blue-600" },
+  { icon: Instagram, href: "https://instagram.com", label: "Instagram", color: "from-pink-500 to-purple-500" },
+  { icon: Twitter, href: "https://twitter.com", label: "Twitter", color: "from-sky-400 to-blue-500" },
 ];
 
 const ConnectSection: React.FC = () => {
   const { ref, isInView } = useInView({ threshold: 0.1 });
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
-  });
-  const [focusedField, setFocusedField] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [isSending, setIsSending] = useState(false);
+  const [toast, setToast] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
+
+  /* ==============================
+     AUTO CLOSE TOAST
+  ============================== */
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
+    if (!toast) return;
+    const timer = setTimeout(() => {
+      setToast(null);
+    }, 4000);
+    return () => clearTimeout(timer);
+  }, [toast]);
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  // Particle animation
+  /* ==============================
+     PARTICLES
+  ============================== */
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     canvas.width = window.innerWidth;
@@ -254,9 +97,9 @@ const ConnectSection: React.FC = () => {
     }
 
     const colors = [
-      'rgba(236, 72, 153, 0.6)',
-      'rgba(168, 85, 247, 0.6)',
-      'rgba(59, 130, 246, 0.6)',
+      "rgba(236,72,153,0.6)",
+      "rgba(168,85,247,0.6)",
+      "rgba(59,130,246,0.6)",
     ];
 
     const particles: Particle[] = Array.from({ length: 30 }, () => ({
@@ -274,56 +117,67 @@ const ConnectSection: React.FC = () => {
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      particles.forEach(particle => {
+      particles.forEach((particle) => {
         particle.x += particle.speedX;
         particle.y += particle.speedY;
 
         if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1;
         if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1;
 
-        // Draw particle
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
         ctx.fillStyle = particle.color;
-        ctx.shadowBlur = 20;
-        ctx.shadowColor = particle.color;
         ctx.fill();
-        ctx.shadowBlur = 0;
-
-        // Draw connections
-        particles.forEach(otherParticle => {
-          const dx = particle.x - otherParticle.x;
-          const dy = particle.y - otherParticle.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < 150) {
-            ctx.beginPath();
-            ctx.moveTo(particle.x, particle.y);
-            ctx.lineTo(otherParticle.x, otherParticle.y);
-            ctx.strokeStyle = `rgba(168, 85, 247, ${0.1 * (1 - distance / 150)})`;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
-        });
       });
 
       animationFrameId = requestAnimationFrame(animate);
     };
 
     animate();
-
     return () => cancelAnimationFrame(animationFrameId);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  /* ==============================
+     HANDLERS
+  ============================== */
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    alert('Thank you for your message! I will get back to you soon.');
-    setFormData({ name: '', email: '', message: '' });
-  };
+    setIsSending(true);
+    
+    try {
+      // Use the emailjs object imported at the top of your file
+      await emailjs.send(
+        // Replace with your EmailJS public key
+        "service_g02b7qp",
+        "template_7hopjmh",
+       {
+           from_name: formData.name,
+           reply_to: formData.email,
+           message: formData.message,
+         },
+       "xc6Qd4zsm5eP2i4Zf"
+    );
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData(prev => ({
+    setToast({
+      type: "success",
+      message: `Thanks ${formData.name}! Message sent successfully.`,
+    });
+
+    setFormData({ name: "", email: "", message: "" });
+  } catch (error) {
+    console.error("EmailJS Error:", error);
+    setToast({
+      type: "error",
+      message: "Failed to send message. Please try again.",
+    });
+  } finally {
+    setIsSending(false);
+  }
+};
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
@@ -331,68 +185,37 @@ const ConnectSection: React.FC = () => {
 
   return (
     <section id="connect" className="py-20 relative overflow-hidden" ref={ref}>
-      {/* Particle Canvas */}
-      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-0" />
+      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" />
 
-      {/* Background */}
-      <div className="absolute inset-0 bg-[image:var(--gradient-mesh)] opacity-40" />
-      
-      {/* Dynamic Gradient Orbs */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div 
-          className="gradient-orb gradient-orb-pink w-[600px] h-[600px] -top-40 right-0 blur-3xl"
-          style={{ 
-            animationDelay: '2s',
-            transform: `translate(${-mousePosition.x * 0.03}px, ${-mousePosition.y * 0.03}px)`,
-            transition: 'transform 0.3s ease-out',
-          }}
-        />
-        <div 
-          className="gradient-orb gradient-orb-primary w-[550px] h-[550px] bottom-0 -left-40 blur-3xl"
-          style={{ 
-            animationDelay: '4s',
-            transform: `translate(${mousePosition.x * 0.025}px, ${mousePosition.y * 0.025}px)`,
-            transition: 'transform 0.3s ease-out',
-          }}
-        />
-      </div>
-      
       <div className="container mx-auto px-4 relative z-10">
-        {/* Section Heading */}
-        <div className={`text-center mb-16 ${isInView ? 'animate-fade-in' : 'opacity-0'}`}>
-          <div className="inline-flex items-center gap-3 mb-4">
-            <div className="h-px w-12 bg-gradient-to-r from-transparent via-purple-500 to-transparent animate-pulse" />
-            <MessageCircle className="w-6 h-6 text-primary animate-bounce" />
-            <Heart className="w-6 h-6 text-primary animate-bounce" style={{ animationDelay: '0.2s' }} />
-            <div className="h-px w-12 bg-gradient-to-r from-transparent via-pink-500 to-transparent animate-pulse" />
-          </div>
-          
-          <h2 className="section-heading relative inline-block">
-            <span className="gradient-text-vibrant relative">
-              Let's Connect
-              <span className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-full animate-gradient-x" />
-            </span>
+        {/* HEADER */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold gradient-text-vibrant">
+            Let's Connect
           </h2>
-          
-          <p className="mt-6 text-muted-foreground max-w-2xl mx-auto">
+          <p className="mt-4 text-gray-400">
             Have a project in mind or just want to chat? I'd love to hear from you!
           </p>
         </div>
 
+        {/* BOXED DESIGN START */}
         <div className={`max-w-5xl mx-auto ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.2s' }}>
           <div className="group relative">
             {/* Animated border glow */}
             <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 opacity-75 blur-xl group-hover:opacity-100 transition-opacity duration-500" />
             
-            <div className="relative glass-card p-8 md:p-12 rounded-2xl backdrop-blur-xl bg-background/40 border border-primary/20">
+            <div className="relative glass-card p-8 md:p-12 rounded-2xl backdrop-blur-2xl 
+            bg-gradient-to-br from-[#1a1a2e]/85 via-[#16213e]/85 to-[#0f172a]/85
+            border border-purple-500/30 shadow-[0_0_40px_rgba(168,85,247,0.15)] overflow-hidden">
+              
               {/* Shimmer effect */}
               <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent rounded-2xl" />
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 relative z-10">
-                {/* Contact Info */}
+                {/* CONTACT INFO */}
                 <div>
                   <div className="flex items-center gap-3 mb-8">
-                    <Sparkles className="w-6 h-6 text-primary animate-pulse" />
+                    <Sparkles className="w-6 h-6 text-purple-400 animate-pulse" />
                     <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                       Get in Touch
                     </h3>
@@ -416,16 +239,16 @@ const ConnectSection: React.FC = () => {
                         </div>
                         
                         <div className="flex-1">
-                          <p className="text-sm text-muted-foreground mb-1">{info.label}</p>
+                          <p className="text-sm text-gray-400 mb-1">{info.label}</p>
                           {info.href ? (
                             <a
                               href={info.href}
-                              className="text-foreground hover:text-transparent hover:bg-gradient-to-r hover:bg-clip-text hover:from-purple-400 hover:to-pink-400 transition-all duration-300 font-medium"
+                              className="text-white hover:text-transparent hover:bg-gradient-to-r hover:bg-clip-text hover:from-purple-400 hover:to-pink-400 transition-all duration-300 font-medium"
                             >
                               {info.value}
                             </a>
                           ) : (
-                            <p className="text-foreground font-medium">{info.value}</p>
+                            <p className="text-white font-medium">{info.value}</p>
                           )}
                         </div>
                       </div>
@@ -434,8 +257,8 @@ const ConnectSection: React.FC = () => {
 
                   {/* Social Links */}
                   <div>
-                    <p className="text-sm text-muted-foreground mb-4 flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-primary" />
+                    <p className="text-sm text-gray-400 mb-4 flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-purple-400" />
                       Follow me on
                     </p>
                     <div className="flex items-center gap-4">
@@ -456,7 +279,7 @@ const ConnectSection: React.FC = () => {
                           <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${social.color} opacity-0 group-hover/social:opacity-50 blur-lg transition-opacity duration-300`} />
                           
                           {/* Button */}
-                          <div className={`relative w-12 h-12 rounded-xl bg-gradient-to-br ${social.color} opacity-20 group-hover/social:opacity-100 flex items-center justify-center transition-all duration-300 transform group-hover/social:scale-110 group-hover/social:rotate-12`}>
+                          <div className={`relative w-12 h-12 rounded-xl bg-gradient-to-br ${social.color} opacity-70 group-hover/social:opacity-100 flex items-center justify-center transition-all duration-300 transform group-hover/social:scale-110 group-hover/social:rotate-12`}>
                             <social.icon className="w-5 h-5 text-white" />
                           </div>
                         </a>
@@ -465,10 +288,10 @@ const ConnectSection: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Contact Form */}
+                {/* FORM */}
                 <div>
                   <div className="flex items-center gap-3 mb-8">
-                    <Send className="w-6 h-6 text-primary animate-pulse" />
+                    <Send className="w-6 h-6 text-teal-400 animate-pulse" />
                     <h3 className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
                       Send a Message
                     </h3>
@@ -476,9 +299,9 @@ const ConnectSection: React.FC = () => {
 
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                      <label htmlFor="name" className="block text-sm text-muted-foreground mb-2 flex items-center gap-2">
+                      <label htmlFor="name" className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
                         Name
-                        {focusedField === 'name' && <Sparkles className="w-3 h-3 text-primary animate-pulse" />}
+                        {focusedField === 'name' && <Sparkles className="w-3 h-3 text-purple-400 animate-pulse" />}
                       </label>
                       <div className="relative group/input">
                         <input
@@ -490,7 +313,7 @@ const ConnectSection: React.FC = () => {
                           onFocus={() => setFocusedField('name')}
                           onBlur={() => setFocusedField(null)}
                           required
-                          className="w-full px-4 py-3 rounded-xl bg-background/50 border-2 border-primary/20 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:bg-background/70 transition-all backdrop-blur-sm"
+                          className="w-full px-4 py-3 rounded-xl bg-white/10 border border-purple-400/30 text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-400 focus:bg-white/15 transition-all backdrop-blur-md"
                           placeholder="Your name"
                         />
                         {focusedField === 'name' && (
@@ -500,9 +323,9 @@ const ConnectSection: React.FC = () => {
                     </div>
 
                     <div>
-                      <label htmlFor="email" className="block text-sm text-muted-foreground mb-2 flex items-center gap-2">
+                      <label htmlFor="email" className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
                         Email
-                        {focusedField === 'email' && <Sparkles className="w-3 h-3 text-primary animate-pulse" />}
+                        {focusedField === 'email' && <Sparkles className="w-3 h-3 text-blue-400 animate-pulse" />}
                       </label>
                       <div className="relative group/input">
                         <input
@@ -514,7 +337,7 @@ const ConnectSection: React.FC = () => {
                           onFocus={() => setFocusedField('email')}
                           onBlur={() => setFocusedField(null)}
                           required
-                          className="w-full px-4 py-3 rounded-xl bg-background/50 border-2 border-primary/20 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:bg-background/70 transition-all backdrop-blur-sm"
+                          className="w-full px-4 py-3 rounded-xl bg-white/10 border border-purple-400/30 text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-400 focus:bg-white/15 transition-all backdrop-blur-md"
                           placeholder="your.email@example.com"
                         />
                         {focusedField === 'email' && (
@@ -524,9 +347,9 @@ const ConnectSection: React.FC = () => {
                     </div>
 
                     <div>
-                      <label htmlFor="message" className="block text-sm text-muted-foreground mb-2 flex items-center gap-2">
+                      <label htmlFor="message" className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
                         Message
-                        {focusedField === 'message' && <Sparkles className="w-3 h-3 text-primary animate-pulse" />}
+                        {focusedField === 'message' && <Sparkles className="w-3 h-3 text-teal-400 animate-pulse" />}
                       </label>
                       <div className="relative group/input">
                         <textarea
@@ -538,7 +361,7 @@ const ConnectSection: React.FC = () => {
                           onBlur={() => setFocusedField(null)}
                           required
                           rows={4}
-                          className="w-full px-4 py-3 rounded-xl bg-background/50 border-2 border-primary/20 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:bg-background/70 transition-all resize-none backdrop-blur-sm"
+                          className="w-full px-4 py-3 rounded-xl bg-white/10 border border-purple-400/30 text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-400 focus:bg-white/15 transition-all resize-none backdrop-blur-md"
                           placeholder="Your message..."
                         />
                         {focusedField === 'message' && (
@@ -549,17 +372,22 @@ const ConnectSection: React.FC = () => {
 
                     <button
                       type="submit"
+                      disabled={isSending}
                       className="group/button relative w-full overflow-hidden"
                     >
-                      {/* Glow effect */}
                       <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 opacity-75 blur-lg group-hover/button:opacity-100 transition-opacity duration-300" />
-                      
-                      {/* Button */}
-                      <div className="relative flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 text-white font-semibold transform group-hover/button:scale-105 transition-all duration-300">
-                        <Send className="w-5 h-5 group-hover/button:translate-x-1 transition-transform" />
-                        <span>Send Message</span>
-                        
-                        {/* Shimmer */}
+                      <div className="relative flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 text-white font-semibold transform group-hover/button:scale-[1.02] transition-all duration-300">
+                        {isSending ? (
+                          <>
+                            <span className="animate-spin border-2 border-white border-t-transparent rounded-full w-5 h-5"></span>
+                            <span>Sending...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Send className="w-5 h-5 group-hover/button:translate-x-1 transition-transform" />
+                            <span>Send Message</span>
+                          </>
+                        )}
                         <div className="absolute inset-0 -translate-x-full group-hover/button:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
                       </div>
                     </button>
@@ -569,22 +397,28 @@ const ConnectSection: React.FC = () => {
             </div>
           </div>
         </div>
+        {/* BOXED DESIGN END */}
       </div>
 
-      <style>{`
-        @keyframes gradient-x {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        .animate-gradient-x {
-          background-size: 200% auto;
-          animation: gradient-x 3s ease infinite;
-        }
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
-        }
-      `}</style>
+      {/* TOAST */}
+      {toast && (
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
+          <div
+            className={`flex items-center gap-3 px-5 py-3 rounded-xl backdrop-blur-xl border shadow-xl ${
+              toast.type === "success"
+                ? "bg-green-500/20 border-green-400/40"
+                : "bg-red-500/20 border-red-400/40"
+            }`}
+          >
+            {toast.type === "success" ? (
+              <CheckCircle className="text-green-400 w-5 h-5" />
+            ) : (
+              <XCircle className="text-red-400 w-5 h-5" />
+            )}
+            <p className="text-white text-sm">{toast.message}</p>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

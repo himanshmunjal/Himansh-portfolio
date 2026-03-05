@@ -1,161 +1,9 @@
-// import React from 'react';
-// import { Link } from 'react-router-dom';
-// import { ArrowRight } from 'lucide-react';
-// import { useInView } from '@/hooks/useInView';
-
-// export const allProjects = [
-//   {
-//     id: 1,
-//     title: 'Taxi Fare Prediction System',
-//     description: 'End-to-end ML pipeline for taxi fare prediction with geospatial & temporal feature engineering, workflow orchestration, and experiment tracking for real-time deployment readiness.',
-//     tech: ['Python', 'Pandas', 'NumPy', 'Scikit-Learn', 'XGBoost', 'CatBoost', 'Prefect', 'MLflow', 'FastAPI', 'Docker'],
-//   },
-//   {
-//     id: 2,
-//     title: 'Job Fit & Skill Gap Intelligence System',
-//     description: 'AI-driven system evaluating resume–job fit using NLP and ML, generating job readiness scores and personalized skill gap recommendations.',
-//     tech: ['Python', 'spaCy', 'TF-IDF', 'Logistic Regression', 'XGBoost', 'PostgreSQL', 'Streamlit'],
-//     ongoing: true,
-//   },
-//   {
-//     id: 3,
-//     title: 'DevConnect – Techies Social Platform',
-//     description: 'Full-stack social platform for developers featuring authentication, profiles, project sharing, search, and image uploads with a React + Golang backend.',
-//     tech: ['React.js', 'Tailwind CSS', 'Golang', 'Gin', 'GORM', 'PostgreSQL', 'JWT Auth', 'Axios'],
-//     ongoing: true,
-//   },
-//   {
-//     id: 4,
-//     title: 'Credit Card Fraud Detection',
-//     description: 'High-accuracy fraud detection system using advanced ML on imbalanced datasets, with end-to-end preprocessing, feature engineering, and real-time risk prediction.',
-//     tech: ['Python', 'Pandas', 'NumPy', 'Scikit-learn', 'Matplotlib', 'Seaborn', 'Jupyter Notebook'],
-//   },
-//   {
-//     id: 5,
-//     title: 'Airport Management Web – Flight Management & Booking System',
-//     description: 'Role-based full-stack flight management system where admins manage flights/schedules and users can search, book flights, and track baggage. Secure JWT auth with React + Golang backend.',
-//     tech: ['React.js', 'Tailwind CSS', 'Golang', 'Gin', 'GORM', 'PostgreSQL', 'JWT Authentication'],
-//   },
-//   {
-//     id: 6,
-//     title: 'RetailPulse – Sales & Profit Intelligence Dashboard',
-//     description: 'End-to-end Power BI dashboard analyzing sales, profitability, and customer trends using a star-schema data model with advanced DAX calculations.',
-//     tech: ['Power BI', 'DAX', 'Power Query', 'Data Modeling'],
-//   },
-//   {
-//     id: 7,
-//     title: 'FinSight – Financial Performance & Forecasting Dashboard',
-//     description: 'Financial analytics dashboard tracking revenue, expenses, EBITDA, and cash flow with budget vs. actual variance analysis and automated forecasting.',
-//     tech: ['Power BI', 'DAX', 'Power Query', 'Financial Modeling'],
-//   },
-//   {
-//     id: 8,
-//     title: 'Sentiment Analysis – NLP-Based Text Classification System',
-//     description: 'End-to-end sentiment analysis system classifying user reviews using NLP preprocessing and Random Forest, deployed as a real-time REST API via FastAPI.',
-//     tech: ['Python', 'NLTK', 'Scikit-learn', 'Random Forest', 'FastAPI', 'REST APIs'],
-//   },
-//   {
-//     id: 9,
-//     title: 'Gesture-Controlled Snake Game – Computer Vision Interface',
-//     description: 'Real-time Snake game controlled via hand gestures using MediaPipe hand tracking and OpenCV, mapped to Pygame game controls for a touchless experience.',
-//     tech: ['Python', 'MediaPipe', 'OpenCV', 'Pygame', 'NumPy'],
-//   },
-// ];
-
-// const ProjectCard: React.FC<{
-//   project: typeof allProjects[0];
-//   index: number;
-//   isInView: boolean;
-// }> = ({ project, index, isInView }) => {
-//   return (
-//     <div
-//       className={`glass-card-hover p-6 rounded-xl group ${isInView ? 'animate-fade-in' : 'opacity-0'}`}
-//       style={{ animationDelay: `${0.2 + index * 0.1}s` }}
-//     >
-//       <div className="flex items-start justify-between mb-4">
-//         <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
-//           {project.title}
-//         </h3>
-//         {project.ongoing && (
-//           <span className="px-2 py-1 text-xs font-medium rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
-//             Ongoing
-//           </span>
-//         )}
-//       </div>
-
-//       <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
-//         {project.description}
-//       </p>
-
-//       <div className="flex flex-wrap gap-2">
-//         {project.tech.slice(0, 5).map((t) => (
-//           <span key={t} className="tech-badge">
-//             {t}
-//           </span>
-//         ))}
-//         {project.tech.length > 5 && (
-//           <span className="tech-badge">+{project.tech.length - 5}</span>
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
-// const ProjectsSection: React.FC = () => {
-//   const { ref, isInView } = useInView({ threshold: 0.1 });
-//   const featuredProjects = allProjects.slice(0, 4);
-
-//   return (
-//     <section id="projects" className="py-20 relative" ref={ref}>
-//       {/* Background */}
-//       <div className="absolute inset-0 bg-[image:var(--gradient-mesh)] opacity-30" />
-      
-//       {/* Gradient Orbs */}
-//       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-//         <div className="gradient-orb gradient-orb-pink w-[350px] h-[350px] top-20 -right-20" style={{ animationDelay: '2s' }} />
-//         <div className="gradient-orb gradient-orb-purple w-[300px] h-[300px] bottom-20 -left-10" style={{ animationDelay: '4s' }} />
-//       </div>
-      
-//       <div className="container mx-auto px-4 relative z-10">
-//         {/* Section Heading */}
-//         <h2 className={`section-heading ${isInView ? 'animate-fade-in' : 'opacity-0'}`}>
-//           <span className="gradient-text-vibrant">My Projects</span>
-//         </h2>
-
-//         {/* Projects Grid */}
-//         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto mb-12">
-//           {featuredProjects.map((project, index) => (
-//             <ProjectCard
-//               key={project.id}
-//               project={project}
-//               index={index}
-//               isInView={isInView}
-//             />
-//           ))}
-//         </div>
-
-//         {/* View All Button */}
-//         <div className={`text-center ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.6s' }}>
-//           <Link
-//             to="/projects/all"
-//             className="inline-flex items-center gap-2 px-8 py-4 rounded-xl gradient-border-card font-semibold text-foreground hover:text-primary transition-all group"
-//           >
-//             <span className="relative z-10">View All Projects</span>
-//             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform relative z-10" />
-//           </Link>
-//         </div>
-//       </div>
-//     </section>
-//   );
-// };
-
-// export default ProjectsSection;
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles, Rocket, Code, Database, Zap, ExternalLink, Github, Star } from 'lucide-react';
 import { useInView } from '@/hooks/useInView';
 import { link } from 'fs';
+import SEO from '../common/SEO';
 
 export const allProjects = [
   {
@@ -441,6 +289,13 @@ const ProjectsSection: React.FC = () => {
   }, []);
 
   return (
+    <>
+    <SEO
+        title="Projects"
+        description="Explore AI, Machine Learning, Data Science, and Full Stack projects built by Himansh Munjal."
+        url="/projects/all"
+        keywords={["AI projects", "Machine Learning projects", "React projects", "Golang projects", "Data Science projects", "Himansh Munjal projects", "Power BI dashboards", "NLP projects"]}
+      />
     <section id="projects" className="py-20 relative overflow-hidden" ref={ref}>
       {/* Particle Canvas */}
       <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-0" />
@@ -540,6 +395,7 @@ const ProjectsSection: React.FC = () => {
         }
       `}</style>
     </section>
+    </>
   );
 };
 

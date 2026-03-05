@@ -1,94 +1,3 @@
-// import React from 'react';
-// import { Link } from 'react-router-dom';
-// import { ArrowLeft, Github } from 'lucide-react';
-// import Header from '@/components/Header';
-// import Footer from '@/components/Footer';
-// import { allProjects } from '@/components/sections/ProjectsSection';
-// import { useInView } from '@/hooks/useInView';
-
-// const AllProjects: React.FC = () => {
-//   const { ref, isInView } = useInView({ threshold: 0.05 });
-
-//   return (
-//     <div className="min-h-screen">
-//       <Header />
-
-//       <main className="pt-24 pb-20" ref={ref}>
-//         <div className="container mx-auto px-4">
-//           {/* Back Link */}
-//           <Link
-//             to="/"
-//             className={`inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8 ${isInView ? 'animate-fade-in' : 'opacity-0'}`}
-//           >
-//             <ArrowLeft className="w-4 h-4" />
-//             Back to Home
-//           </Link>
-
-//           {/* Section Heading */}
-//           <h1 className={`text-4xl md:text-5xl font-bold mb-4 ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.1s' }}>
-//             <span className="gradient-text">All Projects</span>
-//           </h1>
-
-//           <p className={`text-muted-foreground mb-12 max-w-2xl ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.2s' }}>
-//             A collection of my work spanning data science, machine learning, full-stack development, and data visualization.
-//           </p>
-
-//           {/* Projects Grid */}
-//           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-//             {allProjects.map((project, index) => (
-//               <div
-//                 key={project.id}
-//                 className={`glass-card-hover p-6 rounded-xl group ${isInView ? 'animate-fade-in' : 'opacity-0'}`}
-//                 style={{ animationDelay: `${0.2 + index * 0.05}s` }}
-//               >
-//                 <div className="flex items-start justify-between mb-4">
-//                   <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
-//                     {project.title}
-//                   </h3>
-//                   {project.ongoing && (
-//                     <span className="px-2 py-1 text-xs font-medium rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 whitespace-nowrap ml-2">
-//                       Ongoing
-//                     </span>
-//                   )}
-//                 </div>
-
-//                 <p className="text-sm text-muted-foreground mb-4">
-//                   {project.description}
-//                 </p>
-
-//                 <div className="flex flex-wrap gap-2">
-//                   {project.tech.map((t) => (
-//                     <span key={t} className="tech-badge">
-//                       {t}
-//                     </span>
-//                   ))}
-//                 </div>
-//               </div>
-//             ))}
-//           </div>
-
-//           {/* GitHub Link */}
-//           <div className={`text-center ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.8s' }}>
-//             <a
-//               href="https://github.com"
-//               target="_blank"
-//               rel="noopener noreferrer"
-//               className="inline-flex items-center gap-3 px-8 py-4 rounded-xl gradient-button hover:opacity-90 transition-all shadow-lg shadow-primary/25"
-//             >
-//               <Github className="w-5 h-5" />
-//               View More on GitHub
-//             </a>
-//           </div>
-//         </div>
-//       </main>
-
-//       <Footer />
-//     </div>
-//   );
-// };
-
-// export default AllProjects;
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Github, Sparkles, Rocket, Code, Zap, Star, ExternalLink } from 'lucide-react';
@@ -96,6 +5,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { allProjects } from '@/components/sections/ProjectsSection';
 import { useInView } from '@/hooks/useInView';
+import SEO from '@/components/common/SEO';
 
 const AllProjects: React.FC = () => {
   const { ref, isInView } = useInView({ threshold: 0.05 });
@@ -179,6 +89,13 @@ const AllProjects: React.FC = () => {
   }, []);
 
   return (
+    <>
+    <SEO
+        title="Projects"
+        description="Explore AI, Machine Learning, Data Science, and Full Stack projects built by Himansh Munjal."
+        url="/projects/all"
+        keywords={["AI projects", "Machine Learning projects", "React projects"]}
+      />
     <div className="min-h-screen relative">
       {/* Particle Canvas */}
       <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0" />
@@ -195,7 +112,7 @@ const AllProjects: React.FC = () => {
             transform: `translate(${-mousePosition.x * 0.02}px, ${-mousePosition.y * 0.02}px)`,
             transition: 'transform 0.3s ease-out',
           }}
-        />
+          />
         <div 
           className="gradient-orb gradient-orb-purple w-[450px] h-[450px] bottom-20 -left-40 blur-3xl"
           style={{ 
@@ -203,7 +120,7 @@ const AllProjects: React.FC = () => {
             transform: `translate(${mousePosition.x * 0.015}px, ${mousePosition.y * 0.015}px)`,
             transition: 'transform 0.3s ease-out',
           }}
-        />
+          />
       </div>
 
       <Header />
@@ -214,7 +131,7 @@ const AllProjects: React.FC = () => {
           <Link
             to="/"
             className={`group inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8 ${isInView ? 'animate-fade-in' : 'opacity-0'}`}
-          >
+            >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             Back to Home
           </Link>
@@ -261,6 +178,7 @@ const AllProjects: React.FC = () => {
 
             <div className="group glass-card p-4 rounded-xl border border-primary/20 hover:border-primary/40 transition-all">
               <div className="flex items-center gap-3 mb-2">
+            
                 <Code className="w-5 h-5 text-blue-400 group-hover:rotate-12 transition-transform" />
                 <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
                   {new Set(allProjects.flatMap(p => p.tech)).size}
@@ -402,6 +320,7 @@ const AllProjects: React.FC = () => {
         }
       `}</style>
     </div>
+    </>
   );
 };
 

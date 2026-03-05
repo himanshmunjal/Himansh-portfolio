@@ -10,7 +10,7 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as Sonner } from 'sonner';
-import BlogPost from './pages/Blogpost';
+import BlogPost from './pages/BlogPost';
 
 
 function App() {

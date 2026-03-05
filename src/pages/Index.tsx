@@ -12,6 +12,11 @@ import ProjectsSection from '@/components/sections/ProjectsSection';
 import BlogSection from '@/components/sections/BlogSection';
 import ConnectSection from '@/components/sections/ConnectSection';
 import StrengthsSection from '@/components/sections/StrengthsSection'
+import SectionDivider from '@/components/common/SectionDivider';
+import SectionDivider1 from '@/components/common/SectionDivider1';
+import SectionDivider2 from '@/components/common/SectionDivider2';
+import SectionDivider4 from '@/components/common/SectionDivider4';
+import SEO from "@/components/common/SEO";
 
 const Index: React.FC = () => {
   const [showDoorAnimation, setShowDoorAnimation] = useState(true);
@@ -31,6 +36,11 @@ const Index: React.FC = () => {
 
   return (
     <>
+    <SEO
+        title="Home"
+        description="Himansh Munjal — AI Engineer, Data Science student at VIT Vellore. Explore projects in Machine Learning, Deep Learning, NLP, and Full Stack Development."
+        url="/" image={undefined}     
+        keywords={["Himansh Munjal", "Portfolio", "Data Scientist"]} />
       {showDoorAnimation && <DoorAnimation onComplete={handleAnimationComplete} />}
       
       <div className={`min-h-screen ${showDoorAnimation ? 'opacity-0' : 'opacity-100 transition-opacity duration-500'}`}>
@@ -38,13 +48,17 @@ const Index: React.FC = () => {
         
         <main>
           <HeroSection />
+          <SectionDivider1 />
           <AboutSection />
           <TechStrip />
           <JourneySection />
+          <SectionDivider color='purple'/>
           <SkillsSection />
           <QuoteSection />
           <ProjectsSection />
+          <SectionDivider2 />
           <BlogSection />
+          <SectionDivider4/>
           <StrengthsSection />
           <ConnectSection />
         </main>
