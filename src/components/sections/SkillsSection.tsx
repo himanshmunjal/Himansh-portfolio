@@ -488,10 +488,10 @@ const SkillsSection: React.FC = () => {
     const particles: FloatingParticle[] = Array.from({ length: 30 }, () => ({
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
-      size: Math.random() * 4 + 2,
-      speedX: (Math.random() - 0.5) * 0.3,
-      speedY: (Math.random() - 0.5) * 0.3,
-      opacity: Math.random() * 0.4 + 0.2,
+      size: Math.random() * 2 + 1,
+      speedX: (Math.random() - 0.5) * 0.5,
+      speedY: (Math.random() - 0.5) * 0.5,
+      opacity: Math.random() * 0.5 + 0.3,
       color: colors[Math.floor(Math.random() * colors.length)],
     }));
     setFloatingParticles(particles);
@@ -524,11 +524,30 @@ const SkillsSection: React.FC = () => {
           newX = Math.max(0, Math.min(canvas.width, newX));
           newY = Math.max(0, Math.min(canvas.height, newY));
 
+          // Draw connections between particles (neural network effect)
+          prevParticles.forEach((otherParticle) => {
+            const dx = newX - otherParticle.x;
+            const dy = newY - otherParticle.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            // Draw line if particles are close enough
+            if (distance < 150) {
+              ctx.beginPath();
+              ctx.moveTo(newX, newY);
+              ctx.lineTo(otherParticle.x, otherParticle.y);
+              // Line opacity depends on distance
+              const lineOpacity = 0.15 * (1 - distance / 150) * particle.opacity;
+              ctx.strokeStyle = particle.color.replace(/[\d.]+\)$/g, `${lineOpacity})`);
+              ctx.lineWidth = 1;
+              ctx.stroke();
+            }
+          });
+
           // Draw particle with glow
           ctx.beginPath();
           ctx.arc(newX, newY, particle.size, 0, Math.PI * 2);
           ctx.fillStyle = particle.color;
-          ctx.shadowBlur = 15;
+          ctx.shadowBlur = 10;
           ctx.shadowColor = particle.color;
           ctx.fill();
           ctx.shadowBlur = 0;

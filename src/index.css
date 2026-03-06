@@ -6,32 +6,32 @@
 
 @layer base {
   :root {
-    --background: 222 47% 11%;
+    --background: 240 18% 3%;
     --foreground: 210 40% 98%;
 
-    --card: 222 47% 14%;
+    --card: 240 10% 6%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 222 47% 14%;
+    --popover: 240 10% 6%;
     --popover-foreground: 210 40% 98%;
 
     --primary: 187 94% 53%;
-    --primary-foreground: 222 47% 11%;
+    --primary-foreground: 240 18% 3%;
 
-    --secondary: 217 33% 17%;
+    --secondary: 240 10% 12%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 240 10% 12%;
+    --muted-foreground: 240 5% 65%;
 
     --accent: 187 94% 53%;
-    --accent-foreground: 222 47% 11%;
+    --accent-foreground: 240 18% 3%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217 33% 25%;
-    --input: 217 33% 25%;
+    --border: 240 10% 15%;
+    --input: 240 10% 15%;
     --ring: 187 94% 53%;
 
     --radius: 0.75rem;
@@ -42,9 +42,9 @@
     --orange: 25 95% 55%;
 
     /* Glassmorphism */
-    --glass-bg: hsla(222, 47%, 20%, 0.6);
-    --glass-border: hsla(210, 40%, 98%, 0.1);
-    --glass-shadow: 0 8px 32px hsla(0, 0%, 0%, 0.3);
+    --glass-bg: hsla(240, 10%, 6%, 0.6);
+    --glass-border: hsla(210, 40%, 98%, 0.05);
+    --glass-shadow: 0 8px 32px hsla(0, 0%, 0%, 0.4);
 
     /* Enhanced Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(187, 94%, 53%) 0%, hsl(199, 89%, 48%) 100%);
@@ -53,11 +53,9 @@
     --gradient-warm: linear-gradient(135deg, hsl(25, 95%, 55%) 0%, hsl(330, 85%, 60%) 100%);
     --gradient-cool: linear-gradient(135deg, hsl(199, 89%, 48%) 0%, hsl(280, 87%, 65%) 100%);
     --gradient-dark: linear-gradient(180deg, hsl(222, 47%, 8%) 0%, hsl(222, 47%, 14%) 100%);
-    --gradient-mesh: radial-gradient(at 40% 20%, hsl(187, 94%, 53%, 0.15) 0px, transparent 50%), 
-                     radial-gradient(at 80% 0%, hsl(280, 87%, 65%, 0.1) 0px, transparent 50%),
-                     radial-gradient(at 0% 50%, hsl(199, 89%, 48%, 0.1) 0px, transparent 50%),
-                     radial-gradient(at 80% 50%, hsl(330, 85%, 60%, 0.08) 0px, transparent 50%),
-                     radial-gradient(at 0% 100%, hsl(187, 94%, 53%, 0.1) 0px, transparent 50%);
+    --gradient-mesh: radial-gradient(at 50% 50%, hsl(280, 87%, 65%, 0.03) 0px, transparent 80%),
+                     radial-gradient(at 100% 0%, hsl(330, 85%, 60%, 0.02) 0px, transparent 50%),
+                     radial-gradient(at 0% 100%, hsl(187, 94%, 53%, 0.02) 0px, transparent 50%);
   }
 
   .light {

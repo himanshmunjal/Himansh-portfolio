@@ -39,10 +39,9 @@ const contactInfo = [
 ];
 
 const socialLinks = [
-  { icon: Github, href: "https://github.com", label: "GitHub", color: "from-gray-500 to-gray-700" },
-  { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn", color: "from-blue-500 to-blue-600" },
-  { icon: Instagram, href: "https://instagram.com", label: "Instagram", color: "from-pink-500 to-purple-500" },
-  { icon: Twitter, href: "https://twitter.com", label: "Twitter", color: "from-sky-400 to-blue-500" },
+  { icon: Github, href: 'https://github.com/himanshmunjal', label: 'GitHub', color: "from-gray-500 to-gray-700" },
+  { icon: Linkedin, href: 'https://www.linkedin.com/in/himansh-munjal/', label: 'LinkedIn', color: "from-blue-500 to-blue-600" },
+  { icon: Instagram, href: "https://www.instagram.com/munjal.himansh/", label: 'Instagram', color: "from-pink-500 to-purple-500" },
 ];
 
 const ConnectSection: React.FC = () => {
@@ -143,37 +142,37 @@ const ConnectSection: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSending(true);
-    
+
     try {
       // Use the emailjs object imported at the top of your file
       await emailjs.send(
         // Replace with your EmailJS public key
         "service_g02b7qp",
         "template_7hopjmh",
-       {
-           from_name: formData.name,
-           reply_to: formData.email,
-           message: formData.message,
-         },
-       "xc6Qd4zsm5eP2i4Zf"
-    );
+        {
+          from_name: formData.name,
+          reply_to: formData.email,
+          message: formData.message,
+        },
+        "xc6Qd4zsm5eP2i4Zf"
+      );
 
-    setToast({
-      type: "success",
-      message: `Thanks ${formData.name}! Message sent successfully.`,
-    });
+      setToast({
+        type: "success",
+        message: `Thanks ${formData.name}! Message sent successfully.`,
+      });
 
-    setFormData({ name: "", email: "", message: "" });
-  } catch (error) {
-    console.error("EmailJS Error:", error);
-    setToast({
-      type: "error",
-      message: "Failed to send message. Please try again.",
-    });
-  } finally {
-    setIsSending(false);
-  }
-};
+      setFormData({ name: "", email: "", message: "" });
+    } catch (error) {
+      console.error("EmailJS Error:", error);
+      setToast({
+        type: "error",
+        message: "Failed to send message. Please try again.",
+      });
+    } finally {
+      setIsSending(false);
+    }
+  };
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -201,16 +200,16 @@ const ConnectSection: React.FC = () => {
         {/* BOXED DESIGN START */}
         <div className={`max-w-5xl mx-auto ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.2s' }}>
           <div className="group relative">
-            {/* Animated border glow */}
-            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 opacity-75 blur-xl group-hover:opacity-100 transition-opacity duration-500" />
-            
-            <div className="relative glass-card p-8 md:p-12 rounded-2xl backdrop-blur-2xl 
-            bg-gradient-to-br from-[#1a1a2e]/85 via-[#16213e]/85 to-[#0f172a]/85
-            border border-purple-500/30 shadow-[0_0_40px_rgba(168,85,247,0.15)] overflow-hidden">
-              
+            {/* Animated border glow (Glassmorphism gradient) */}
+            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-purple-500 via-pink-500 to-emerald-500 opacity-60 blur-3xl group-hover:opacity-100 transition-opacity duration-1000 animate-pulse" />
+
+            <div className="relative glass-card p-8 md:p-12 rounded-2xl backdrop-blur-3xl 
+            bg-gradient-to-br from-[#1a1a2e]/60 via-[#16213e]/70 to-[#0f172a]/80
+            border border-purple-500/20 shadow-[0_0_60px_rgba(168,85,247,0.2)] overflow-hidden">
+
               {/* Shimmer effect */}
-              <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent rounded-2xl" />
-              
+              <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/5 to-transparent rounded-2xl" />
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 relative z-10">
                 {/* CONTACT INFO */}
                 <div>
@@ -223,21 +222,21 @@ const ConnectSection: React.FC = () => {
 
                   <div className="space-y-6 mb-8">
                     {contactInfo.map((info, idx) => (
-                      <div 
-                        key={info.label} 
+                      <div
+                        key={info.label}
                         className="group/item flex items-center gap-4 animate-fade-in"
                         style={{ animationDelay: `${0.3 + idx * 0.1}s` }}
                       >
                         <div className="relative">
                           {/* Glow effect */}
                           <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${info.color} opacity-0 group-hover/item:opacity-50 blur-lg transition-opacity duration-300`} />
-                          
+
                           {/* Icon container */}
                           <div className={`relative w-14 h-14 rounded-xl bg-gradient-to-br ${info.color} flex items-center justify-center transform group-hover/item:scale-110 group-hover/item:rotate-6 transition-all duration-300`}>
                             <info.icon className="w-6 h-6 text-white" />
                           </div>
                         </div>
-                        
+
                         <div className="flex-1">
                           <p className="text-sm text-gray-400 mb-1">{info.label}</p>
                           {info.href ? (
@@ -270,14 +269,14 @@ const ConnectSection: React.FC = () => {
                           rel="noopener noreferrer"
                           className="group/social relative"
                           aria-label={social.label}
-                          style={{ 
+                          style={{
                             animation: 'float 3s ease-in-out infinite',
                             animationDelay: `${idx * 0.2}s`,
                           }}
                         >
                           {/* Glow */}
                           <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${social.color} opacity-0 group-hover/social:opacity-50 blur-lg transition-opacity duration-300`} />
-                          
+
                           {/* Button */}
                           <div className={`relative w-12 h-12 rounded-xl bg-gradient-to-br ${social.color} opacity-70 group-hover/social:opacity-100 flex items-center justify-center transition-all duration-300 transform group-hover/social:scale-110 group-hover/social:rotate-12`}>
                             <social.icon className="w-5 h-5 text-white" />
@@ -404,11 +403,10 @@ const ConnectSection: React.FC = () => {
       {toast && (
         <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
           <div
-            className={`flex items-center gap-3 px-5 py-3 rounded-xl backdrop-blur-xl border shadow-xl ${
-              toast.type === "success"
+            className={`flex items-center gap-3 px-5 py-3 rounded-xl backdrop-blur-xl border shadow-xl ${toast.type === "success"
                 ? "bg-green-500/20 border-green-400/40"
                 : "bg-red-500/20 border-red-400/40"
-            }`}
+              }`}
           >
             {toast.type === "success" ? (
               <CheckCircle className="text-green-400 w-5 h-5" />

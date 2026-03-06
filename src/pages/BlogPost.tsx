@@ -202,7 +202,8 @@ const BlogPost: React.FC = () => {
       <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0" />
 
       {/* Background */}
-      <div className="fixed inset-0 bg-[image:var(--gradient-mesh)] opacity-30 -z-10" />
+      <div className="fixed inset-0 bg-background opacity-90 -z-10" />
+      <div className="fixed inset-0 bg-[image:var(--gradient-mesh)] opacity-10 -z-10" />
 
       {/* Dynamic Gradient Orbs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles, Rocket, Code, Database, Zap, ExternalLink, Github, Star } from 'lucide-react';
 import { useInView } from '@/hooks/useInView';
-import { link } from 'fs';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import SEO from '../common/SEO';
 
 export const allProjects = [
@@ -96,47 +96,58 @@ const ProjectCard: React.FC<{
   index: number;
   isInView: boolean;
   mousePosition: { x: number; y: number };
-}> = ({ project, index, isInView, mousePosition }) => {
-  const [isHovered, setIsHovered] = useState(false);
+}> = ({ project, index, isInView }) => {
   const cardRef = useRef<HTMLDivElement>(null);
+  
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
 
-  const getTilt = () => {
-    if (!cardRef.current || !isHovered) return { x: 0, y: 0 };
-    
+  const mouseXSpring = useSpring(x, { stiffness: 300, damping: 20 });
+  const mouseYSpring = useSpring(y, { stiffness: 300, damping: 20 });
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["15deg", "-15deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-15deg", "15deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
-    const cardCenterX = rect.left + rect.width / 2;
-    const cardCenterY = rect.top + rect.height / 2;
-    
-    const deltaX = (mousePosition.x - cardCenterX) / (rect.width / 2);
-    const deltaY = (mousePosition.y - cardCenterY) / (rect.height / 2);
-    
-    return { x: deltaY * -5, y: deltaX * 5 };
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    x.set(xPct);
+    y.set(yPct);
   };
 
-  const tilt = getTilt();
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
 
   return (
-    <div
+    <motion.div
       ref={cardRef}
       className={`group relative ${isInView ? 'animate-fade-in' : 'opacity-0'}`}
       style={{ 
         animationDelay: `${0.2 + index * 0.1}s`,
-        perspective: '1000px',
+        perspective: '1500px',
+        transformStyle: "preserve-3d"
       }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
     >
       {/* Glow effect */}
       <div className={`absolute -inset-1 rounded-2xl bg-gradient-to-r ${project.color} opacity-0 group-hover:opacity-75 blur-xl transition-all duration-500`} />
 
       {/* Card */}
-      <div
-        className="relative glass-card rounded-2xl p-6 backdrop-blur-xl bg-background/40 border border-primary/20 overflow-hidden transition-all duration-500 group-hover:bg-background/60 group-hover:border-primary/40"
+      <motion.div
+        className="relative glass-card rounded-2xl p-6 backdrop-blur-xl bg-background/40 border border-primary/20 overflow-hidden group-hover:bg-background/60 group-hover:border-primary/40 group-hover:shadow-2xl h-full"
         style={{
-          transform: isHovered 
-            ? `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(1.02)` 
-            : 'rotateX(0deg) rotateY(0deg) scale(1)',
-          transition: 'all 0.3s ease-out',
+          rotateX,
+          rotateY,
+          transformStyle: "preserve-3d",
         }}
       >
         {/* Shimmer effect */}
@@ -200,10 +211,10 @@ const ProjectCard: React.FC<{
         </div>
 
         {/* Decorative elements */}
-        <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${project.color} opacity-5 rounded-full blur-3xl group-hover:opacity-10 transition-opacity duration-500`} />
-        <div className={`absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr ${project.color} opacity-5 rounded-full blur-2xl group-hover:opacity-10 transition-opacity duration-500`} />
-      </div>
-    </div>
+        <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${project.color} opacity-5 rounded-full blur-3xl group-hover:opacity-10 transition-opacity duration-500`} style={{ transform: "translateZ(10px)" }} />
+        <div className={`absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr ${project.color} opacity-5 rounded-full blur-2xl group-hover:opacity-10 transition-opacity duration-500`} style={{ transform: "translateZ(10px)" }} />
+      </motion.div>
+    </motion.div>
   );
 };
 
