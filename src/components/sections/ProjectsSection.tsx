@@ -5,89 +5,204 @@ import { useInView } from '@/hooks/useInView';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import SEO from '../common/SEO';
 
+// export const allProjects = [
+//   {
+//     id: 1,
+//     title: 'Job Fit & Skill Gap Intelligence System',
+//     description: 'AI-driven system evaluating resume—job fit using NLP and ML, generating job readiness scores and personalized skill gap recommendations.',
+//     tech: ['Python', 'spaCy', 'TF-IDF', 'Logistic Regression', 'XGBoost', 'PostgreSQL', 'Streamlit'],
+//     ongoing: true,
+//     category: 'AI/NLP',
+//     color: 'from-purple-500 to-pink-500',
+//     link: 'https://github.com/himanshmunjal/Job-fit-skill-gap-Analyzer'
+//   },
+//   {
+//     id: 2,
+//     title: 'Taxi Fare Prediction System',
+//     description: 'End-to-end ML pipeline for taxi fare prediction with geospatial & temporal feature engineering, workflow orchestration, and experiment tracking for real-time deployment readiness.',
+//     tech: ['Python', 'Pandas', 'NumPy', 'Scikit-Learn', 'XGBoost', 'CatBoost', 'Prefect', 'MLflow', 'FastAPI', 'Docker'],
+//     category: 'Machine Learning',
+//     color: 'from-blue-500 to-cyan-500',
+//     link: 'https://github.com/himanshmunjal'
+//   },
+//   {
+//     id: 5,
+//     title: 'Airport Management Web – Flight Management & Booking System',
+//     description: 'Role-based full-stack flight management system where admins manage flights/schedules and users can search, book flights, and track baggage. Secure JWT auth with React + Golang backend.',
+//     tech: ['React.js', 'Tailwind CSS', 'Golang', 'Gin', 'GORM', 'PostgreSQL', 'JWT Authentication'],
+//     category: 'Full Stack',
+//     color: 'from-indigo-500 to-purple-500',
+//     link : 'https://github.com/himanshmunjal/Training'
+//   },
+//   {
+//     id: 4,
+//     title: 'GridSense — AI Grid Demand Forecasting & Anomaly Detection System',
+//     description: 'Developed a deep learning system for a multi-zone electricity distribution network, performing 24-hour ahead hourly demand forecasting using LSTM and Transformer architectures with temporal and lag-based feature engineering. Implemented an anomaly detection pipeline using Isolation Forest on model residuals to automatically flag abnormal consumption events and pre-alert grid operators before failure occurrence. Built an interactive real-time dashboard for zone-wise forecast visualization and alert monitoring.',
+//     tech: ['Python', 'PyTorch', 'Scikit-Learn', 'Pandas', 'Streamlit', 'Plotly'],
+//     category: 'Data Science',
+//     color: 'from-orange-500 to-red-500',
+//     link : 'https://github.com/himanshmunjal'
+//   },
+//   {
+//     id: 3,
+//     title: 'DisasterTweet AI — Real-Time Disaster Tweet Triage & Urgency Ranking System',
+//     description: 'Built an NLP pipeline to classify and prioritize disaster-related tweets during active emergencies, fine-tuning RoBERTa for multi-class classification across categories including SOS, medical emergency, infrastructure damage, and misinformation. Engineered an urgency ranking algorithm combining classification confidence, severity signals, and recency to generate a ranked alert feed for first responders. Simulated a real-time tweet stream with live dashboard filtering and color-coded urgency visualization.',
+//     tech: ['Python', 'HuggingFace', 'Transformers', 'PyTorch', 'Pandas', 'Streamlit', 'Plotly'],
+//     ongoing: false,
+//     category: 'Full Stack',
+//     color: 'from-emerald-500 to-teal-500',
+//     link : 'https://github.com/himanshmunjal/DevConnect'
+//   },
+//   {
+//     id: 10,
+//     title: 'FinGuard — Hybrid Deep Learning Financial Fraud Detection Engine',
+//     description: 'Designed a three-layer hybrid fraud detection system combining Graph Neural Networks for coordinated fraud ring detection, a Transformer-based sequence model for behavioral anomaly detection in transaction histories, and an XGBoost ensemble layer integrating outputs from all upstream models. Applied SHAP explainability to surface the top contributing features per fraud decision, and built a real-time transaction stream simulator with per-transaction risk tiering and network graph visualization of detected fraud clusters.',
+//     tech: ['Python', 'PyTorch', 'PyTorch Geometric', 'XGBoost', 'SHAP', 'Pandas', 'Streamlit', 'Plotly'],
+//     ongoing: true,
+//     category: 'Deep Learning',
+//     color: 'from-orange-500 to-red-500',
+//     link : 'https://github.com/himanshmunjal'
+//   },
+//   {
+//     id: 6,
+//     title: 'RetailPulse – Sales & Profit Intelligence Dashboard',
+//     description: 'End-to-end Power BI dashboard analyzing sales, profitability, and customer trends using a star-schema data model with advanced DAX calculations.',
+//     tech: ['Power BI', 'DAX', 'Power Query', 'Data Modeling'],
+//     category: 'Analytics',
+//     color: 'from-pink-500 to-rose-500',
+//     link : 'https://github.com/himanshmunjal'
+//   },
+//   {
+//     id: 7,
+//     title: 'FinSight – Financial Performance & Forecasting Dashboard',
+//     description: 'Financial analytics dashboard tracking revenue, expenses, EBITDA, and cash flow with budget vs. actual variance analysis and automated forecasting.',
+//     tech: ['Power BI', 'DAX', 'Power Query', 'Financial Modeling'],
+//     category: 'Analytics',
+//     color: 'from-yellow-500 to-orange-500',
+//     link : 'https://github.com/himanshmunjal'
+//   },
+//   {
+//     id: 8,
+//     title: 'Sentiment Analysis – NLP-Based Text Classification System',
+//     description: 'End-to-end sentiment analysis system classifying user reviews using NLP preprocessing and Random Forest, deployed as a real-time REST API via FastAPI.',
+//     tech: ['Python', 'NLTK', 'Scikit-learn', 'Random Forest', 'FastAPI', 'REST APIs'],
+//     category: 'NLP',
+//     color: 'from-green-500 to-emerald-500',
+//     link : 'https://github.com/himanshmunjal'
+//   },
+//   {
+//     id: 9,
+//     title: 'Gesture-Controlled Snake Game – Computer Vision Interface',
+//     description: 'Real-time Snake game controlled via hand gestures using MediaPipe hand tracking and OpenCV, mapped to Pygame game controls for a touchless experience.',
+//     tech: ['Python', 'MediaPipe', 'OpenCV', 'Pygame', 'NumPy'],
+//     category: 'Computer Vision',
+//     color: 'from-cyan-500 to-blue-500',
+//     link : 'https://github.com/himanshmunjal/Hand-Gesture'
+//   },
+// ];
+
 export const allProjects = [
   {
-    id: 1,
-    title: 'Taxi Fare Prediction System',
-    description: 'End-to-end ML pipeline for taxi fare prediction with geospatial & temporal feature engineering, workflow orchestration, and experiment tracking for real-time deployment readiness.',
-    tech: ['Python', 'Pandas', 'NumPy', 'Scikit-Learn', 'XGBoost', 'CatBoost', 'Prefect', 'MLflow', 'FastAPI', 'Docker'],
-    category: 'Machine Learning',
-    color: 'from-blue-500 to-cyan-500',
+    id: 10,
+    title: 'FinGuard — Hybrid Deep Learning Financial Fraud Detection Engine',
+    description: 'Designed a multi-layer fraud detection architecture combining Graph Neural Networks for detecting coordinated fraud rings, a Transformer-based sequence model for behavioral anomaly detection in transaction histories, and an XGBoost ensemble layer aggregating upstream predictions. Integrated SHAP explainability for transparent risk attribution and built a real-time transaction stream simulator with network graph visualization of detected fraud clusters.',
+    tech: ['Python', 'PyTorch', 'PyTorch Geometric', 'XGBoost', 'SHAP', 'Pandas', 'Streamlit', 'Plotly'],
+    ongoing: true,
+    category: 'Deep Learning',
+    color: 'from-orange-500 to-red-500',
     link: 'https://github.com/himanshmunjal'
   },
+
   {
-    id: 2,
+    id: 4,
+    title: 'GridSense — AI Grid Demand Forecasting & Anomaly Detection System',
+    description: 'Developed a deep learning forecasting system for multi-zone electricity grids using LSTM and Transformer architectures to predict 24-hour ahead hourly demand. Engineered temporal and lag-based features and implemented an anomaly detection pipeline using Isolation Forest on forecast residuals to proactively flag abnormal consumption events. Built an interactive monitoring dashboard for zone-wise forecasts and grid anomaly alerts.',
+    tech: ['Python', 'PyTorch', 'Scikit-Learn', 'Pandas', 'Streamlit', 'Plotly'],
+    category: 'Data Science',
+    color: 'from-orange-500 to-red-500',
+    link: 'https://github.com/himanshmunjal'
+  },
+
+  {
+    id: 3,
+    title: 'DisasterTweet AI — Real-Time Disaster Tweet Triage & Urgency Ranking System',
+    description: 'Built an NLP intelligence system to classify and prioritize disaster-related tweets during emergencies by fine-tuning RoBERTa for multi-class classification across categories such as SOS, medical emergencies, infrastructure damage, and misinformation. Designed an urgency ranking algorithm combining model confidence, severity indicators, and recency to generate a prioritized alert feed for first responders with a real-time visualization dashboard.',
+    tech: ['Python', 'HuggingFace', 'Transformers', 'PyTorch', 'Pandas', 'Streamlit', 'Plotly'],
+    ongoing: false,
+    category: 'AI/NLP',
+    color: 'from-emerald-500 to-teal-500',
+    link: 'https://github.com/himanshmunjal/DevConnect'
+  },
+
+  {
+    id: 1,
     title: 'Job Fit & Skill Gap Intelligence System',
-    description: 'AI-driven system evaluating resume—job fit using NLP and ML, generating job readiness scores and personalized skill gap recommendations.',
+    description: 'Developed an AI-driven resume intelligence system that evaluates candidate-job compatibility using NLP feature extraction and machine learning classification models. The system generates a job readiness score and identifies missing competencies by comparing resume skills against job descriptions, providing personalized skill gap insights and improvement recommendations.',
     tech: ['Python', 'spaCy', 'TF-IDF', 'Logistic Regression', 'XGBoost', 'PostgreSQL', 'Streamlit'],
     ongoing: true,
     category: 'AI/NLP',
     color: 'from-purple-500 to-pink-500',
     link: 'https://github.com/himanshmunjal/Job-fit-skill-gap-Analyzer'
   },
+
   {
-    id: 3,
-    title: 'DevConnect – Techies Social Platform',
-    description: 'Full-stack social platform for developers featuring authentication, profiles, project sharing, search, and image uploads with a React + Golang backend.',
-    tech: ['React.js', 'Tailwind CSS', 'Golang', 'Gin', 'GORM', 'PostgreSQL', 'JWT Auth', 'Axios'],
-    ongoing: true,
-    category: 'Full Stack',
-    color: 'from-emerald-500 to-teal-500',
-    link : 'https://github.com/himanshmunjal/DevConnect'
+    id: 2,
+    title: 'Taxi Fare Prediction System',
+    description: 'Developed a production-style machine learning pipeline to predict taxi fares using geospatial and temporal feature engineering. Implemented experiment tracking with MLflow, workflow orchestration using Prefect, and exposed the trained model via FastAPI for real-time predictions. Containerized the system with Docker to simulate deployment-ready ML infrastructure.',
+    tech: ['Python', 'Pandas', 'NumPy', 'Scikit-Learn', 'XGBoost', 'CatBoost', 'Prefect', 'MLflow', 'FastAPI', 'Docker'],
+    category: 'Machine Learning',
+    color: 'from-blue-500 to-cyan-500',
+    link: 'https://github.com/himanshmunjal'
   },
-  {
-    id: 4,
-    title: 'Credit Card Fraud Detection',
-    description: 'High-accuracy fraud detection system using advanced ML on imbalanced datasets, with end-to-end preprocessing, feature engineering, and real-time risk prediction.',
-    tech: ['Python', 'Pandas', 'NumPy', 'Scikit-learn', 'Matplotlib', 'Seaborn', 'Jupyter Notebook'],
-    category: 'Data Science',
-    color: 'from-orange-500 to-red-500',
-    link : 'https://github.com/himanshmunjal'
-  },
+
   {
     id: 5,
     title: 'Airport Management Web – Flight Management & Booking System',
-    description: 'Role-based full-stack flight management system where admins manage flights/schedules and users can search, book flights, and track baggage. Secure JWT auth with React + Golang backend.',
+    description: 'Built a role-based full-stack airport management system where administrators manage flight schedules while users search, book flights, track baggage status, and submit complaints. Implemented secure authentication using JWT and developed a RESTful backend with Golang (Gin + GORM) integrated with PostgreSQL, with a responsive React frontend.',
     tech: ['React.js', 'Tailwind CSS', 'Golang', 'Gin', 'GORM', 'PostgreSQL', 'JWT Authentication'],
     category: 'Full Stack',
     color: 'from-indigo-500 to-purple-500',
-    link : 'https://github.com/himanshmunjal/Training'
+    link: 'https://github.com/himanshmunjal/Training'
   },
-  {
-    id: 6,
-    title: 'RetailPulse – Sales & Profit Intelligence Dashboard',
-    description: 'End-to-end Power BI dashboard analyzing sales, profitability, and customer trends using a star-schema data model with advanced DAX calculations.',
-    tech: ['Power BI', 'DAX', 'Power Query', 'Data Modeling'],
-    category: 'Analytics',
-    color: 'from-pink-500 to-rose-500',
-    link : 'https://github.com/himanshmunjal'
-  },
-  {
-    id: 7,
-    title: 'FinSight – Financial Performance & Forecasting Dashboard',
-    description: 'Financial analytics dashboard tracking revenue, expenses, EBITDA, and cash flow with budget vs. actual variance analysis and automated forecasting.',
-    tech: ['Power BI', 'DAX', 'Power Query', 'Financial Modeling'],
-    category: 'Analytics',
-    color: 'from-yellow-500 to-orange-500',
-    link : 'https://github.com/himanshmunjal'
-  },
+
   {
     id: 8,
     title: 'Sentiment Analysis – NLP-Based Text Classification System',
-    description: 'End-to-end sentiment analysis system classifying user reviews using NLP preprocessing and Random Forest, deployed as a real-time REST API via FastAPI.',
+    description: 'Developed an NLP pipeline for sentiment classification of user reviews using text preprocessing, feature extraction, and a Random Forest classifier. Deployed the model as a REST API using FastAPI, enabling real-time sentiment prediction and integration with external applications.',
     tech: ['Python', 'NLTK', 'Scikit-learn', 'Random Forest', 'FastAPI', 'REST APIs'],
     category: 'NLP',
     color: 'from-green-500 to-emerald-500',
-    link : 'https://github.com/himanshmunjal'
+    link: 'https://github.com/himanshmunjal'
   },
+
+  {
+    id: 6,
+    title: 'RetailPulse – Sales & Profit Intelligence Dashboard',
+    description: 'Designed an interactive Power BI dashboard analyzing sales performance, profitability trends, and customer behavior using a star-schema data model. Implemented advanced DAX calculations and dynamic filtering to enable business users to explore revenue drivers and profitability insights.',
+    tech: ['Power BI', 'DAX', 'Power Query', 'Data Modeling'],
+    category: 'Analytics',
+    color: 'from-pink-500 to-rose-500',
+    link: 'https://github.com/himanshmunjal'
+  },
+
+  {
+    id: 7,
+    title: 'FinSight – Financial Performance & Forecasting Dashboard',
+    description: 'Developed a financial analytics dashboard tracking key business metrics including revenue, expenses, EBITDA, and cash flow. Implemented budget vs actual variance analysis and forecasting models to support financial planning and performance monitoring.',
+    tech: ['Power BI', 'DAX', 'Power Query', 'Financial Modeling'],
+    category: 'Analytics',
+    color: 'from-yellow-500 to-orange-500',
+    link: 'https://github.com/himanshmunjal'
+  },
+
   {
     id: 9,
     title: 'Gesture-Controlled Snake Game – Computer Vision Interface',
-    description: 'Real-time Snake game controlled via hand gestures using MediaPipe hand tracking and OpenCV, mapped to Pygame game controls for a touchless experience.',
+    description: 'Built a computer vision-based interactive game where users control a Snake game using hand gestures detected via MediaPipe. Integrated real-time hand tracking with OpenCV and mapped gestures to Pygame controls to create a touchless gaming experience.',
     tech: ['Python', 'MediaPipe', 'OpenCV', 'Pygame', 'NumPy'],
     category: 'Computer Vision',
     color: 'from-cyan-500 to-blue-500',
-    link : 'https://github.com/himanshmunjal/Hand-Gesture'
+    link: 'https://github.com/himanshmunjal/Hand-Gesture'
   },
 ];
 
