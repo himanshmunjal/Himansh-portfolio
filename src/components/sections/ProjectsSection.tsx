@@ -165,16 +165,7 @@ export const allProjects = [
     link: 'https://github.com/himanshmunjal/Training'
   },
 
-  {
-    id: 8,
-    title: 'Sentiment Analysis – NLP-Based Text Classification System',
-    description: 'Developed an NLP pipeline for sentiment classification of user reviews using text preprocessing, feature extraction, and a Random Forest classifier. Deployed the model as a REST API using FastAPI, enabling real-time sentiment prediction and integration with external applications.',
-    tech: ['Python', 'NLTK', 'Scikit-learn', 'Random Forest', 'FastAPI', 'REST APIs'],
-    category: 'NLP',
-    color: 'from-green-500 to-emerald-500',
-    link: 'https://github.com/himanshmunjal'
-  },
-
+  
   {
     id: 6,
     title: 'RetailPulse – Sales & Profit Intelligence Dashboard',
@@ -184,17 +175,35 @@ export const allProjects = [
     color: 'from-pink-500 to-rose-500',
     link: 'https://github.com/himanshmunjal'
   },
-
   {
-    id: 7,
-    title: 'FinSight – Financial Performance & Forecasting Dashboard',
-    description: 'Developed a financial analytics dashboard tracking key business metrics including revenue, expenses, EBITDA, and cash flow. Implemented budget vs actual variance analysis and forecasting models to support financial planning and performance monitoring.',
-    tech: ['Power BI', 'DAX', 'Power Query', 'Financial Modeling'],
-    category: 'Analytics',
-    color: 'from-yellow-500 to-orange-500',
+    id: 12,
+    title: 'TravelItinerary AI — Smart Trip Planner & Itinerary Generator',
+    description: 'Developed a SwiftUI-based travel planning application that generates optimized multi-day itineraries based on user preferences, budget, and location inputs. Implemented a structured itinerary engine with categorized activities, time-slot allocation, and dynamic UI rendering for daily plans. Focused on clean UX design, modular architecture, and scalable frontend logic for future AI/API integration.',
+    tech: ['Swift', 'SwiftUI', 'MVVM', 'State Management', 'API Integration (Planned)'],
+    ongoing: true,
+    category: 'iOS Development',
+    color: 'from-teal-500 to-cyan-500',
+    link: 'https://github.com/himanshmunjal/Travelitinerary'
+  },
+  {
+    id: 11,
+    title: 'FocusFlow — Minimalist Productivity & Pomodoro System',
+    description: 'Built a fully native iOS productivity application using SwiftUI, combining task management, Pomodoro-based focus sessions, a rule-based daily planner, and an analytics dashboard. Implemented a Combine-powered timer state machine, MVVM architecture for scalability, and Swift Charts for visualizing productivity trends. Designed the system to be fully offline-first with persistent storage using UserDefaults and Codable.',
+    tech: ['Swift', 'SwiftUI', 'Combine', 'Swift Charts', 'MVVM', 'UserDefaults', 'Codable'],
+    ongoing: false,
+    category: 'iOS Development',
+    color: 'from-blue-500 to-indigo-500',
+    link: 'https://github.com/himanshmunjal/FocusFlow'
+  },
+  {
+    id: 8,
+    title: 'Sentiment Analysis – NLP-Based Text Classification System',
+    description: 'Developed an NLP pipeline for sentiment classification of user reviews using text preprocessing, feature extraction, and a Random Forest classifier. Deployed the model as a REST API using FastAPI, enabling real-time sentiment prediction and integration with external applications.',
+    tech: ['Python', 'NLTK', 'Scikit-learn', 'Random Forest', 'FastAPI', 'REST APIs'],
+    category: 'NLP',
+    color: 'from-green-500 to-emerald-500',
     link: 'https://github.com/himanshmunjal'
   },
-
   {
     id: 9,
     title: 'Gesture-Controlled Snake Game – Computer Vision Interface',
@@ -203,6 +212,15 @@ export const allProjects = [
     category: 'Computer Vision',
     color: 'from-cyan-500 to-blue-500',
     link: 'https://github.com/himanshmunjal/Hand-Gesture'
+  },
+  {
+    id: 7,
+    title: 'FinSight – Financial Performance & Forecasting Dashboard',
+    description: 'Developed a financial analytics dashboard tracking key business metrics including revenue, expenses, EBITDA, and cash flow. Implemented budget vs actual variance analysis and forecasting models to support financial planning and performance monitoring.',
+    tech: ['Power BI', 'DAX', 'Power Query', 'Financial Modeling'],
+    category: 'Analytics',
+    color: 'from-yellow-500 to-orange-500',
+    link: 'https://github.com/himanshmunjal'
   },
 ];
 
