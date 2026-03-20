@@ -17,7 +17,8 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: { "@": path.resolve(__dirname, "./src") },
   },
-
+// vite.config.ts
+  assetsInclude: ['**/*.md'],
   build: {
     chunkSizeWarningLimit: 1000,
 
