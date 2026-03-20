@@ -21,6 +21,7 @@ const blogImports: Record<string, () => Promise<{ default: string }>> = {
   'roberta-disaster-tweet-triage':        () => import('../blogs/roberta-disaster-tweet-triage.md?raw'),
   'finguard-deep-learning-architecture':  () => import('../blogs/finguard-deep-learning-architecture.md?raw'),
   'explainability-crisis-black-box-ai':   () => import('../blogs/explainability-crisis-black-box-ai.md?raw'),
+  'from-scattered-focus-to-clarity':      () => import('../blogs/from-scattered-focus-to-clarity.md?raw'),
 };
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
@@ -93,6 +94,18 @@ export const allBlogs = [
     category: 'AI Research',
     categoryColor: '#8b5cf6',
   },
+  // {
+  //   id: 6,
+  //   slug: 'from-scattered-focus-to-clarity',
+  //   title: "From Scattered Focus to Strategic Clarity: Why Doing Everything Was Holding Me Back",
+  //   excerpt: "I found myself jumping between Data Science, DSA, iOS, backend, and more—constantly learning but never compounding. This is how I realized that confusion wasn’t my weakness, lack of focus was, and why choosing fewer, aligned skills changed everything.",
+  //   image: "https://images.unsplash.com/photo-1492724441997-5dc865305da7?w=800&h=500&fit=crop&q=80",
+  //   tags: ["Productivity", "Learning", "Focus", "Career", "SelfGrowth"],
+  //   readTime: "7 min read",
+  //   views: "5.1k",
+  //   category: "Career",
+  //   categoryColor: "#3b82f6"
+  // }
 ];
 
 type Blog = typeof allBlogs[0];

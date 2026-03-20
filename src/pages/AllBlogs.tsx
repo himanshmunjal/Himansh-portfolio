@@ -222,7 +222,7 @@ const AllBlogs: React.FC = () => {
 
                   {/* Content */}
                   <div className="relative p-6">
-                    <Link to={`/blog/${blog.id}`}>
+                    <Link to={'/blog/' + blog.slug}>
                       <h3 className="text-lg font-bold text-foreground mb-3 line-clamp-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-purple-400 group-hover:to-pink-400 transition-all duration-300 cursor-pointer">
                         {blog.title}
                       </h3>
