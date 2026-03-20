@@ -32,7 +32,7 @@ const Header: React.FC = () => {
 
   const handleDownloadResume = () => {
   const link = document.createElement('a');
-  link.href = '/resume/Updated_resume2.pdf';
+  link.href = '/resume/Himansh_Munjal_Resume.pdf';
   link.download = 'Himansh_Munjal_Resume.pdf';
   document.body.appendChild(link);
   link.click();
