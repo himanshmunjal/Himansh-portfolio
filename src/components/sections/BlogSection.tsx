@@ -16,6 +16,7 @@ import {
 import { useInView } from '@/hooks/useInView';
 // Put this at the top of BlogSection.tsx, outside the component
 const blogImports: Record<string, () => Promise<{ default: string }>> = {
+  'concurrency-bottlenecks-in-java-caches' : () => import('../blogs/concurrency-bottlenecks-in-java-caches.md?raw'),
   'full-stack-airport-management':        () => import('../blogs/full-stack-airport-management.md?raw'),
   'data-science-notebook-to-production':  () => import('../blogs/data-science-notebook-to-production.md?raw'),
   'roberta-disaster-tweet-triage':        () => import('../blogs/roberta-disaster-tweet-triage.md?raw'),
@@ -31,6 +32,18 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 export const allBlogs = [
   {
     id: 1,
+    slug: 'concurrency-bottlenecks-in-java-caches',
+    title: "Concurrency Bottlenecks in Java Caches: Coarse Locks vs Segmented Locking vs Lock-Free Designs",
+    excerpt: "Building a high-performance cache is not just about choosing the right data structure—it is about managing contention between threads. In this article, I explore the trade-offs between coarse-grained locking, segmented locking, and lock-free designs while developing JCache, a distributed in-memory cache server in Java. Through real benchmark results and engineering lessons, I show why reducing contention often has a greater impact on scalability than optimizing individual operations.",
+    image: "https://images.unsplash.com/photo-1492724441997-5dc865305da7?w=800&h=500&fit=crop&q=80",
+    tags: ["Concurrency", "Java", "Cache", "Segmented Cache", "Coarse Lock", "Lock-Free"],
+    readTime: "7 min read",
+    views: "5.1k",
+    category: "Technical Deep Dive",
+    categoryColor: "#3b82f6"
+  },
+  {
+    id: 2,
     slug: 'full-stack-airport-management',
     title: 'Surviving Full-Stack Hell: Lessons From Building an Airport Management System in Go + React',
     excerpt:
@@ -43,7 +56,7 @@ export const allBlogs = [
     categoryColor: '#6366f1',
   },
   {
-    id: 2,
+    id: 3,
     slug: 'data-science-notebook-to-production',
     title: 'From Notebook to Nowhere: The Real Reason Data Science Projects Fail Before Deployment',
     excerpt:
@@ -56,7 +69,7 @@ export const allBlogs = [
     categoryColor: '#f59e0b',
   },
   {
-    id: 3,
+    id: 4,
     slug: 'roberta-disaster-tweet-triage',
     title: 'Fine-Tuning RoBERTa for Disaster Tweet Triage — What the Papers Do Not Tell You',
     excerpt:
@@ -69,7 +82,7 @@ export const allBlogs = [
     categoryColor: '#10b981',
   },
   {
-    id: 4,
+    id: 5,
     slug: 'finguard-deep-learning-architecture',
     title: 'Building FinGuard: What Three Architecture Rewrites Taught Me About Deep Learning',
     excerpt:
@@ -82,7 +95,7 @@ export const allBlogs = [
     categoryColor: '#ef4444',
   },
   {
-    id: 5,
+    id: 6,
     slug: 'explainability-crisis-black-box-ai',
     title: 'The Explainability Crisis: Why Black-Box AI Is Failing the Industries That Need It Most',
     excerpt:
@@ -94,18 +107,19 @@ export const allBlogs = [
     category: 'AI Research',
     categoryColor: '#8b5cf6',
   },
-  // {
-  //   id: 6,
-  //   slug: 'from-scattered-focus-to-clarity',
-  //   title: "From Scattered Focus to Strategic Clarity: Why Doing Everything Was Holding Me Back",
-  //   excerpt: "I found myself jumping between Data Science, DSA, iOS, backend, and more—constantly learning but never compounding. This is how I realized that confusion wasn’t my weakness, lack of focus was, and why choosing fewer, aligned skills changed everything.",
-  //   image: "https://images.unsplash.com/photo-1492724441997-5dc865305da7?w=800&h=500&fit=crop&q=80",
-  //   tags: ["Productivity", "Learning", "Focus", "Career", "SelfGrowth"],
-  //   readTime: "7 min read",
-  //   views: "5.1k",
-  //   category: "Career",
-  //   categoryColor: "#3b82f6"
-  // }
+  {
+    id: 7,
+    slug: 'from-scattered-focus-to-clarity',
+    title: "From Scattered Focus to Strategic Clarity: Why Doing Everything Was Holding Me Back",
+    excerpt: "I found myself jumping between Data Science, DSA, iOS, backend, and more—constantly learning but never compounding. This is how I realized that confusion wasn’t my weakness, lack of focus was, and why choosing fewer, aligned skills changed everything.",
+    image: "https://images.unsplash.com/photo-1492724441997-5dc865305da7?w=800&h=500&fit=crop&q=80",
+    tags: ["Productivity", "Learning", "Focus", "Career", "SelfGrowth"],
+    readTime: "7 min read",
+    views: "5.1k",
+    category: "Career",
+    categoryColor: "#3b82f6"
+  },
+  
 ];
 
 type Blog = typeof allBlogs[0];

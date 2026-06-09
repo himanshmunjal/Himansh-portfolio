@@ -7,7 +7,7 @@ import { allBlogs } from '@/components/sections/BlogSection';
 import { useInView } from '@/hooks/useInView';
 import SEO from '@/components/common/SEO';
 
-const allTags = ['All', 'Java', 'SpringBoot', 'Backend', 'Coding', 'CleanCode', 'MachineLearning', 'DataScience', 'AI', 'Python'];
+const allTags = ['All', 'Java', 'Backend', 'Coding', 'CleanCode', 'MachineLearning', 'DataScience', 'AI', 'Python','System'];
 
 const AllBlogs: React.FC = () => {
   const { ref, isInView } = useInView({ threshold: 0.05 });
@@ -78,8 +78,7 @@ const AllBlogs: React.FC = () => {
   }, []);
 
   const filteredBlogs = selectedTag === 'All'
-    ? allBlogs
-    : allBlogs.filter(blog => blog.tags.some(tag => tag.toLowerCase().includes(selectedTag.toLowerCase())));
+    ? allBlogs : allBlogs.filter(blog => blog.tags.some(tag => tag.toLowerCase().includes(selectedTag.toLowerCase())));
 
   return (
     <>
