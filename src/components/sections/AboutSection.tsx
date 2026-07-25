@@ -27,8 +27,8 @@ const AboutSection: React.FC = () => {
 
   const handleDownloadResume = () => {
     const link = document.createElement('a');
-    link.href = '/resume/Himansh_Munjal_Resume.pdf';
-    link.download = 'Himansh_Munjal_Resume.pdf';
+    link.href = '/resume/Himansh_Munjal_Resume_Full_Stack.pdf';
+    link.download = 'Himansh_Munjal_Resume_Full_Stack.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

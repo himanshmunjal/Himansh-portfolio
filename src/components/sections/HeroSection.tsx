@@ -82,8 +82,8 @@ const HeroSection: React.FC = () => {
   // ── Resume download ────────────────────────────────────────────────
   const handleDownloadResume = () => {
     const a = document.createElement('a');
-    a.href = '/resume/Himansh_Munjal_Resume.pdf';
-    a.download = 'Himansh_Munjal_Resume.pdf';
+    a.href = '/resume/Himansh_Munjal_Resume_Full_Stack.pdf';
+    a.download = 'Himansh_Munjal_Resume_Full_Stack.pdf';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

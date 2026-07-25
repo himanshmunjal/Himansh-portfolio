@@ -103,16 +103,14 @@ import SEO from '../common/SEO';
 
 export const allProjects = [
   {
-    id: 10,
-    title: 'FinGuard — Hybrid Deep Learning Financial Fraud Detection Engine',
-    description: 'Designed a multi-layer fraud detection architecture combining Graph Neural Networks for detecting coordinated fraud rings, a Transformer-based sequence model for behavioral anomaly detection in transaction histories, and an XGBoost ensemble layer aggregating upstream predictions. Integrated SHAP explainability for transparent risk attribution and built a real-time transaction stream simulator with network graph visualization of detected fraud clusters.',
-    tech: ['Python', 'PyTorch', 'PyTorch Geometric', 'XGBoost', 'SHAP', 'Pandas', 'Streamlit', 'Plotly'],
-    ongoing: true,
-    category: 'Deep Learning',
+    id: 11,
+    title: 'JCache — In-Memory Cache Server',
+    description: 'Built a production-grade, distributed in-memory cache server in Java from the ground up — starting with O(1) data structures and scaling to a full TCP server accessible from any language. Implemented three eviction policies: LRU (doubly linked list + HashMap), O(1) LFU using Shan\'s frequency-bucket algorithm (not the naive O(log n) heap version), and ARC (Adaptive Replacement Cache) — the same algorithm used in ZFS and the macOS kernel — with four ghost lists and a self-tuning adaptation parameter. Layered three concurrency strategies on top: coarse-grained ReentrantReadWriteLock, segmented locking across 16 independent shards (4.4x throughput improvement over coarse), and lock-free reads via ConcurrentHashMap and AtomicLong counters. Added dual-mechanism TTL expiry matching Redis internals — lazy eviction on every get() plus a background ScheduledExecutorService sweeper — with per-key TTL override via the wire protocol. Built an optional persistence layer with an append-only log and atomic snapshot writes, enabling full cache recovery on restart by replaying the AOF log on top of the last snapshot. Exposed the entire library as a TCP server built on Netty — one boss thread accepting connections, N configurable worker threads dispatching commands — with a plain-text wire protocol (GET, PUT, DELETE, STATS, FLUSH, PING) debuggable via telnet. Implemented consistent hashing with 150 virtual nodes per physical node so adding or removing a cluster node remaps only 1/N keys instead of everything. Shipped a Java client library with connection pooling, a ClusterCacheClient that mirrors the hash ring client-side for zero-coordinator routing, and an interactive CLI shell. Containerized with Docker — all configuration (policy, capacity, TTL, threads, segments, persistence) passed via environment variables following twelve-factor app conventions. Benchmarked with JMH across Zipfian and uniform workloads: ARC achieved 87% hit rate vs LRU\'s 76% on skewed access patterns; segmented locking hit 4.8M ops/sec vs 1.1M coarse-grained; network round-trip p99 held at 0.8ms under 8 concurrent clients. CI pipeline via GitHub Actions enforces 85% JaCoCo coverage on every push and runs the JMH suite on merge to main.',
+    tech: ['Java', 'Netty', 'JMH', 'JUnit 5', 'JaCoCo', 'Maven', 'Docker', 'GitHub Actions', 'ReentrantReadWriteLock', 'ConcurrentHashMap', 'ScheduledExecutorService', 'Consistent Hashing', 'Go'],
+    category: 'Systems & Infrastructure',
     color: 'from-orange-500 to-red-500',
-    link: 'https://github.com/himanshmunjal'
+    link: 'https://github.com/himanshmunjal/JCache'
   },
-
   {
     id: 4,
     title: 'GridSense — AI Grid Demand Forecasting & Anomaly Detection System',
@@ -122,18 +120,6 @@ export const allProjects = [
     color: 'from-orange-500 to-red-500',
     link: 'https://github.com/himanshmunjal'
   },
-
-  {
-    id: 3,
-    title: 'DisasterTweet AI — Real-Time Disaster Tweet Triage & Urgency Ranking System',
-    description: 'Built an NLP intelligence system to classify and prioritize disaster-related tweets during emergencies by fine-tuning RoBERTa for multi-class classification across categories such as SOS, medical emergencies, infrastructure damage, and misinformation. Designed an urgency ranking algorithm combining model confidence, severity indicators, and recency to generate a prioritized alert feed for first responders with a real-time visualization dashboard.',
-    tech: ['Python', 'HuggingFace', 'Transformers', 'PyTorch', 'Pandas', 'Streamlit', 'Plotly'],
-    ongoing: false,
-    category: 'AI/NLP',
-    color: 'from-emerald-500 to-teal-500',
-    link: 'https://github.com/himanshmunjal/DevConnect'
-  },
-
   {
     id: 1,
     title: 'Job Fit & Skill Gap Intelligence System',
@@ -144,7 +130,6 @@ export const allProjects = [
     color: 'from-purple-500 to-pink-500',
     link: 'https://github.com/himanshmunjal/Job-fit-skill-gap-Analyzer'
   },
-
   {
     id: 2,
     title: 'Taxi Fare Prediction System',
@@ -154,18 +139,25 @@ export const allProjects = [
     color: 'from-blue-500 to-cyan-500',
     link: 'https://github.com/himanshmunjal'
   },
-
+  {
+    id: 2,
+    title: 'Text Classification & Neural Embedding Benchmark',
+    description: 'Engineered a unified NLP benchmarking framework evaluating six text classification architectures—ranging from sparse TF-IDF baselines to fine-tuned DistilBERT models—on the 120,000-sample AG News corpus[cite: 1]. Conducted multi-dimensional trade-off analysis across test accuracy, parameter efficiency, training throughput, and per-class precision/recall to establish empirical model selection guidelines for edge and cloud deployments[cite: 1].',
+    tech: ['Python', 'PyTorch', 'Transformers', 'DistilBERT', 'Scikit-learn', 'TF-IDF', 'LSTM/GRU'],
+    ongoing: false,
+    category: 'AI/NLP',
+    color: 'from-blue-500 to-cyan-500',
+    link: 'https://github.com/himanshmunjal/Text-Classification-Benchmark'
+  },
   {
     id: 5,
-    title: 'Airport Management Web – Flight Management & Booking System',
+    title: 'Airport Management Web - Flight Management & Booking System',
     description: 'Built a role-based full-stack airport management system where administrators manage flight schedules while users search, book flights, track baggage status, and submit complaints. Implemented secure authentication using JWT and developed a RESTful backend with Golang (Gin + GORM) integrated with PostgreSQL, with a responsive React frontend.',
     tech: ['React.js', 'Tailwind CSS', 'Golang', 'Gin', 'GORM', 'PostgreSQL', 'JWT Authentication'],
     category: 'Full Stack',
     color: 'from-indigo-500 to-purple-500',
     link: 'https://github.com/himanshmunjal/Training'
   },
-
-  
   {
     id: 6,
     title: 'RetailPulse – Sales & Profit Intelligence Dashboard',
@@ -214,12 +206,13 @@ export const allProjects = [
     link: 'https://github.com/himanshmunjal/Hand-Gesture'
   },
   {
-    id: 7,
-    title: 'FinSight – Financial Performance & Forecasting Dashboard',
-    description: 'Developed a financial analytics dashboard tracking key business metrics including revenue, expenses, EBITDA, and cash flow. Implemented budget vs actual variance analysis and forecasting models to support financial planning and performance monitoring.',
-    tech: ['Power BI', 'DAX', 'Power Query', 'Financial Modeling'],
-    category: 'Analytics',
-    color: 'from-yellow-500 to-orange-500',
+    id: 3,
+    title: 'DisasterTweet AI — Real-Time Disaster Tweet Triage & Urgency Ranking System',
+    description: 'Built an NLP intelligence system to classify and prioritize disaster-related tweets during emergencies by fine-tuning RoBERTa for multi-class classification across categories such as SOS, medical emergencies, infrastructure damage, and misinformation. Designed an urgency ranking algorithm combining model confidence, severity indicators, and recency to generate a prioritized alert feed for first responders with a real-time visualization dashboard.',
+    tech: ['Python', 'HuggingFace', 'Transformers', 'PyTorch', 'Pandas', 'Streamlit', 'Plotly'],
+    ongoing: false,
+    category: 'AI/NLP',
+    color: 'from-emerald-500 to-teal-500',
     link: 'https://github.com/himanshmunjal'
   },
 ];
