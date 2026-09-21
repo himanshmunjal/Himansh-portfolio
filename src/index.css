@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -426,4 +424,22 @@
 .animate-gradient-xy {
   background-size: 400% 400%;
   animation: gradient-xy 3s ease infinite;
+}
+
+/* Journey timeline particles — pure CSS so they never trigger React renders */
+@keyframes timeline-fall {
+  from { top: 0%; }
+  to   { top: 100%; }
+}
+
+/* Respect users who ask the OS for less motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

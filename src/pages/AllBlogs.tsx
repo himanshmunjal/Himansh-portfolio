@@ -1,84 +1,28 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Sparkles, Filter, Clock, Eye, BookOpen } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { allBlogs } from '@/components/sections/BlogSection';
 import { useInView } from '@/hooks/useInView';
+import { useMousePosition } from '@/hooks/useMousePosition';
+import ParticleCanvas from '@/components/common/ParticleCanvas';
 import SEO from '@/components/common/SEO';
 
-const allTags = ['All', 'Java', 'Backend', 'Coding', 'CleanCode', 'MachineLearning', 'DataScience', 'AI', 'Python','System'];
+// Filter chips — each must match a tag on at least one post in allBlogs
+const allTags = ['All', 'Java', 'FullStack', 'DataScience', 'NLP', 'DeepLearning', 'XAI', 'Career'];
+
+const PARTICLE_COLORS = ['rgba(168, 85, 247, 0.6)'];
+const PARTICLE_SIZE: [number, number] = [1, 4];
 
 const AllBlogs: React.FC = () => {
   const { ref, isInView } = useInView({ threshold: 0.05 });
   const [selectedTag, setSelectedTag] = useState('All');
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  // Particle animation
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    interface Particle {
-      x: number;
-      y: number;
-      size: number;
-      speedY: number;
-      opacity: number;
-    }
-
-    const particles: Particle[] = Array.from({ length: 30 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      size: Math.random() * 3 + 1,
-      speedY: Math.random() * 0.5 + 0.2,
-      opacity: Math.random() * 0.5 + 0.3,
-    }));
-
-    let animationFrameId: number;
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      particles.forEach(particle => {
-        particle.y += particle.speedY;
-        if (particle.y > canvas.height) particle.y = 0;
-
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(168, 85, 247, ${particle.opacity})`;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = 'rgba(168, 85, 247, 0.5)';
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      });
-
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => cancelAnimationFrame(animationFrameId);
-  }, []);
+  const mousePosition = useMousePosition(ref);
 
   const filteredBlogs = selectedTag === 'All'
-    ? allBlogs : allBlogs.filter(blog => blog.tags.some(tag => tag.toLowerCase().includes(selectedTag.toLowerCase())));
+    ? allBlogs
+    : allBlogs.filter((blog) => blog.tags.some((tag) => tag.toLowerCase().includes(selectedTag.toLowerCase())));
 
   return (
     <>
@@ -90,7 +34,7 @@ const AllBlogs: React.FC = () => {
       />
     <div className="min-h-screen relative">
       {/* Particle Canvas */}
-      <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0" />
+      <ParticleCanvas className="fixed inset-0 w-full h-full pointer-events-none z-0" variant="fall" count={30} size={PARTICLE_SIZE} colors={PARTICLE_COLORS} speed={0.5} />
 
       {/* Background */}
       <div className="fixed inset-0 bg-background opacity-90 -z-10" />

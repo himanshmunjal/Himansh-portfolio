@@ -1,92 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Github, Sparkles, Rocket, Code, Zap, Star, ExternalLink } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { allProjects } from '@/components/sections/ProjectsSection';
 import { useInView } from '@/hooks/useInView';
+import { useMousePosition } from '@/hooks/useMousePosition';
+import ParticleCanvas from '@/components/common/ParticleCanvas';
 import SEO from '@/components/common/SEO';
+
+const PARTICLE_SIZE: [number, number] = [1, 4];
 
 const AllProjects: React.FC = () => {
   const { ref, isInView } = useInView({ threshold: 0.05 });
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const mousePosition = useMousePosition(ref);
   const [hoveredProject, setHoveredProject] = useState<number | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  // Particle animation
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    interface Particle {
-      x: number;
-      y: number;
-      size: number;
-      speedX: number;
-      speedY: number;
-      opacity: number;
-      color: string;
-    }
-
-    const colors = [
-      'rgba(168, 85, 247, 0.6)',
-      'rgba(236, 72, 153, 0.6)',
-      'rgba(59, 130, 246, 0.6)',
-    ];
-
-    const particles: Particle[] = Array.from({ length: 40 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      size: Math.random() * 3 + 1,
-      speedX: (Math.random() - 0.5) * 0.3,
-      speedY: (Math.random() - 0.5) * 0.3,
-      opacity: Math.random() * 0.5 + 0.3,
-      color: colors[Math.floor(Math.random() * colors.length)],
-    }));
-
-    let animationFrameId: number;
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      particles.forEach(particle => {
-        particle.x += particle.speedX;
-        particle.y += particle.speedY;
-
-        if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1;
-        if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1;
-
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = particle.color;
-        ctx.shadowBlur = 15;
-        ctx.shadowColor = particle.color;
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      });
-
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => cancelAnimationFrame(animationFrameId);
-  }, []);
 
   return (
     <>
@@ -98,7 +26,7 @@ const AllProjects: React.FC = () => {
       />
     <div className="min-h-screen relative">
       {/* Particle Canvas */}
-      <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0" />
+      <ParticleCanvas className="fixed inset-0 w-full h-full pointer-events-none z-0" count={40} size={PARTICLE_SIZE} speed={0.3} />
 
       {/* Background */}
       <div className="fixed inset-0 bg-background opacity-90 -z-10" />
@@ -283,7 +211,7 @@ const AllProjects: React.FC = () => {
           {/* GitHub Link */}
           <div className={`text-center ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.8s' }}>
             <a
-              href="https://github.com"
+              href="https://github.com/himanshmunjal"
               target="_blank"
               rel="noopener noreferrer"
               className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-xl overflow-hidden"

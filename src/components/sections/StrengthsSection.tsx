@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   Brain, 
   Users, 
@@ -11,6 +11,18 @@ import {
   Zap
 } from 'lucide-react';
 import { useInView } from '@/hooks/useInView';
+import { useMousePosition } from '@/hooks/useMousePosition';
+import ParticleCanvas from '@/components/common/ParticleCanvas';
+
+const PARTICLE_COLORS = [
+  'rgba(168, 85, 247, 0.6)',
+  'rgba(59, 130, 246, 0.6)',
+  'rgba(16, 185, 129, 0.6)',
+  'rgba(249, 115, 22, 0.6)',
+  'rgba(234, 179, 8, 0.6)',
+  'rgba(236, 72, 153, 0.6)',
+];
+const PARTICLE_SIZE: [number, number] = [2, 6];
 
 const coreStrengths = [
   {
@@ -62,16 +74,6 @@ const coreStrengths = [
     stats: 'Quality focused',
   },
 ];
-
-interface FloatingParticle {
-  x: number;
-  y: number;
-  size: number;
-  speedX: number;
-  speedY: number;
-  opacity: number;
-  color: string;
-}
 
 const StrengthCard: React.FC<{
   strength: typeof coreStrengths[0];
@@ -197,124 +199,12 @@ const StrengthCard: React.FC<{
 
 const CoreStrengthsSection: React.FC = () => {
   const { ref, isInView } = useInView({ threshold: 0.1 });
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [floatingParticles, setFloatingParticles] = useState<FloatingParticle[]>([]);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  // Mouse movement tracking
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  // Initialize floating particles
-  useEffect(() => {
-    const colors = [
-      'rgba(168, 85, 247, 0.6)', // purple
-      'rgba(59, 130, 246, 0.6)',  // blue
-      'rgba(16, 185, 129, 0.6)',  // emerald
-      'rgba(249, 115, 22, 0.6)',  // orange
-      'rgba(234, 179, 8, 0.6)',   // yellow
-      'rgba(236, 72, 153, 0.6)',  // pink
-    ];
-
-    const particles: FloatingParticle[] = Array.from({ length: 35 }, () => ({
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-      size: Math.random() * 4 + 2,
-      speedX: (Math.random() - 0.5) * 0.4,
-      speedY: (Math.random() - 0.5) * 0.4,
-      opacity: Math.random() * 0.5 + 0.3,
-      color: colors[Math.floor(Math.random() * colors.length)],
-    }));
-    setFloatingParticles(particles);
-  }, []);
-
-  // Animate floating particles
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    let animationFrameId: number;
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      setFloatingParticles(prevParticles =>
-        prevParticles.map(particle => {
-          let newX = particle.x + particle.speedX;
-          let newY = particle.y + particle.speedY;
-
-          if (newX < 0 || newX > canvas.width) particle.speedX *= -1;
-          if (newY < 0 || newY > canvas.height) particle.speedY *= -1;
-
-          newX = Math.max(0, Math.min(canvas.width, newX));
-          newY = Math.max(0, Math.min(canvas.height, newY));
-
-          // Draw particle with glow
-          ctx.beginPath();
-          ctx.arc(newX, newY, particle.size, 0, Math.PI * 2);
-          ctx.fillStyle = particle.color;
-          ctx.shadowBlur = 20;
-          ctx.shadowColor = particle.color;
-          ctx.fill();
-          ctx.shadowBlur = 0;
-
-          // Draw connections
-          prevParticles.forEach(otherParticle => {
-            const dx = newX - otherParticle.x;
-            const dy = newY - otherParticle.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance < 120) {
-              ctx.beginPath();
-              ctx.moveTo(newX, newY);
-              ctx.lineTo(otherParticle.x, otherParticle.y);
-              ctx.strokeStyle = `rgba(168, 85, 247, ${0.15 * (1 - distance / 120)})`;
-              ctx.lineWidth = 1;
-              ctx.stroke();
-            }
-          });
-
-          return { ...particle, x: newX, y: newY };
-        })
-      );
-
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  const mousePosition = useMousePosition(ref);
 
   return (
     <section id="strengths" className="py-20 relative overflow-hidden" ref={ref}>
       {/* Particle Canvas */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 pointer-events-none z-0"
-      />
+      <ParticleCanvas count={35} colors={PARTICLE_COLORS} size={PARTICLE_SIZE} speed={0.4} linkDistance={120} />
 
       {/* Background */}
       <div className="absolute inset-0 bg-[image:var(--gradient-mesh)] opacity-40" />

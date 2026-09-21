@@ -17,7 +17,6 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: { "@": path.resolve(__dirname, "./src") },
   },
-// vite.config.ts
   assetsInclude: ['**/*.md'],
   build: {
     chunkSizeWarningLimit: 1000,
@@ -25,7 +24,6 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks: {
-          'three-vendor': ['three', '@react-three/fiber', '@react-three/drei'],
           'motion':       ['framer-motion'],
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
         },

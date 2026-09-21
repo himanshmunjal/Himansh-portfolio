@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { GraduationCap, Briefcase, Award, TrendingUp, Zap, Star } from 'lucide-react';
 import { useInView } from '@/hooks/useInView';
+import { useMousePosition } from '@/hooks/useMousePosition';
 
 const education = [
   {
@@ -43,55 +44,25 @@ const experience = [
 ];
 
 interface TimelineParticle {
-  y: number;
   opacity: number;
   size: number;
-  speed: number;
+  duration: number;
+  delay: number;
 }
+
+// Stable across renders; motion is pure CSS so nothing re-renders while it plays
+const timelineParticles: TimelineParticle[] = Array.from({ length: 20 }, () => ({
+  opacity: Math.random() * 0.5 + 0.3,
+  size: Math.random() * 4 + 2,
+  duration: 8 + Math.random() * 14,
+  delay: -Math.random() * 20,
+}));
 
 const JourneySection: React.FC = () => {
   const { ref, isInView } = useInView({ threshold: 0.1 });
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const mousePosition = useMousePosition(ref);
   const [activeCard, setActiveCard] = useState<number | null>(null);
-  const [timelineParticles, setTimelineParticles] = useState<TimelineParticle[]>([]);
   const timelineRef = useRef<HTMLDivElement>(null);
-
-  // Mouse movement tracking
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  // Initialize timeline particles
-  useEffect(() => {
-    const initParticles: TimelineParticle[] = Array.from({ length: 20 }, () => ({
-      y: Math.random() * 100,
-      opacity: Math.random() * 0.5 + 0.3,
-      size: Math.random() * 4 + 2,
-      speed: Math.random() * 0.5 + 0.2,
-    }));
-    setTimelineParticles(initParticles);
-  }, []);
-
-  // Animate timeline particles
-  useEffect(() => {
-    if (!isInView) return;
-
-    const interval = setInterval(() => {
-      setTimelineParticles(prev =>
-        prev.map(particle => ({
-          ...particle,
-          y: particle.y >= 100 ? 0 : particle.y + particle.speed,
-        }))
-      );
-    }, 50);
-
-    return () => clearInterval(interval);
-  }, [isInView]);
 
   return (
     <section id="journey" className="py-20 relative overflow-hidden" ref={ref}>
@@ -160,11 +131,11 @@ const JourneySection: React.FC = () => {
                 key={idx}
                 className="absolute left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-purple-400 to-pink-400"
                 style={{
-                  top: `${particle.y}%`,
                   width: `${particle.size}px`,
                   height: `${particle.size}px`,
                   opacity: particle.opacity,
                   boxShadow: '0 0 10px rgba(168, 85, 247, 0.5)',
+                  animation: `timeline-fall ${particle.duration}s linear ${particle.delay}s infinite`,
                 }}
               />
             ))}

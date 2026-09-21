@@ -3,6 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { Sun, Moon, Menu, X, Download } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 
+const RESUME_URL = '/resume/Himansh_Munjal_Resume_Full_Stack.pdf';
+
 const navLinks = [
   { name: 'Home', href: '/', section: 'hero' },
   { name: 'About', href: '/#about', section: 'about' },
@@ -30,15 +32,6 @@ const Header: React.FC = () => {
     }
   };
 
-  const handleDownloadResume = () => {
-  const link = document.createElement('a');
-  link.href = '/resume/Himansh_Munjal_Resume_Full_Stack.pdf';
-  link.download = 'Himansh_Munjal_Resume_Full_Stack.pdf';
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-};
-
   return (
     <header className="fixed top-0 left-0 right-0 z-40 glass-header">
       <div className="container mx-auto px-4">
@@ -49,7 +42,7 @@ const Header: React.FC = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav aria-label="Primary" className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
@@ -69,7 +62,7 @@ const Header: React.FC = () => {
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg hover:bg-secondary/50 transition-colors"
-              aria-label="Toggle theme"
+              aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
             >
               {theme === 'dark' ? (
                 <Sun className="w-5 h-5 text-yellow-400" />
@@ -79,19 +72,21 @@ const Header: React.FC = () => {
             </button>
 
             {/* Resume Button */}
-            <button
-              onClick={handleDownloadResume}
+            <a
+              href={RESUME_URL}
+              download
               className="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg gradient-button hover:opacity-90 transition-opacity"
             >
               <Download className="w-4 h-4" />
               Resume
-            </button>
+            </a>
 
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="md:hidden p-2 rounded-lg hover:bg-secondary/50 transition-colors"
               aria-label="Toggle menu"
+              aria-expanded={isMobileMenuOpen}
             >
               {isMobileMenuOpen ? (
                 <X className="w-6 h-6" />
@@ -116,13 +111,14 @@ const Header: React.FC = () => {
                   {link.name}
                 </Link>
               ))}
-              <button
-                onClick={handleDownloadResume}
+              <a
+                href={RESUME_URL}
+                download
                 className="flex items-center gap-2 px-4 py-2 rounded-lg gradient-button hover:opacity-90 transition-opacity w-fit"
               >
                 <Download className="w-4 h-4" />
                 Resume
-              </button>
+              </a>
             </div>
           </nav>
         )}

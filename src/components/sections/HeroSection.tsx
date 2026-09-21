@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
 import { Github, Linkedin, Instagram, FileText } from 'lucide-react';
-import { Canvas } from '@react-three/fiber';
-import { Environment } from '@react-three/drei';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Lazy load the 3D object
-const Hero3DObject = lazy(() => import('../common/Hero3DObject'));
+// Lazy load the whole 3D scene (three.js, fiber, drei) — none of it is in the initial bundle
+const Hero3DScene = lazy(() => import('../common/Hero3DScene'));
 
 const socialLinks = [
   { icon: Github, href: 'https://github.com/himanshmunjal', label: 'GitHub' },
@@ -78,16 +76,6 @@ const HeroSection: React.FC = () => {
     const id = setInterval(() => setRoleIndex(p => (p + 1) % roles.length), 4000);
     return () => clearInterval(id);
   }, []);
-
-  // ── Resume download ────────────────────────────────────────────────
-  const handleDownloadResume = () => {
-    const a = document.createElement('a');
-    a.href = '/resume/Himansh_Munjal_Resume_Full_Stack.pdf';
-    a.download = 'Himansh_Munjal_Resume_Full_Stack.pdf';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  };
 
   const fadeStyle = { opacity: scrollOpacity };
 
@@ -179,15 +167,11 @@ const HeroSection: React.FC = () => {
       {show3D ? (
         <div className="absolute inset-0 z-10 pointer-events-none sm:pointer-events-auto">
           <Suspense fallback={<CanvasLoader />}>
-            <Canvas
-              camera={{ position: [0, 0, 8], fov: 45 }}
-              dpr={isMobile ? [1, 1.5] : [1, 2]}
-              performance={{ min: 0.5 }}
-              frameloop={isMobile ? 'demand' : 'always'}
-            >
-              <Environment preset="city" />
-              <Hero3DObject scrollProgress={scrollYRef.current} />
-            </Canvas>
+            <Hero3DScene
+              isMobile={isMobile}
+              paused={scrollOpacity === 0}
+              scrollProgress={scrollYRef.current}
+            />
           </Suspense>
         </div>
       ) : (
@@ -273,8 +257,9 @@ const HeroSection: React.FC = () => {
       {/* ── Resume button ─────────────────────────────────────────────── */}
       {/* On mobile, nudge left so it doesn't crowd the social icons     */}
       <div className="absolute bottom-6 md:bottom-8 right-6 md:right-8 z-50">
-        <button
-          onClick={handleDownloadResume}
+        <a
+          href="/resume/Himansh_Munjal_Resume_Full_Stack.pdf"
+          download
           className="flex items-center gap-2 md:gap-3
                      text-xs md:text-sm lg:text-base font-bold uppercase
                      tracking-[0.15em] md:tracking-[0.2em]
@@ -282,7 +267,7 @@ const HeroSection: React.FC = () => {
           aria-label="Download Resume"
         >
           Resume <FileText className="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5" />
-        </button>
+        </a>
       </div>
     </section>
   );

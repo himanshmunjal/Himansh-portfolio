@@ -14,6 +14,12 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { useInView } from '@/hooks/useInView';
+import { useMousePosition } from '@/hooks/useMousePosition';
+import ParticleCanvas from '@/components/common/ParticleCanvas';
+
+const PARTICLE_COLORS = ['rgba(168, 85, 247, 0.6)'];
+const PARTICLE_SIZE: [number, number] = [1, 4];
+
 // Put this at the top of BlogSection.tsx, outside the component
 const blogImports: Record<string, () => Promise<{ default: string }>> = {
   'concurrency-bottlenecks-in-java-caches' : () => import('../blogs/concurrency-bottlenecks-in-java-caches.md?raw'),
@@ -24,7 +30,7 @@ const blogImports: Record<string, () => Promise<{ default: string }>> = {
   'explainability-crisis-black-box-ai':   () => import('../blogs/explainability-crisis-black-box-ai.md?raw'),
   'from-scattered-focus-to-clarity':      () => import('../blogs/from-scattered-focus-to-clarity.md?raw'),
 };
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 
 // ---------------------------------------------------------------------------
 // Blog metadata — slug must match the filename in /public/blogs/
@@ -572,52 +578,11 @@ const BlogCard: React.FC<{
 // ---------------------------------------------------------------------------
 const BlogSection: React.FC = () => {
   const { ref, isInView } = useInView({ threshold: 0.1 });
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const mousePosition = useMousePosition(ref);
   const navigate = useNavigate();
+  const location = useLocation();
   const { slug } = useParams<{ slug: string }>();
   const activeBlog = allBlogs.find((b) => b.slug === slug) ?? null;
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => setMousePosition({ x: e.clientX, y: e.clientY });
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  // Particle background
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    const particles = Array.from({ length: 20 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      size: Math.random() * 3 + 1,
-      speedY: Math.random() * 0.5 + 0.2,
-      opacity: Math.random() * 0.5 + 0.3,
-    }));
-    let rafId: number;
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach((p) => {
-        p.y += p.speedY;
-        if (p.y > canvas.height) p.y = 0;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(168, 85, 247, ' + p.opacity + ')';
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = 'rgba(168, 85, 247, 0.5)';
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      });
-      rafId = requestAnimationFrame(animate);
-    };
-    animate();
-    return () => cancelAnimationFrame(rafId);
-  }, []);
 
   const handleNavigate = useCallback((id: number) => {
     const found = allBlogs.find((b) => b.id === id);
@@ -629,13 +594,13 @@ const BlogSection: React.FC = () => {
       {activeBlog && (
         <BlogReader
           blog={activeBlog}
-          onClose={() => navigate(-1)}
+          onClose={() => (location.key !== 'default' ? navigate(-1) : navigate('/#blog'))}
           onNavigate={handleNavigate}
         />
       )}
 
       <section id="blog" className="py-20 relative overflow-hidden" ref={ref}>
-        <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-0" />
+        <ParticleCanvas variant="fall" count={20} size={PARTICLE_SIZE} colors={PARTICLE_COLORS} speed={0.5} />
         <div className="absolute inset-0 bg-[image:var(--gradient-mesh)] opacity-30" />
 
         <div className="absolute inset-0 pointer-events-none overflow-hidden">

@@ -1,5 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Sparkles } from 'lucide-react';
+import ParticleCanvas from '@/components/common/ParticleCanvas';
+
+const PARTICLE_COLORS = [
+  'hsla(270, 70%, 60%, 0.5)',
+  'hsla(320, 70%, 60%, 0.5)',
+  'hsla(210, 70%, 60%, 0.5)',
+  'hsla(160, 70%, 55%, 0.5)',
+];
+const PARTICLE_SIZE: [number, number] = [1, 3];
 
 const technologies = [
   { name: 'Python', icon: '🐍', color: 'from-yellow-500 to-blue-500' },
@@ -23,7 +32,6 @@ const technologies = [
   { name: 'Docker', icon: '🐳', color: 'from-blue-500 to-cyan-600' },
   { name: 'FastAPI', icon: '⚡', color: 'from-teal-500 to-emerald-500' },
   { name: 'Linux', icon: '🐧', color: 'from-yellow-500 to-orange-600' },
-  { name: 'Golang', icon: '🔷', color: 'from-cyan-400 to-blue-500' },
   { name: 'JWT', icon: '🔐', color: 'from-purple-500 to-pink-500' },
   { name: 'NLP', icon: '📝', color: 'from-green-500 to-teal-500' },
   { name: 'Jupyter', icon: '📓', color: 'from-orange-500 to-red-500' },
@@ -33,89 +41,14 @@ const technologies = [
 
 const TechStrip: React.FC = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   
   // Duplicate the array for seamless loop
   const duplicatedTech = [...technologies, ...technologies, ...technologies];
 
-  // Particle animation on canvas
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const container = canvas.parentElement;
-    if (!container) return;
-
-    canvas.width = container.offsetWidth;
-    canvas.height = container.offsetHeight;
-
-    interface Particle {
-      x: number;
-      y: number;
-      size: number;
-      speedY: number;
-      opacity: number;
-      hue: number;
-    }
-
-    const particles: Particle[] = Array.from({ length: 15 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      size: Math.random() * 2 + 1,
-      speedY:0.2,
-      //  Math.random() * 
-      opacity: Math.random() * 0.4 + 0.2,
-      hue: Math.random() * 360,
-    }));
-
-    let animationFrameId: number;
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      particles.forEach(particle => {
-        particle.y += particle.speedY;
-        if (particle.y > canvas.height) {
-          particle.y = 0;
-          particle.x = Math.random() * canvas.width;
-        }
-
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${particle.hue}, 70%, 60%, ${particle.opacity})`;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = `hsla(${particle.hue}, 70%, 60%, ${particle.opacity})`;
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      });
-
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    const handleResize = () => {
-      if (container) {
-        canvas.width = container.offsetWidth;
-        canvas.height = container.offsetHeight;
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
   return (
     <section className="py-16 overflow-hidden relative">
       {/* Particle Canvas */}
-      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-0" />
+      <ParticleCanvas variant="fall" count={15} size={PARTICLE_SIZE} colors={PARTICLE_COLORS} speed={0.05} />
 
       {/* Background with glass effect */}
       <div className="absolute inset-0 glass-card rounded-none opacity-40 backdrop-blur-sm" />

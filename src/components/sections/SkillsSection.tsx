@@ -1,6 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { Code, Brain, BarChart3, Rocket, Calculator, Wrench, Sparkles, Zap, TrendingUp } from 'lucide-react';
 import { useInView } from '@/hooks/useInView';
+import { useMousePosition } from '@/hooks/useMousePosition';
+import ParticleCanvas from '@/components/common/ParticleCanvas';
+
+const PARTICLE_COLORS = [
+  'rgba(168, 85, 247, 0.6)',
+  'rgba(59, 130, 246, 0.6)',
+  'rgba(16, 185, 129, 0.6)',
+  'rgba(249, 115, 22, 0.6)',
+  'rgba(236, 72, 153, 0.6)',
+];
+const PARTICLE_SIZE: [number, number] = [1, 3];
 
 const skillCategories = [
   {
@@ -89,16 +100,6 @@ const skillCategories = [
     ],
   },
 ];
-
-interface FloatingParticle {
-  x: number;
-  y: number;
-  size: number;
-  speedX: number;
-  speedY: number;
-  opacity: number;
-  color: string;
-}
 
 const SkillCard: React.FC<{
   category: typeof skillCategories[0];
@@ -304,126 +305,12 @@ const SkillCard: React.FC<{
 
 const SkillsSection: React.FC = () => {
   const { ref, isInView } = useInView({ threshold: 0.1 });
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [floatingParticles, setFloatingParticles] = useState<FloatingParticle[]>([]);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  // Mouse movement tracking
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  // Initialize floating particles
-  useEffect(() => {
-    const colors = [
-      'rgba(168, 85, 247, 0.6)', // purple
-      'rgba(59, 130, 246, 0.6)',  // blue
-      'rgba(16, 185, 129, 0.6)',  // emerald
-      'rgba(249, 115, 22, 0.6)',  // orange
-      'rgba(236, 72, 153, 0.6)',  // pink
-    ];
-
-    const particles: FloatingParticle[] = Array.from({ length: 30 }, () => ({
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-      size: Math.random() * 2 + 1,
-      speedX: (Math.random() - 0.5) * 0.5,
-      speedY: (Math.random() - 0.5) * 0.5,
-      opacity: Math.random() * 0.5 + 0.3,
-      color: colors[Math.floor(Math.random() * colors.length)],
-    }));
-    setFloatingParticles(particles);
-  }, []);
-
-  // Animate floating particles
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    let animationFrameId: number;
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      setFloatingParticles(prevParticles =>
-        prevParticles.map(particle => {
-          let newX = particle.x + particle.speedX;
-          let newY = particle.y + particle.speedY;
-
-          if (newX < 0 || newX > canvas.width) particle.speedX *= -1;
-          if (newY < 0 || newY > canvas.height) particle.speedY *= -1;
-
-          newX = Math.max(0, Math.min(canvas.width, newX));
-          newY = Math.max(0, Math.min(canvas.height, newY));
-
-          // Draw connections between particles (neural network effect)
-          prevParticles.forEach((otherParticle) => {
-            const dx = newX - otherParticle.x;
-            const dy = newY - otherParticle.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            // Draw line if particles are close enough
-            if (distance < 150) {
-              ctx.beginPath();
-              ctx.moveTo(newX, newY);
-              ctx.lineTo(otherParticle.x, otherParticle.y);
-              // Line opacity depends on distance
-              const lineOpacity = 0.15 * (1 - distance / 150) * particle.opacity;
-              ctx.strokeStyle = particle.color.replace(/[\d.]+\)$/g, `${lineOpacity})`);
-              ctx.lineWidth = 1;
-              ctx.stroke();
-            }
-          });
-
-          // Draw particle with glow
-          ctx.beginPath();
-          ctx.arc(newX, newY, particle.size, 0, Math.PI * 2);
-          ctx.fillStyle = particle.color;
-          ctx.shadowBlur = 10;
-          ctx.shadowColor = particle.color;
-          ctx.fill();
-          ctx.shadowBlur = 0;
-
-          return { ...particle, x: newX, y: newY };
-        })
-      );
-
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  const mousePosition = useMousePosition(ref);
 
   return (
     <section className="py-20 relative overflow-hidden" ref={ref}>
       {/* Particle Canvas */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 pointer-events-none z-0"
-      />
+      <ParticleCanvas count={30} colors={PARTICLE_COLORS} size={PARTICLE_SIZE} speed={0.5} linkDistance={150} />
 
       {/* Background */}
       <div className="absolute inset-0 bg-[image:var(--gradient-mesh)] opacity-40" />

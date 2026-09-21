@@ -3,14 +3,67 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Himansh Portfolio</title>
-    <meta name="author" content="Lovable" />
-    <link rel="icon" href="/images.png" />
-  
+
+    <title>Himansh Munjal — AI Engineer | Data Science | Full Stack Developer</title>
+    <meta name="description" content="Portfolio of Himansh Munjal — Computer Science (Data Science) student at VIT Vellore building machine learning systems, NLP pipelines and full-stack applications." />
+    <meta name="author" content="Himansh Munjal" />
+    <meta name="theme-color" content="#0a0a1a" />
+    <link rel="canonical" href="https://himansh-portfolio.vercel.app/" />
+
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- Link previews (crawlers don't run JS, so these must be static; per-route tags are added by react-helmet) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Himansh Munjal" />
+    <meta property="og:title" content="Himansh Munjal — AI Engineer | Data Science | Full Stack Developer" />
+    <meta property="og:description" content="Machine learning systems, NLP pipelines and full-stack applications by Himansh Munjal, Data Science student at VIT Vellore." />
+    <meta property="og:url" content="https://himansh-portfolio.vercel.app/" />
+    <meta property="og:image" content="https://himansh-portfolio.vercel.app/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Himansh Munjal — AI Engineer | Data Science | Full Stack Developer" />
+    <meta name="twitter:description" content="Machine learning systems, NLP pipelines and full-stack applications by Himansh Munjal." />
+    <meta name="twitter:image" content="https://himansh-portfolio.vercel.app/og-image.jpg" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Himansh Munjal",
+        "url": "https://himansh-portfolio.vercel.app/",
+        "image": "https://himansh-portfolio.vercel.app/images/profile.jpeg",
+        "jobTitle": "AI / Data Science Engineer",
+        "alumniOf": { "@type": "CollegeOrUniversity", "name": "Vellore Institute of Technology" },
+        "knowsAbout": ["Machine Learning", "Deep Learning", "Natural Language Processing", "Data Science", "Full Stack Development"],
+        "sameAs": [
+          "https://github.com/himanshmunjal",
+          "https://www.linkedin.com/in/himansh-munjal/"
+        ]
+      }
+    </script>
+
+    <!-- Apply the saved theme before first paint to avoid a dark→light flash -->
+    <script>
+      try {
+        if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light');
+      } catch (e) {}
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300..900&display=swap"
+    />
   </head>
 
   <body>
     <div id="root"></div>
+    <noscript>
+      Himansh Munjal — AI Engineer, Data Science student at VIT Vellore. Enable JavaScript to view this portfolio.
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

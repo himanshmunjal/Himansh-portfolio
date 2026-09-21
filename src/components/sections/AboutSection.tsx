@@ -15,6 +15,12 @@ const skills = [
   { name: 'Problem Solving', level: 88, icon: Zap },
 ];
 
+// Stable positions (Math.random() inside JSX would re-roll on every render)
+const portraitParticles = Array.from({ length: 6 }, () => ({
+  top: Math.random() * 100,
+  left: Math.random() * 100,
+}));
+
 const floatingWords = ['Innovate', 'Create', 'Analyze', 'Build', 'Transform', 'Optimize'];
 
 const AboutSection: React.FC = () => {
@@ -22,31 +28,43 @@ const AboutSection: React.FC = () => {
   const [animatedValues, setAnimatedValues] = useState<Record<string, string>>({});
   const [hoveredStat, setHoveredStat] = useState<number | null>(null);
   const [skillLevels, setSkillLevels] = useState<number[]>([0, 0, 0, 0]);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const imageRef = useRef<HTMLDivElement>(null);
 
-  const handleDownloadResume = () => {
-    const link = document.createElement('a');
-    link.href = '/resume/Himansh_Munjal_Resume_Full_Stack.pdf';
-    link.download = 'Himansh_Munjal_Resume_Full_Stack.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  // Mouse tracking for parallax
+  // Mouse parallax on the portrait: written straight to the DOM (rAF-throttled,
+  // only while on screen) so moving the mouse never re-renders the section.
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = imageRef.current?.getBoundingClientRect();
-      if (rect) {
-        const x = (e.clientX - rect.left - rect.width / 2) / rect.width;
-        const y = (e.clientY - rect.top - rect.height / 2) / rect.height;
-        setMousePosition({ x, y });
-      }
+    const el = imageRef.current;
+    if (!el) return;
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    let raf = 0;
+    let last: MouseEvent | null = null;
+
+    const apply = () => {
+      raf = 0;
+      if (!last) return;
+      const rect = el.getBoundingClientRect();
+      const x = (last.clientX - rect.left - rect.width / 2) / rect.width;
+      const y = (last.clientY - rect.top - rect.height / 2) / rect.height;
+      el.style.transform = `perspective(1000px) rotateY(${x * 10}deg) rotateX(${-y * 10}deg)`;
+    };
+    const onMove = (e: MouseEvent) => {
+      last = e;
+      if (!raf) raf = requestAnimationFrame(apply);
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) window.addEventListener('mousemove', onMove, { passive: true });
+      else window.removeEventListener('mousemove', onMove);
+    });
+    io.observe(el);
+
+    return () => {
+      io.disconnect();
+      window.removeEventListener('mousemove', onMove);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, []);
 
   // Animate stats
@@ -179,10 +197,7 @@ const AboutSection: React.FC = () => {
             <div 
               ref={imageRef}
               className="relative group"
-              style={{
-                transform: `perspective(1000px) rotateY(${mousePosition.x * 10}deg) rotateX(${-mousePosition.y * 10}deg)`,
-                transition: 'transform 0.1s ease-out',
-              }}
+              style={{ transition: 'transform 0.1s ease-out' }}
             >
               {/* Animated rings */}
               <div className="absolute inset-0 -z-10">
@@ -198,8 +213,12 @@ const AboutSection: React.FC = () => {
                   <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                   
                   <img
-                    src="/images/profile.jpeg"
-                    alt="Himansh Munjal"
+                    src="/images/profile.webp"
+                    alt="Portrait of Himansh Munjal"
+                    width={360}
+                    height={360}
+                    loading="lazy"
+                    decoding="async"
                     className="w-80 h-80 md:w-[360px] md:h-[360px] object-cover rounded-2xl relative z-10 group-hover:scale-105 transition-transform duration-500"
                   />
                   
@@ -212,13 +231,13 @@ const AboutSection: React.FC = () => {
               </div>
 
               {/* Floating particles around image */}
-              {[...Array(6)].map((_, i) => (
+              {portraitParticles.map((pos, i) => (
                 <div
                   key={i}
                   className="absolute w-2 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-sm"
                   style={{
-                    top: `${Math.random() * 100}%`,
-                    left: `${Math.random() * 100}%`,
+                    top: `${pos.top}%`,
+                    left: `${pos.left}%`,
                     animation: `float-particle ${3 + i}s ease-in-out infinite`,
                     animationDelay: `${i * 0.5}s`,
                   }}
@@ -385,8 +404,9 @@ const AboutSection: React.FC = () => {
           }`}
           style={{ animationDelay: '0.7s' }}
         >
-          <button
-            onClick={handleDownloadResume}
+          <a
+            href="/resume/Himansh_Munjal_Resume_Full_Stack.pdf"
+            download
             className="relative group inline-flex items-center gap-3 px-10 py-4 rounded-xl overflow-hidden transition-all shadow-lg hover:shadow-2xl"
           >
             {/* Animated gradient background */}
@@ -403,7 +423,7 @@ const AboutSection: React.FC = () => {
 
             {/* Glow effect */}
             <div className="absolute inset-0 blur-xl bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 opacity-0 group-hover:opacity-50 transition-opacity -z-10" />
-          </button>
+          </a>
         </div>
       </div>
 

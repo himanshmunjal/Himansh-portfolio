@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Mail,
   Phone,
@@ -6,7 +6,6 @@ import {
   Github,
   Linkedin,
   Instagram,
-  Twitter,
   Send,
   Sparkles,
   CheckCircle,
@@ -15,6 +14,10 @@ import {
 
 import { useInView } from "@/hooks/useInView";
 import emailjs from "@emailjs/browser";
+import ParticleCanvas from "@/components/common/ParticleCanvas";
+
+const PARTICLE_SIZE: [number, number] = [2, 6];
+
 const contactInfo = [
   {
     icon: Mail,
@@ -46,7 +49,6 @@ const socialLinks = [
 
 const ConnectSection: React.FC = () => {
   const { ref, isInView } = useInView({ threshold: 0.1 });
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -71,70 +73,6 @@ const ConnectSection: React.FC = () => {
     }, 4000);
     return () => clearTimeout(timer);
   }, [toast]);
-
-  /* ==============================
-     PARTICLES
-  ============================== */
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    interface Particle {
-      x: number;
-      y: number;
-      size: number;
-      speedX: number;
-      speedY: number;
-      opacity: number;
-      color: string;
-    }
-
-    const colors = [
-      "rgba(236,72,153,0.6)",
-      "rgba(168,85,247,0.6)",
-      "rgba(59,130,246,0.6)",
-    ];
-
-    const particles: Particle[] = Array.from({ length: 30 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      size: Math.random() * 4 + 2,
-      speedX: (Math.random() - 0.5) * 0.5,
-      speedY: (Math.random() - 0.5) * 0.5,
-      opacity: Math.random() * 0.5 + 0.3,
-      color: colors[Math.floor(Math.random() * colors.length)],
-    }));
-
-    let animationFrameId: number;
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      particles.forEach((particle) => {
-        particle.x += particle.speedX;
-        particle.y += particle.speedY;
-
-        if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1;
-        if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1;
-
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = particle.color;
-        ctx.fill();
-      });
-
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    animate();
-    return () => cancelAnimationFrame(animationFrameId);
-  }, []);
 
   /* ==============================
      HANDLERS
@@ -184,7 +122,7 @@ const ConnectSection: React.FC = () => {
 
   return (
     <section id="connect" className="py-20 relative overflow-hidden" ref={ref}>
-      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" />
+      <ParticleCanvas count={30} size={PARTICLE_SIZE} speed={0.5} />
 
       <div className="container mx-auto px-4 relative z-10">
         {/* HEADER */}

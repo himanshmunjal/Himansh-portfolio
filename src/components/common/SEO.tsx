@@ -2,6 +2,12 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { SEO_CONFIG } from '../config/SEO';
 
+interface ArticleMeta {
+  publishedTime?: string;
+  modifiedTime?: string;
+  tags?: string[];
+}
+
 interface SEOProps {
     title?: string;
     description?: string;
@@ -9,7 +15,7 @@ interface SEOProps {
     url?: string;
     type?: string;
     keywords?: string[];
-    article?: any;
+    article?: ArticleMeta | null;
     noIndex?: boolean;
   }
   
@@ -33,9 +39,9 @@ interface SEOProps {
       ? image
       : `${SEO_CONFIG.siteUrl}${image}`
     : `${SEO_CONFIG.siteUrl}${SEO_CONFIG.defaultImage}`;
-  const metaUrl = url
+  const metaUrl = url && url !== '/'
     ? `${SEO_CONFIG.siteUrl}${url}`
-    : SEO_CONFIG.siteUrl;
+    : `${SEO_CONFIG.siteUrl}/`;
   const metaKeywords = [...SEO_CONFIG.keywords, ...keywords].join(', ');
 
   // JSON-LD structured data

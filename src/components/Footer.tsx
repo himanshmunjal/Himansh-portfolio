@@ -1,5 +1,5 @@
 import React from 'react';
-import { Github, Linkedin, Instagram, Twitter, ArrowUp, Heart } from 'lucide-react';
+import { Github, Linkedin, Instagram, ArrowUp, Heart } from 'lucide-react';
 
 const socialLinks = [
   { icon: Github, href: 'https://github.com/himanshmunjal', label: 'GitHub' },
@@ -46,6 +46,7 @@ const Footer: React.FC = () => {
 
           {/* Back to Top */}
           <button
+            type="button"
             onClick={scrollToTop}
             className="flex items-center gap-2 px-4 py-2 rounded-lg glass-card hover:bg-primary/20 transition-all group"
           >

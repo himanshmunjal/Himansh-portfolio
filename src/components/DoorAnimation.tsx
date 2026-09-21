@@ -11,15 +11,15 @@ const DoorAnimation: React.FC<DoorAnimationProps> = ({ onComplete }) => {
   useEffect(() => {
     const openTimer = setTimeout(() => {
       setIsOpening(true);
-    }, 500);
+    }, 300);
 
     const fadeTimer = setTimeout(() => {
       setIsFading(true);
-    }, 2000);
+    }, 1600);
 
     const completeTimer = setTimeout(() => {
       onComplete();
-    }, 2500);
+    }, 2000);
 
     return () => {
       clearTimeout(openTimer);
@@ -30,7 +30,10 @@ const DoorAnimation: React.FC<DoorAnimationProps> = ({ onComplete }) => {
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-500 bg-background ${
+      role="presentation"
+      onClick={onComplete}
+      title="Click to skip"
+      className={`fixed inset-0 z-50 cursor-pointer flex items-center justify-center transition-opacity duration-500 bg-background ${
         isFading ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
     >
