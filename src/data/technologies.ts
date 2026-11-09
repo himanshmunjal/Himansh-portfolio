@@ -7,9 +7,7 @@ export const technologies = [
   { name: 'Python', sym: 'Py', icon: '🐍', group: 'lang' },
   { name: 'Go', sym: 'Go', icon: '🔷', group: 'lang' },
   { name: 'Java', sym: 'Ja', icon: '☕', group: 'lang' },
-  { name: 'TypeScript', sym: 'Ts', icon: '🟦', group: 'lang' },
   { name: 'SQL', sym: 'Sq', icon: '🗃️', group: 'lang' },
-  { name: 'C++', sym: 'C+', icon: '⚡', group: 'lang' },
   { name: 'R', sym: 'R', icon: '📊', group: 'lang' },
   { name: 'Bash', sym: 'Sh', icon: '💲', group: 'lang' },
 
@@ -29,9 +27,7 @@ export const technologies = [
   { name: 'NumPy', sym: 'Np', icon: '🔢', group: 'data' },
   { name: 'PostgreSQL', sym: 'Pg', icon: '🐘', group: 'data' },
   { name: 'Redis', sym: 'Rd', icon: '🟥', group: 'data' },
-  { name: 'MongoDB', sym: 'Mo', icon: '🍃', group: 'data' },
   { name: 'BigQuery', sym: 'Bq', icon: '☁️', group: 'data' },
-  { name: 'DuckDB', sym: 'Dd', icon: '🦆', group: 'data' },
   { name: 'DVC', sym: 'Dv', icon: '🗂️', group: 'data' },
 
   // Visualisation
@@ -43,10 +39,8 @@ export const technologies = [
 
   // Web & APIs
   { name: 'React.js', sym: 'Re', icon: '⚛️', group: 'web' },
-  { name: 'Next.js', sym: 'Nx', icon: '▲', group: 'web' },
   { name: 'Tailwind CSS', sym: 'Tw', icon: '🎨', group: 'web' },
   { name: 'FastAPI', sym: 'Fa', icon: '⚡', group: 'web' },
-  { name: 'Node.js', sym: 'No', icon: '🟩', group: 'web' },
   { name: 'Gin', sym: 'Gn', icon: '🍸', group: 'web' },
   { name: 'WebSockets', sym: 'Ws', icon: '🔌', group: 'web' },
   { name: 'JWT', sym: 'Jw', icon: '🔐', group: 'web' },
@@ -57,6 +51,5 @@ export const technologies = [
   { name: 'GitHub Actions', sym: 'Ga', icon: '⚙️', group: 'tools' },
   { name: 'Docker', sym: 'Dk', icon: '🐳', group: 'tools' },
   { name: 'Linux', sym: 'Lx', icon: '🐧', group: 'tools' },
-  { name: 'pytest', sym: 'Te', icon: '✅', group: 'tools' },
   { name: 'Jupyter', sym: 'Ju', icon: '📓', group: 'tools' },
 ];
