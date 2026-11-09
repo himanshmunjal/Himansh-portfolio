@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#222"/>
+    </marker>
+    <marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#3a6ea5"/>
+    </marker>
+  </defs>
+  <style>
+    .layer { fill: #fff; stroke: #222; stroke-width: 1.5; }
+    .lt { font-size: 15px; font-weight: 700; fill: #222; letter-spacing: 1px; }
+    .node { fill: #fff; stroke: #222; stroke-width: 1.5; }
+    .nodeA { fill: #fff; stroke: #3a6ea5; stroke-width: 2.5; }
+    .t { font-size: 17px; font-weight: 700; fill: #222; text-anchor: middle; }
+    .s { font-size: 14px; fill: #222; text-anchor: middle; }
+    .lbl { font-size: 14px; fill: #222; }
+    .lblA { font-size: 14px; fill: #3a6ea5; font-weight: 700; }
+    .e { fill: none; stroke: #222; stroke-width: 1.6; marker-end: url(#ah); }
+    .eA { fill: none; stroke: #3a6ea5; stroke-width: 2.5; marker-end: url(#aa); }
+    .dash { stroke-dasharray: 7 5; }
+  </style>
+
+  <rect width="1600" height="900" fill="#fff"/>
+
+  <!-- Title + legend -->
+  <text x="30" y="52" font-size="24" font-weight="700" fill="#222">LinkPlus architecture</text>
+  <line x1="880" y1="46" x2="930" y2="46" class="eA"/>
+  <text x="940" y="51" class="lbl">redirect hot path</text>
+  <line x1="1095" y1="46" x2="1145" y2="46" class="e"/>
+  <text x="1155" y="51" class="lbl">dashboard API</text>
+  <line x1="1290" y1="46" x2="1340" y2="46" class="e dash"/>
+  <text x="1350" y="51" class="lbl">HTTP response</text>
+
+  <!-- Layers -->
+  <rect x="20" y="90" width="210" height="780" rx="10" class="layer"/>
+  <text x="36" y="118" class="lt">CLIENT</text>
+  <rect x="350" y="90" width="210" height="780" rx="10" class="layer"/>
+  <text x="366" y="118" class="lt">API (GIN)</text>
+  <rect x="710" y="90" width="280" height="780" rx="10" class="layer"/>
+  <text x="726" y="118" class="lt">SERVICES</text>
+  <rect x="1060" y="90" width="520" height="780" rx="10" class="layer"/>
+  <text x="1076" y="118" class="lt">STORAGE</text>
+
+  <!-- Client nodes -->
+  <rect x="35" y="170" width="180" height="80" rx="8" class="nodeA"/>
+  <text x="125" y="204" class="t">Visitor</text>
+  <text x="125" y="228" class="s">browser or phone camera</text>
+
+  <rect x="35" y="620" width="180" height="80" rx="8" class="node"/>
+  <text x="125" y="654" class="t">React dashboard</text>
+  <text x="125" y="678" class="s">React 19 + Vite</text>
+
+  <!-- API nodes -->
+  <rect x="360" y="170" width="190" height="80" rx="8" class="nodeA"/>
+  <text x="455" y="204" class="t">Rate limiter</text>
+  <text x="455" y="228" class="s">sliding window per IP</text>
+
+  <rect x="360" y="310" width="190" height="80" rx="8" class="nodeA"/>
+  <text x="455" y="344" class="t">Redirect handler</text>
+  <text x="455" y="368" class="s">GET /r/:code</text>
+
+  <rect x="360" y="620" width="190" height="80" rx="8" class="node"/>
+  <text x="455" y="654" class="t">JWT auth</text>
+  <text x="455" y="678" class="s">user and admin roles</text>
+
+  <rect x="360" y="760" width="190" height="80" rx="8" class="node"/>
+  <text x="455" y="794" class="t">API handlers</text>
+  <text x="455" y="818" class="s">/api/v4/*</text>
+
+  <!-- Service nodes -->
+  <rect x="730" y="150" width="240" height="80" rx="8" class="nodeA"/>
+  <text x="845" y="184" class="t">Analytics recorder</text>
+  <text x="845" y="208" class="s">device + GeoLite2 lookup</text>
+
+  <rect x="730" y="300" width="240" height="100" rx="8" class="nodeA"/>
+  <text x="845" y="342" class="t">URL service</text>
+  <text x="845" y="366" class="s">cache-aside resolve</text>
+
+  <rect x="730" y="450" width="240" height="70" rx="8" class="node"/>
+  <text x="845" y="480" class="t">QR service</text>
+  <text x="845" y="503" class="s">hidden short URL per QR</text>
+
+  <rect x="730" y="560" width="240" height="70" rx="8" class="node"/>
+  <text x="845" y="590" class="t">Auth service</text>
+  <text x="845" y="613" class="s">bcrypt, token rotation</text>
+
+  <rect x="730" y="670" width="240" height="70" rx="8" class="node"/>
+  <text x="845" y="700" class="t">Analytics queries</text>
+  <text x="845" y="723" class="s">daily, device, country</text>
+
+  <rect x="730" y="780" width="240" height="70" rx="8" class="node"/>
+  <text x="845" y="810" class="t">Expiry worker</text>
+  <text x="845" y="833" class="s">sweeps every 5 min</text>
+
+  <!-- Storage nodes -->
+  <rect x="1205" y="285" width="180" height="65" rx="8" class="nodeA"/>
+  <text x="1295" y="313" class="t">JCache</text>
+  <text x="1295" y="336" class="s">RESP2 cache server</text>
+
+  <rect x="1205" y="490" width="180" height="65" rx="8" class="node"/>
+  <text x="1295" y="518" class="t">QR PNG files</text>
+  <text x="1295" y="541" class="s">local disk</text>
+
+  <rect x="1410" y="150" width="150" height="700" rx="8" class="nodeA"/>
+  <text x="1485" y="470" class="t">PostgreSQL</text>
+  <text x="1485" y="496" class="s">users, urls</text>
+  <text x="1485" y="516" class="s">clicks, qr_scans</text>
+  <text x="1485" y="536" class="s">qr_codes</text>
+  <text x="1485" y="556" class="s">refresh_tokens</text>
+
+  <!-- Redirect hot path -->
+  <line x1="215" y1="210" x2="358" y2="210" class="eA"/>
+  <text x="240" y="200" class="lblA">GET /r/:code</text>
+
+  <line x1="455" y1="250" x2="455" y2="308" class="eA"/>
+  <text x="465" y="284" class="lblA">allowed</text>
+
+  <line x1="550" y1="345" x2="728" y2="345" class="eA"/>
+  <text x="612" y="337" class="lblA">short code</text>
+
+  <polyline points="550,322 575,322 575,190 728,190" class="eA"/>
+  <text x="585" y="182" class="lblA">UA, IP (async)</text>
+
+  <line x1="970" y1="318" x2="1203" y2="318" class="eA"/>
+  <text x="1072" y="310" class="lblA">GET / SET code</text>
+
+  <line x1="970" y1="378" x2="1408" y2="378" class="eA"/>
+  <text x="1215" y="398" class="lblA">cache miss: SELECT</text>
+
+  <line x1="970" y1="190" x2="1408" y2="190" class="eA"/>
+  <text x="1100" y="182" class="lblA">INSERT click or scan</text>
+
+  <polyline points="360,372 125,372 125,252" class="eA dash"/>
+  <text x="140" y="362" class="lblA">302 Location</text>
+
+  <!-- Dashboard path -->
+  <line x1="215" y1="660" x2="358" y2="660" class="e"/>
+  <text x="245" y="650" class="lbl">JSON + JWT</text>
+
+  <line x1="455" y1="700" x2="455" y2="758" class="e"/>
+  <text x="465" y="734" class="lbl">user ID, role</text>
+
+  <polyline points="360,812 125,812 125,702" class="e dash"/>
+  <text x="140" y="802" class="lbl">JSON</text>
+
+  <!-- Bus from API handlers -->
+  <polyline points="550,790 595,790 595,385 728,385" class="e"/>
+  <text x="605" y="377" class="lbl">create link</text>
+  <line x1="595" y1="485" x2="728" y2="485" class="e"/>
+  <text x="605" y="477" class="lbl">create QR</text>
+  <line x1="595" y1="595" x2="728" y2="595" class="e"/>
+  <text x="605" y="587" class="lbl">login, refresh</text>
+  <line x1="595" y1="705" x2="728" y2="705" class="e"/>
+  <text x="605" y="697" class="lbl">read stats</text>
+
+  <!-- Services to storage -->
+  <line x1="970" y1="465" x2="1408" y2="465" class="e"/>
+  <text x="1072" y="457" class="lbl">qr_codes row</text>
+  <line x1="970" y1="510" x2="1203" y2="510" class="e"/>
+  <text x="1072" y="502" class="lbl">PNG bytes</text>
+  <line x1="970" y1="595" x2="1408" y2="595" class="e"/>
+  <text x="1100" y="587" class="lbl">users, token hashes</text>
+  <line x1="970" y1="705" x2="1408" y2="705" class="e"/>
+  <text x="1100" y="697" class="lbl">GROUP BY reads</text>
+  <line x1="970" y1="815" x2="1408" y2="815" class="e"/>
+  <text x="1100" y="807" class="lbl">DELETE expired links</text>
+</svg>

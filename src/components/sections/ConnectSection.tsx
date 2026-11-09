@@ -1,360 +1,211 @@
-import React, { useState, useEffect } from "react";
-import {
-  Mail,
-  Phone,
-  MapPin,
-  Github,
-  Linkedin,
-  Instagram,
-  Send,
-  Sparkles,
-  CheckCircle,
-  XCircle,
-} from "lucide-react";
+import React, { useEffect, useState } from 'react';
+import { Mail, Phone, MapPin, Github, Linkedin, Instagram, Send, CheckCircle2, AlertCircle } from 'lucide-react';
+import SectionHeading from '@/components/notebook/SectionHeading';
 
-import { useInView } from "@/hooks/useInView";
-import emailjs from "@emailjs/browser";
-import ParticleCanvas from "@/components/common/ParticleCanvas";
+const EMAILJS = {
+  serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID,
+  templateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+  publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
+};
 
-const PARTICLE_SIZE: [number, number] = [2, 6];
+const LIMITS = { name: 100, email: 254, message: 3000 };
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const contactInfo = [
-  {
-    icon: Mail,
-    label: "Email",
-    value: "munjalhimansh2211@gmail.com",
-    href: "mailto:munjalhimansh2211@gmail.com",
-    color: "from-blue-500 to-cyan-500",
-  },
-  {
-    icon: Phone,
-    label: "Phone",
-    value: "+91-9812445531",
-    href: "tel:+919812445531",
-    color: "from-emerald-500 to-teal-500",
-  },
-  {
-    icon: MapPin,
-    label: "Location",
-    value: "Vellore, Tamil Nadu, India",
-    color: "from-purple-500 to-pink-500",
-  },
+  { icon: Mail, label: 'Email', value: 'munjalhimansh2211@gmail.com', href: 'mailto:munjalhimansh2211@gmail.com' },
+  { icon: Phone, label: 'Phone', value: '+91-9812445531', href: 'tel:+919812445531' },
+  { icon: MapPin, label: 'Location', value: 'Vellore, Tamil Nadu, India' },
 ];
 
 const socialLinks = [
-  { icon: Github, href: 'https://github.com/himanshmunjal', label: 'GitHub', color: "from-gray-500 to-gray-700" },
-  { icon: Linkedin, href: 'https://www.linkedin.com/in/himansh-munjal/', label: 'LinkedIn', color: "from-blue-500 to-blue-600" },
-  { icon: Instagram, href: "https://www.instagram.com/munjal.himansh/", label: 'Instagram', color: "from-pink-500 to-purple-500" },
+  { icon: Github, href: 'https://github.com/himanshmunjal', label: 'GitHub', handle: '@himanshmunjal' },
+  { icon: Linkedin, href: 'https://www.linkedin.com/in/himansh-munjal/', label: 'LinkedIn', handle: 'in/himansh-munjal' },
+  { icon: Instagram, href: 'https://www.instagram.com/munjal.himansh/', label: 'Instagram', handle: '@munjal.himansh' },
 ];
 
+// Inline "fill in the blank" input that grows with its content
+const Blank: React.FC<React.InputHTMLAttributes<HTMLInputElement> & { label: string }> = ({ label, value, ...rest }) => (
+  <label className="relative inline-block align-baseline">
+    <span className="sr-only">{label}</span>
+    <input
+      {...rest}
+      value={value}
+      size={Math.max(String(value ?? '').length, rest.placeholder?.length ?? 10)}
+      className="hand max-w-full border-0 border-b-2 border-dashed border-[var(--rule-strong)] bg-transparent px-1 text-[1.9rem] leading-none text-ink outline-none transition-colors placeholder:text-[var(--ink-3)] placeholder:opacity-60 focus:border-[var(--accent)]"
+      style={{ color: 'var(--ink)' }}
+    />
+  </label>
+);
+
 const ConnectSection: React.FC = () => {
-  const { ref, isInView } = useInView({ threshold: 0.1 });
-
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-
-  const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [isSending, setIsSending] = useState(false);
-  const [toast, setToast] = useState<{
-    type: "success" | "error";
-    message: string;
-  } | null>(null);
+  const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
-  /* ==============================
-     AUTO CLOSE TOAST
-  ============================== */
   useEffect(() => {
     if (!toast) return;
-    const timer = setTimeout(() => {
-      setToast(null);
-    }, 4000);
+    const timer = setTimeout(() => setToast(null), 4000);
     return () => clearTimeout(timer);
   }, [toast]);
 
-  /* ==============================
-     HANDLERS
-  ============================== */
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isSending) return;
+
+    // Honeypot: hidden from people, but naive bots fill every field
+    if (new FormData(e.currentTarget).get('company')) return;
+
+    const name = formData.name.trim();
+    const email = formData.email.trim();
+    const message = formData.message.trim();
+    if (!name || !message || !EMAIL_RE.test(email)) {
+      setToast({ type: 'error', message: 'Please enter your name, a valid email and a message.' });
+      return;
+    }
+    if (!EMAILJS.serviceId || !EMAILJS.templateId || !EMAILJS.publicKey) {
+      setToast({ type: 'error', message: 'The contact form is unavailable right now — please email me directly.' });
+      return;
+    }
+
     setIsSending(true);
-
     try {
-      // Use the emailjs object imported at the top of your file
+      // Loaded on demand so the SDK isn't part of the initial bundle
+      const { default: emailjs } = await import('@emailjs/browser');
       await emailjs.send(
-        // Replace with your EmailJS public key
-        "service_g02b7qp",
-        "template_7hopjmh",
-        {
-          from_name: formData.name,
-          reply_to: formData.email,
-          message: formData.message,
-        },
-        "xc6Qd4zsm5eP2i4Zf"
+        EMAILJS.serviceId,
+        EMAILJS.templateId,
+        { from_name: name, reply_to: email, message },
+        { publicKey: EMAILJS.publicKey, blockHeadless: true, limitRate: { id: 'contact-form', throttle: 30_000 } }
       );
-
-      setToast({
-        type: "success",
-        message: `Thanks ${formData.name}! Message sent successfully.`,
-      });
-
-      setFormData({ name: "", email: "", message: "" });
+      setToast({ type: 'success', message: 'Thanks! Your message was sent successfully.' });
+      setFormData({ name: '', email: '', message: '' });
     } catch (error) {
-      console.error("EmailJS Error:", error);
+      const tooSoon = (error as { status?: number })?.status === 429;
+      if (import.meta.env.DEV) console.error('EmailJS error:', error);
       setToast({
-        type: "error",
-        message: "Failed to send message. Please try again.",
+        type: 'error',
+        message: tooSoon
+          ? 'You just sent a message — please wait a few seconds before sending another.'
+          : 'Failed to send message. Please try again.',
       });
     } finally {
       setIsSending(false);
     }
   };
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   return (
-    <section id="connect" className="py-20 relative overflow-hidden" ref={ref}>
-      <ParticleCanvas count={30} size={PARTICLE_SIZE} speed={0.5} />
+    <section id="connect" className="relative scroll-mt-16 py-24 sm:py-32">
+      <div className="wrap">
+        <SectionHeading n="07" kicker="Let's connect" title={<>Write me <em className="text-accent">a letter</em></>} note="internships, research, or just a good problem">
+          Open to internships and collaborations in machine learning, data and full-stack engineering. Fill in the blanks
+          below, or reach me directly.
+        </SectionHeading>
 
-      <div className="container mx-auto px-4 relative z-10">
-        {/* HEADER */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold gradient-text-vibrant">
-            Let's Connect
-          </h2>
-          <p className="mt-4 text-gray-400">
-            Have a project in mind or just want to chat? I'd love to hear from you!
-          </p>
-        </div>
-
-        {/* BOXED DESIGN START */}
-        <div className={`max-w-5xl mx-auto ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.2s' }}>
-          <div className="group relative">
-            {/* Animated border glow (Glassmorphism gradient) */}
-            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-purple-500 via-pink-500 to-emerald-500 opacity-60 blur-3xl group-hover:opacity-100 transition-opacity duration-1000 animate-pulse" />
-
-            <div className="relative glass-card p-8 md:p-12 rounded-2xl backdrop-blur-3xl 
-            bg-gradient-to-br from-[#1a1a2e]/60 via-[#16213e]/70 to-[#0f172a]/80
-            border border-purple-500/20 shadow-[0_0_60px_rgba(168,85,247,0.2)] overflow-hidden">
-
-              {/* Shimmer effect */}
-              <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/5 to-transparent rounded-2xl" />
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 relative z-10">
-                {/* CONTACT INFO */}
-                <div>
-                  <div className="flex items-center gap-3 mb-8">
-                    <Sparkles className="w-6 h-6 text-purple-400 animate-pulse" />
-                    <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                      Get in Touch
-                    </h3>
-                  </div>
-
-                  <div className="space-y-6 mb-8">
-                    {contactInfo.map((info, idx) => (
-                      <div
-                        key={info.label}
-                        className="group/item flex items-center gap-4 animate-fade-in"
-                        style={{ animationDelay: `${0.3 + idx * 0.1}s` }}
-                      >
-                        <div className="relative">
-                          {/* Glow effect */}
-                          <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${info.color} opacity-0 group-hover/item:opacity-50 blur-lg transition-opacity duration-300`} />
-
-                          {/* Icon container */}
-                          <div className={`relative w-14 h-14 rounded-xl bg-gradient-to-br ${info.color} flex items-center justify-center transform group-hover/item:scale-110 group-hover/item:rotate-6 transition-all duration-300`}>
-                            <info.icon className="w-6 h-6 text-white" />
-                          </div>
-                        </div>
-
-                        <div className="flex-1">
-                          <p className="text-sm text-gray-400 mb-1">{info.label}</p>
-                          {info.href ? (
-                            <a
-                              href={info.href}
-                              className="text-white hover:text-transparent hover:bg-gradient-to-r hover:bg-clip-text hover:from-purple-400 hover:to-pink-400 transition-all duration-300 font-medium"
-                            >
-                              {info.value}
-                            </a>
-                          ) : (
-                            <p className="text-white font-medium">{info.value}</p>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Social Links */}
-                  <div>
-                    <p className="text-sm text-gray-400 mb-4 flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-purple-400" />
-                      Follow me on
-                    </p>
-                    <div className="flex items-center gap-4">
-                      {socialLinks.map((social, idx) => (
-                        <a
-                          key={social.label}
-                          href={social.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="group/social relative"
-                          aria-label={social.label}
-                          style={{
-                            animation: 'float 3s ease-in-out infinite',
-                            animationDelay: `${idx * 0.2}s`,
-                          }}
-                        >
-                          {/* Glow */}
-                          <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${social.color} opacity-0 group-hover/social:opacity-50 blur-lg transition-opacity duration-300`} />
-
-                          {/* Button */}
-                          <div className={`relative w-12 h-12 rounded-xl bg-gradient-to-br ${social.color} opacity-70 group-hover/social:opacity-100 flex items-center justify-center transition-all duration-300 transform group-hover/social:scale-110 group-hover/social:rotate-12`}>
-                            <social.icon className="w-5 h-5 text-white" />
-                          </div>
-                        </a>
-                      ))}
+        <div className="grid gap-12 lg:grid-cols-[20rem_1fr] lg:gap-16">
+          {/* ── Contact card ── */}
+          <aside className="space-y-6">
+            <div className="index-card reveal p-6 pt-0">
+              <p className="eyebrow flex h-[2.6rem] items-center"><span className="accent">Contact card</span></p>
+              <ul className="mt-4 space-y-4">
+                {contactInfo.map((info) => (
+                  <li key={info.label} className="flex items-start gap-3">
+                    <info.icon className="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true" />
+                    <div className="min-w-0">
+                      <p className="meta">{info.label}</p>
+                      {info.href ? (
+                        <a href={info.href} className="link break-all text-[0.9375rem]">{info.value}</a>
+                      ) : (
+                        <p className="text-[0.9375rem] text-ink">{info.value}</p>
+                      )}
                     </div>
-                  </div>
-                </div>
-
-                {/* FORM */}
-                <div>
-                  <div className="flex items-center gap-3 mb-8">
-                    <Send className="w-6 h-6 text-teal-400 animate-pulse" />
-                    <h3 className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
-                      Send a Message
-                    </h3>
-                  </div>
-
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div>
-                      <label htmlFor="name" className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
-                        Name
-                        {focusedField === 'name' && <Sparkles className="w-3 h-3 text-purple-400 animate-pulse" />}
-                      </label>
-                      <div className="relative group/input">
-                        <input
-                          type="text"
-                          id="name"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleChange}
-                          onFocus={() => setFocusedField('name')}
-                          onBlur={() => setFocusedField(null)}
-                          required
-                          className="w-full px-4 py-3 rounded-xl bg-white/10 border border-purple-400/30 text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-400 focus:bg-white/15 transition-all backdrop-blur-md"
-                          placeholder="Your name"
-                        />
-                        {focusedField === 'name' && (
-                          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 blur-xl -z-10 animate-pulse" />
-                        )}
-                      </div>
-                    </div>
-
-                    <div>
-                      <label htmlFor="email" className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
-                        Email
-                        {focusedField === 'email' && <Sparkles className="w-3 h-3 text-blue-400 animate-pulse" />}
-                      </label>
-                      <div className="relative group/input">
-                        <input
-                          type="email"
-                          id="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          onFocus={() => setFocusedField('email')}
-                          onBlur={() => setFocusedField(null)}
-                          required
-                          className="w-full px-4 py-3 rounded-xl bg-white/10 border border-purple-400/30 text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-400 focus:bg-white/15 transition-all backdrop-blur-md"
-                          placeholder="your.email@example.com"
-                        />
-                        {focusedField === 'email' && (
-                          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/20 to-cyan-500/20 blur-xl -z-10 animate-pulse" />
-                        )}
-                      </div>
-                    </div>
-
-                    <div>
-                      <label htmlFor="message" className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
-                        Message
-                        {focusedField === 'message' && <Sparkles className="w-3 h-3 text-teal-400 animate-pulse" />}
-                      </label>
-                      <div className="relative group/input">
-                        <textarea
-                          id="message"
-                          name="message"
-                          value={formData.message}
-                          onChange={handleChange}
-                          onFocus={() => setFocusedField('message')}
-                          onBlur={() => setFocusedField(null)}
-                          required
-                          rows={4}
-                          className="w-full px-4 py-3 rounded-xl bg-white/10 border border-purple-400/30 text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-400 focus:bg-white/15 transition-all resize-none backdrop-blur-md"
-                          placeholder="Your message..."
-                        />
-                        {focusedField === 'message' && (
-                          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-emerald-500/20 to-teal-500/20 blur-xl -z-10 animate-pulse" />
-                        )}
-                      </div>
-                    </div>
-
-                    <button
-                      type="submit"
-                      disabled={isSending}
-                      className="group/button relative w-full overflow-hidden"
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 opacity-75 blur-lg group-hover/button:opacity-100 transition-opacity duration-300" />
-                      <div className="relative flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 text-white font-semibold transform group-hover/button:scale-[1.02] transition-all duration-300">
-                        {isSending ? (
-                          <>
-                            <span className="animate-spin border-2 border-white border-t-transparent rounded-full w-5 h-5"></span>
-                            <span>Sending...</span>
-                          </>
-                        ) : (
-                          <>
-                            <Send className="w-5 h-5 group-hover/button:translate-x-1 transition-transform" />
-                            <span>Send Message</span>
-                          </>
-                        )}
-                        <div className="absolute inset-0 -translate-x-full group-hover/button:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-                      </div>
-                    </button>
-                  </form>
-                </div>
-              </div>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
-        </div>
-        {/* BOXED DESIGN END */}
-      </div>
 
-      {/* TOAST */}
-      {toast && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
-          <div
-            className={`flex items-center gap-3 px-5 py-3 rounded-xl backdrop-blur-xl border shadow-xl ${toast.type === "success"
-                ? "bg-green-500/20 border-green-400/40"
-                : "bg-red-500/20 border-red-400/40"
-              }`}
-          >
-            {toast.type === "success" ? (
-              <CheckCircle className="text-green-400 w-5 h-5" />
-            ) : (
-              <XCircle className="text-red-400 w-5 h-5" />
+            <ul className="reveal space-y-2">
+              {socialLinks.map((s) => (
+                <li key={s.label}>
+                  <a
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center gap-3 rounded-[3px] border rule bg-card px-4 py-3 transition-colors hover:border-[var(--accent)]"
+                  >
+                    <s.icon className="h-5 w-5 text-ink-3 transition-colors group-hover:text-accent" />
+                    <span className="text-sm text-ink">{s.label}</span>
+                    <span className="meta ml-auto">{s.handle} ↗</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </aside>
+
+          {/* ── The letter ── */}
+          <form onSubmit={handleSubmit} noValidate className="sheet reveal relative overflow-hidden p-6 sm:p-10">
+            {/* Honeypot */}
+            <input type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 opacity-0" />
+
+            <div className="flex items-start justify-between gap-4">
+              <p className="meta">To: Himansh Munjal · Vellore, India</p>
+              <span className="stamp hidden sm:inline-block">Air mail</span>
+            </div>
+
+            <div className="mt-8 text-lg leading-[3.1rem] text-ink-2 sm:text-xl">
+              <p className="hand text-3xl" style={{ color: 'var(--ink)' }}>Dear Himansh,</p>
+              <p>
+                My name is{' '}
+                <Blank label="Your name" name="name" placeholder="your name" autoComplete="name" required maxLength={LIMITS.name} value={formData.name} onChange={handleChange} />{' '}
+                and you can reach me at{' '}
+                <Blank label="Your email" name="email" type="email" placeholder="you@example.com" autoComplete="email" required maxLength={LIMITS.email} value={formData.email} onChange={handleChange} />.
+              </p>
+            </div>
+
+            <label className="mt-4 block">
+              <span className="sr-only">Your message</span>
+              <textarea
+                name="message"
+                required
+                maxLength={LIMITS.message}
+                value={formData.message}
+                onChange={handleChange}
+                placeholder="I'm writing because…"
+                rows={6}
+                className="ruled hand block w-full resize-y border-0 bg-transparent text-[1.75rem] leading-[28px] outline-none placeholder:text-[var(--ink-3)] placeholder:opacity-60"
+                style={{ color: 'var(--ink)', backgroundAttachment: 'local', paddingTop: '2px' }}
+              />
+              <span className="meta mt-1 block text-right">{formData.message.length}/{LIMITS.message}</span>
+            </label>
+
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
+              <p className="hand text-3xl" style={{ color: 'var(--ink)' }}>
+                Yours, {formData.name.trim() || '…'}
+              </p>
+              <button type="submit" className="btn" disabled={isSending}>
+                {isSending ? 'Sending…' : 'Send letter'} <Send className="h-4 w-4" />
+              </button>
+            </div>
+
+            {toast && (
+              <div
+                role={toast.type === 'error' ? 'alert' : 'status'}
+                className="animate-fade-up mt-6 flex items-start gap-3 rounded-[3px] border p-4 text-sm"
+                style={{ borderColor: toast.type === 'error' ? 'var(--accent)' : 'var(--rule-strong)', background: 'var(--paper-2)' }}
+              >
+                {toast.type === 'success' ? (
+                  <CheckCircle2 className="h-5 w-5 shrink-0 text-ink" />
+                ) : (
+                  <AlertCircle className="h-5 w-5 shrink-0 text-accent" />
+                )}
+                <span className="text-ink">{toast.message}</span>
+              </div>
             )}
-            <p className="text-white text-sm">{toast.message}</p>
-          </div>
+          </form>
         </div>
-      )}
+      </div>
     </section>
   );
 };

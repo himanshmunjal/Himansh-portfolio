@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" font-family="-apple-system, 'Helvetica Neue', Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#222"/>
+    </marker>
+    <marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2f6f7e"/>
+    </marker>
+  </defs>
+  <rect width="1600" height="900" fill="#ffffff"/>
+
+  <text x="30" y="58" font-size="24" font-weight="600" fill="#222">SkyPort: request path from browser to database</text>
+
+  <!-- layers -->
+  <g fill="#f6f6f6" stroke="#222" stroke-width="1.5">
+    <rect x="30" y="100" width="260" height="760" rx="10"/>
+    <rect x="440" y="100" width="770" height="760" rx="10"/>
+    <rect x="1340" y="100" width="230" height="760" rx="10"/>
+  </g>
+  <g font-size="17" font-weight="600" fill="#222">
+    <text x="52" y="134">Client (browser)</text>
+    <text x="462" y="134">API (Go + Gin)</text>
+    <text x="1362" y="134">Storage</text>
+  </g>
+
+  <!-- components -->
+  <g fill="#ffffff" stroke="#222" stroke-width="1.8">
+    <rect x="55"  y="180" width="210" height="90" rx="8"/>
+    <rect x="55"  y="410" width="210" height="90" rx="8"/>
+    <rect x="55"  y="650" width="210" height="90" rx="8"/>
+    <rect x="470" y="410" width="210" height="90" rx="8"/>
+    <rect x="765" y="180" width="155" height="90" rx="8"/>
+    <rect x="765" y="410" width="155" height="90" rx="8"/>
+    <rect x="995" y="410" width="195" height="90" rx="8"/>
+    <rect x="995" y="650" width="195" height="90" rx="8"/>
+    <rect x="1360" y="410" width="190" height="90" rx="8"/>
+  </g>
+  <g font-size="18" font-weight="600" fill="#222" text-anchor="middle">
+    <text x="160" y="449">Axios client</text>
+    <text x="160" y="219">React SPA</text>
+    <text x="160" y="689">Session store</text>
+    <text x="575" y="449">Gin middleware</text>
+    <text x="842" y="219">Rate limiter</text>
+    <text x="842" y="449">JWT auth</text>
+    <text x="1092" y="449">Controllers</text>
+    <text x="1092" y="689">Booking transaction</text>
+    <text x="1455" y="449">PostgreSQL</text>
+  </g>
+  <g font-size="14" fill="#555" text-anchor="middle">
+    <text x="160" y="246">React 19 · Router 7</text>
+    <text x="160" y="476">one shared instance</text>
+    <text x="160" y="716">session / local storage</text>
+    <text x="575" y="476">headers · 1 MB cap · CORS</text>
+    <text x="842" y="246">10 req/min per IP</text>
+    <text x="842" y="476">HS256 · role claim</text>
+    <text x="1092" y="476">public · user · admin</text>
+    <text x="1092" y="716">row lock · seat check</text>
+    <text x="1455" y="476">9 tables · AutoMigrate</text>
+  </g>
+
+  <!-- main path (accent) -->
+  <g stroke="#2f6f7e" stroke-width="2.5" fill="none" marker-end="url(#m)">
+    <line x1="160" y1="270" x2="160" y2="408"/>
+    <line x1="265" y1="438" x2="468" y2="438"/>
+    <line x1="680" y1="455" x2="763" y2="455"/>
+    <line x1="920" y1="455" x2="993" y2="455"/>
+    <line x1="1190" y1="455" x2="1358" y2="455"/>
+    <line x1="1092" y1="500" x2="1092" y2="648"/>
+    <polyline points="1190,695 1395,695 1395,502"/>
+  </g>
+
+  <!-- secondary paths -->
+  <g stroke="#222" stroke-width="1.8" fill="none">
+    <line x1="470" y1="478" x2="267" y2="478" marker-end="url(#a)"/>
+    <line x1="160" y1="502" x2="160" y2="648" marker-start="url(#a)" marker-end="url(#a)"/>
+    <polyline points="575,410 575,225 763,225" marker-end="url(#a)"/>
+    <polyline points="920,225 1092,225 1092,408" marker-end="url(#a)"/>
+  </g>
+
+  <!-- arrow labels -->
+  <g font-size="15" fill="#222">
+    <text x="174" y="345">API calls</text>
+    <text x="365" y="428" text-anchor="middle">request + JWT</text>
+    <text x="365" y="500" text-anchor="middle">JSON</text>
+    <text x="174" y="580">save / read JWT</text>
+    <text x="588" y="320">login / signup</text>
+    <text x="722" y="445" text-anchor="middle" font-size="14">protected</text>
+    <text x="957" y="445" text-anchor="middle">claims</text>
+    <text x="957" y="477" text-anchor="middle" fill="#555" font-size="14">role, id</text>
+    <text x="1006" y="214" text-anchor="middle">credentials</text>
+    <text x="1275" y="445" text-anchor="middle">GORM SQL</text>
+    <text x="1080" y="580" text-anchor="end">POST /user/book</text>
+    <text x="1407" y="590">SQL transaction</text>
+    <text x="1407" y="610" fill="#555" font-size="14">FOR UPDATE lock</text>
+  </g>
+
+  <!-- legend -->
+  <g font-size="14" fill="#555">
+    <line x1="470" y1="826" x2="520" y2="826" stroke="#2f6f7e" stroke-width="2.5"/>
+    <text x="530" y="831">main data path</text>
+    <line x1="670" y1="826" x2="720" y2="826" stroke="#222" stroke-width="1.8"/>
+    <text x="730" y="831">auth and session path</text>
+  </g>
+</svg>

@@ -17,7 +17,8 @@ This portfolio is built using modern frontend technologies:
 * TypeScript
 * Vite
 * Tailwind CSS
-* shadcn/ui
+* Framer Motion & React Three Fiber
+* EmailJS (contact form)
 * Vercel (Deployment)
 
 ---
@@ -55,7 +56,12 @@ cd himansh-portfolio
 npm install
 ```
 
-### 4. Run the Development Server
+### 4. Configure the Contact Form
+
+Copy `.env.example` to `.env.local` and fill in your EmailJS service ID, template ID and public key.
+For production, add the same three variables in **Vercel → Project → Settings → Environment Variables**.
+
+### 5. Run the Development Server
 
 ```bash
 npm run dev
@@ -87,11 +93,13 @@ portfolio
 ├── public
 │
 ├── src
-│   ├── assets
-│   ├── components
+│   ├── components   # sections, shared UI, blog posts (.md)
+│   ├── contexts     # theme
+│   ├── data         # blog + project content
 │   ├── hooks
-│   ├── lib
-│   └── pages
+│   ├── lib          # markdown renderer
+│   ├── pages
+│   └── test
 │
 ├── index.html
 ├── package.json
@@ -119,7 +127,7 @@ If you'd like to connect, collaborate, or discuss opportunities:
 **Himansh Munjal**
 
 * LinkedIn: (https://www.linkedin.com/in/himansh-munjal/)
-* GitHub: ((https://github.com/himanshmunjal))
+* GitHub: (https://github.com/himanshmunjal)
 * Email: (munjalhimansh2211@gmail.com)
 
 ---

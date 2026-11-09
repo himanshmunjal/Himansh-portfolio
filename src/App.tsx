@@ -1,41 +1,50 @@
-import { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { Toaster } from '@/components/ui/toaster';
-import { Toaster as Sonner } from 'sonner';
+import Layout from './components/Layout';
+import NotFound from './pages/NotFound';
 
-// Lazy load every page — only the landing page JS loads initially
-const Index       = lazy(() => import('./pages/Index'));
-const AllProjects = lazy(() => import('./pages/AllProjects'));
-const AllBlogs    = lazy(() => import('./pages/AllBlogs'));
-const NotFound    = lazy(() => import('./pages/NotFound'));
-
-// Minimal fallback — no spinner needed, content appears instantly
-const PageFallback = () => (
-  <div className="min-h-screen bg-background" aria-hidden="true" />
+// A data router so <Link viewTransition> works: navigation waits for the lazy page chunk
+// (and, for posts, the markdown) before the View Transition snapshots the new page.
+const router = createBrowserRouter(
+  [
+    {
+      element: <Layout />,
+      children: [
+        {
+          errorElement: <NotFound />,
+          children: [
+            { index: true, lazy: () => import('./pages/Index').then((m) => ({ Component: m.default })) },
+            { path: 'projects/all', lazy: () => import('./pages/AllProjects').then((m) => ({ Component: m.default })) },
+            { path: 'blogs/all', lazy: () => import('./pages/AllBlogs').then((m) => ({ Component: m.default })) },
+            {
+              path: 'project/:slug',
+              lazy: () => import('./pages/ProjectPage').then((m) => ({ Component: m.default, loader: m.loader })),
+            },
+            {
+              path: 'blog/:slug',
+              lazy: () => import('./pages/BlogPost').then((m) => ({ Component: m.default, loader: m.loader })),
+            },
+            { path: '*', element: <NotFound /> },
+          ],
+        },
+      ],
+    },
+  ],
+  {
+    future: {
+      v7_relativeSplatPath: true,
+      v7_fetcherPersist: true,
+      v7_normalizeFormMethod: true,
+      v7_partialHydration: true,
+      v7_skipActionErrorRevalidation: true,
+    },
+  }
 );
 
 function App() {
-
   return (
     <ThemeProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        {/* future flags silence React Router v7 warnings + prevent unnecessary transitions */}
-        <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-          <Suspense fallback={<PageFallback />}>
-            <Routes>
-              <Route path="/"             element={<Index />} />
-              <Route path="/blog/:slug"   element={<Index />} />  {/* post opens as a reader over the home page */}
-              <Route path="/projects/all" element={<AllProjects />} />
-              <Route path="/blogs/all"    element={<AllBlogs />} />
-              <Route path="*"             element={<NotFound />} />
-            </Routes>
-          </Suspense>
-        </Router>
-      </TooltipProvider>
+      <RouterProvider router={router} future={{ v7_startTransition: true }} />
     </ThemeProvider>
   );
 }

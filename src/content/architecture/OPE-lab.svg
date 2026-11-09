@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" font-family="-apple-system, 'Helvetica Neue', Helvetica, Arial, sans-serif" fill="#222">
+  <defs>
+    <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#222"/>
+    </marker>
+    <marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#3d7a8a"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="900" fill="#ffffff"/>
+
+  <text x="40" y="52" font-size="26" font-weight="700">OPE-lab: architecture</text>
+  <line x1="1110" y1="45" x2="1160" y2="45" stroke="#3d7a8a" stroke-width="3"/>
+  <text x="1172" y="50" font-size="15">estimate path</text>
+  <line x1="1310" y1="45" x2="1360" y2="45" stroke="#222" stroke-width="1.6"/>
+  <text x="1372" y="50" font-size="15">ground-truth path</text>
+
+  <!-- Groups -->
+  <g fill="none" stroke="#222" stroke-width="1.2" stroke-dasharray="6 5">
+    <rect x="30" y="110" width="170" height="640" rx="10"/>
+    <rect x="280" y="110" width="280" height="640" rx="10"/>
+    <rect x="640" y="110" width="230" height="640" rx="10"/>
+    <rect x="950" y="110" width="270" height="640" rx="10"/>
+    <rect x="1300" y="110" width="270" height="640" rx="10"/>
+  </g>
+  <g font-size="15" font-weight="700" letter-spacing="1.5">
+    <text x="48" y="140">INPUT</text>
+    <text x="298" y="140">PREPARE</text>
+    <text x="658" y="140">CACHE, TRUTH</text>
+    <text x="968" y="140">EVALUATE</text>
+    <text x="1318" y="140">OUTPUT</text>
+  </g>
+
+  <!-- Boxes -->
+  <g fill="#ffffff" stroke="#222" stroke-width="1.8">
+    <rect x="45" y="170" width="140" height="110" rx="8"/>
+    <rect x="295" y="170" width="250" height="110" rx="8"/>
+    <rect x="295" y="330" width="250" height="95" rx="8"/>
+    <rect x="295" y="480" width="250" height="95" rx="8"/>
+    <rect x="295" y="635" width="250" height="95" rx="8"/>
+    <rect x="655" y="310" width="200" height="115" rx="8"/>
+    <rect x="655" y="530" width="200" height="190" rx="8"/>
+    <rect x="965" y="310" width="240" height="115" rx="8"/>
+    <rect x="965" y="560" width="240" height="120" rx="8"/>
+    <rect x="1315" y="310" width="240" height="115" rx="8"/>
+    <rect x="1315" y="560" width="240" height="120" rx="8"/>
+  </g>
+
+  <!-- Input -->
+  <text x="115" y="212" font-size="18" font-weight="700" text-anchor="middle">Open Bandit</text>
+  <text x="115" y="235" font-size="18" font-weight="700" text-anchor="middle">logs</text>
+  <text x="115" y="260" font-size="14" text-anchor="middle">ZOZOTOWN</text>
+
+  <!-- Prepare -->
+  <text x="420" y="212" font-size="18" font-weight="700" text-anchor="middle">Ingest</text>
+  <text x="420" y="237" font-size="14" text-anchor="middle">Parquet, shared item vocab,</text>
+  <text x="420" y="257" font-size="14" text-anchor="middle">impression ids</text>
+  <text x="420" y="370" font-size="18" font-weight="700" text-anchor="middle">Chronological splits</text>
+  <text x="420" y="395" font-size="14" text-anchor="middle">train window / eval window</text>
+  <text x="420" y="520" font-size="18" font-weight="700" text-anchor="middle">Reward models</text>
+  <text x="420" y="545" font-size="14" text-anchor="middle">LightGBM, slot + item</text>
+  <text x="420" y="675" font-size="18" font-weight="700" text-anchor="middle">Policy zoo</text>
+  <text x="420" y="700" font-size="14" text-anchor="middle">20 target policies</text>
+
+  <!-- Cache, truth -->
+  <text x="755" y="352" font-size="18" font-weight="700" text-anchor="middle">Ground truth</text>
+  <text x="755" y="377" font-size="14" text-anchor="middle">uniform-random log,</text>
+  <text x="755" y="397" font-size="14" text-anchor="middle">value + its own CI</text>
+  <text x="755" y="600" font-size="18" font-weight="700" text-anchor="middle">Pipeline cache</text>
+  <text x="755" y="625" font-size="14" text-anchor="middle">weights, q_hat, v_pi</text>
+  <text x="755" y="645" font-size="14" text-anchor="middle">memory-mapped .npy</text>
+  <text x="755" y="665" font-size="14" text-anchor="middle">2.3M-row pool</text>
+
+  <!-- Evaluate -->
+  <text x="1085" y="352" font-size="18" font-weight="700" text-anchor="middle">Experiments E1 to E6</text>
+  <text x="1085" y="377" font-size="14" text-anchor="middle">log size, coverage, overlap,</text>
+  <text x="1085" y="397" font-size="14" text-anchor="middle">decisions, optimizer's curse</text>
+  <text x="1085" y="602" font-size="18" font-weight="700" text-anchor="middle">OPEvaluator</text>
+  <text x="1085" y="627" font-size="14" text-anchor="middle">8 estimators, influence terms,</text>
+  <text x="1085" y="647" font-size="14" text-anchor="middle">SEs, bootstrap</text>
+
+  <!-- Output -->
+  <text x="1435" y="352" font-size="18" font-weight="700" text-anchor="middle">Reports</text>
+  <text x="1435" y="377" font-size="14" text-anchor="middle">scorecard, figures,</text>
+  <text x="1435" y="397" font-size="14" text-anchor="middle">decision guide</text>
+  <text x="1435" y="608" font-size="18" font-weight="700" text-anchor="middle">Streamlit app</text>
+  <text x="1435" y="633" font-size="14" text-anchor="middle">browse results, Docker</text>
+
+  <!-- Prepare chain -->
+  <line x1="185" y1="225" x2="291" y2="225" stroke="#3d7a8a" stroke-width="3" marker-end="url(#aa)"/>
+  <text x="240" y="212" font-size="14" text-anchor="middle">CSV</text>
+  <line x1="420" y1="280" x2="420" y2="326" stroke="#3d7a8a" stroke-width="3" marker-end="url(#aa)"/>
+  <text x="432" y="309" font-size="14">Parquet</text>
+  <line x1="420" y1="425" x2="420" y2="476" stroke="#3d7a8a" stroke-width="3" marker-end="url(#aa)"/>
+  <text x="432" y="456" font-size="14">train window</text>
+  <line x1="420" y1="575" x2="420" y2="631" stroke="#3d7a8a" stroke-width="3" marker-end="url(#aa)"/>
+  <text x="432" y="608" font-size="14">reward scores</text>
+
+  <!-- splits -> truth -->
+  <line x1="545" y1="375" x2="651" y2="375" stroke="#222" stroke-width="1.6" marker-end="url(#ag)"/>
+  <text x="600" y="347" font-size="14" text-anchor="middle">random</text>
+  <text x="600" y="365" font-size="14" text-anchor="middle">log</text>
+
+  <!-- reward, zoo -> cache -->
+  <line x1="545" y1="555" x2="651" y2="555" stroke="#3d7a8a" stroke-width="3" marker-end="url(#aa)"/>
+  <text x="600" y="512" font-size="14" text-anchor="middle">predicted</text>
+  <text x="600" y="530" font-size="14" text-anchor="middle">rewards</text>
+  <line x1="545" y1="685" x2="651" y2="685" stroke="#3d7a8a" stroke-width="3" marker-end="url(#aa)"/>
+  <text x="600" y="657" font-size="14" text-anchor="middle">action</text><text x="600" y="675" font-size="14" text-anchor="middle">probs</text>
+
+  <!-- cache -> OPEvaluator -> experiments -->
+  <line x1="855" y1="620" x2="961" y2="620" stroke="#3d7a8a" stroke-width="3" marker-end="url(#aa)"/>
+  <text x="910" y="575" font-size="14" text-anchor="middle">sampled</text>
+  <text x="910" y="593" font-size="14" text-anchor="middle">rows</text>
+  <line x1="1085" y1="560" x2="1085" y2="429" stroke="#3d7a8a" stroke-width="3" marker-end="url(#aa)"/>
+  <text x="1097" y="500" font-size="14">estimates, CIs</text>
+
+  <!-- truth -> experiments -->
+  <line x1="855" y1="367" x2="961" y2="367" stroke="#222" stroke-width="1.6" marker-end="url(#ag)"/>
+  <text x="910" y="300" font-size="14" text-anchor="middle">true</text>
+  <text x="910" y="318" font-size="14" text-anchor="middle">values</text>
+
+  <!-- experiments -> reports -> app -->
+  <line x1="1205" y1="367" x2="1311" y2="367" stroke="#3d7a8a" stroke-width="3" marker-end="url(#aa)"/>
+  <text x="1260" y="300" font-size="14" text-anchor="middle">results</text>
+  <text x="1260" y="318" font-size="14" text-anchor="middle">Parquet</text>
+  <line x1="1435" y1="425" x2="1435" y2="556" stroke="#222" stroke-width="1.6" marker-end="url(#ag)"/>
+  <text x="1447" y="497" font-size="14">scorecard, figures</text>
+
+  <text x="800" y="820" font-size="16" text-anchor="middle">Every stage, from ingest to reports, is a DVC stage driven by params.yaml, run for the men and women campaigns.</text>
+</svg>

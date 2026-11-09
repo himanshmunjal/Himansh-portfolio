@@ -1,229 +1,69 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, Sparkles, Filter, Clock, Eye, BookOpen } from 'lucide-react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import { allBlogs } from '@/components/sections/BlogSection';
-import { useInView } from '@/hooks/useInView';
-import { useMousePosition } from '@/hooks/useMousePosition';
-import ParticleCanvas from '@/components/common/ParticleCanvas';
+import { ArrowLeft } from 'lucide-react';
 import SEO from '@/components/common/SEO';
+import SectionHeading from '@/components/notebook/SectionHeading';
+import PostCard, { LeadPost } from '@/components/notebook/PostCard';
+import { allBlogs } from '@/data/blogs';
 
-// Filter chips — each must match a tag on at least one post in allBlogs
-const allTags = ['All', 'Java', 'FullStack', 'DataScience', 'NLP', 'DeepLearning', 'XAI', 'Career'];
-
-const PARTICLE_COLORS = ['rgba(168, 85, 247, 0.6)'];
-const PARTICLE_SIZE: [number, number] = [1, 4];
+// Tags that appear on more than one post make useful filters
+const tagCounts = allBlogs.flatMap((b) => b.tags).reduce<Record<string, number>>((acc, t) => {
+  acc[t] = (acc[t] ?? 0) + 1;
+  return acc;
+}, {});
+const filterTags = ['All', ...Object.keys(tagCounts).filter((t) => tagCounts[t] > 1).sort(), ...Array.from(new Set(allBlogs.map((b) => b.category)))];
 
 const AllBlogs: React.FC = () => {
-  const { ref, isInView } = useInView({ threshold: 0.05 });
   const [selectedTag, setSelectedTag] = useState('All');
-  const mousePosition = useMousePosition(ref);
 
-  const filteredBlogs = selectedTag === 'All'
-    ? allBlogs
-    : allBlogs.filter((blog) => blog.tags.some((tag) => tag.toLowerCase().includes(selectedTag.toLowerCase())));
+  const filteredBlogs =
+    selectedTag === 'All'
+      ? allBlogs
+      : allBlogs.filter(
+          (blog) => blog.category === selectedTag || blog.tags.some((tag) => tag.toLowerCase().includes(selectedTag.toLowerCase()))
+        );
+  const [lead, ...rest] = filteredBlogs;
 
   return (
     <>
-    <SEO
+      <SEO
         title="Blog"
-        description="Technical blog by Himansh Munjal covering AI, Machine Learning, Data Science, and Software Development."
+        description="Long-form notes by Himansh Munjal on machine learning, NLP, MLOps, concurrency and full-stack engineering."
         url="/blogs/all"
-        keywords={["Himansh Munjal Blog", "AI Blog", "Machine Learning Blog", "Data Science Blog", "Software Development Blog"]}
       />
-    <div className="min-h-screen relative">
-      {/* Particle Canvas */}
-      <ParticleCanvas className="fixed inset-0 w-full h-full pointer-events-none z-0" variant="fall" count={30} size={PARTICLE_SIZE} colors={PARTICLE_COLORS} speed={0.5} />
 
-      {/* Background */}
-      <div className="fixed inset-0 bg-background opacity-90 -z-10" />
-      <div className="fixed inset-0 bg-[image:var(--gradient-mesh)] opacity-10 -z-10" />
+      <div className="wrap pb-10 pt-28 sm:pt-32">
+        <Link to="/#blog" viewTransition className="meta mb-10 inline-flex items-center gap-2 hover:text-ink">
+          <ArrowLeft className="h-3.5 w-3.5" /> Back to the notebook
+        </Link>
 
-      {/* Dynamic Gradient Orbs */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-        <div 
-          className="gradient-orb gradient-orb-primary w-[500px] h-[500px] -top-40 -left-40 blur-3xl"
-          style={{
-            transform: `translate(${mousePosition.x * 0.02}px, ${mousePosition.y * 0.02}px)`,
-            transition: 'transform 0.3s ease-out',
-          }}
-        />
-        <div 
-          className="gradient-orb gradient-orb-pink w-[450px] h-[450px] top-1/2 -right-40 blur-3xl"
-          style={{ 
-            animationDelay: '3s',
-            transform: `translate(${-mousePosition.x * 0.015}px, ${-mousePosition.y * 0.015}px)`,
-            transition: 'transform 0.3s ease-out',
-          }}
-        />
-      </div>
+        <SectionHeading n="B" kicker="Appendix" title={<>Every <em className="text-accent">entry</em></>} note={`${allBlogs.length} entries and counting`}>
+          Real-world lessons from building AI systems: the failures, the rewrites, and what actually works in production.
+        </SectionHeading>
 
-      <Header />
-
-      <main className="pt-32 pb-20 relative z-10" ref={ref}>
-        <div className="container mx-auto px-4">
-          {/* Back Link */}
-          <Link
-            to="/"
-            className={`group inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8 ${isInView ? 'animate-fade-in' : 'opacity-0'}`}
-          >
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            Back to Home
-          </Link>
-
-          {/* Section Heading */}
-          <div className={`mb-12 ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.1s' }}>
-            <div className="flex items-center gap-3 mb-4">
-              <BookOpen className="w-8 h-8 text-primary animate-bounce" />
-              <h1 className="text-4xl md:text-5xl font-bold">
-                <span className="gradient-text-vibrant relative inline-block">
-                  All Blog Posts
-                  <span className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-full animate-gradient-x" />
-                </span>
-              </h1>
-            </div>
-
-            <p className="text-muted-foreground max-w-2xl">
-              Thoughts, tutorials, and insights on software development, data science, and technology
-            </p>
-          </div>
-
-          {/* Tag Filter */}
-          <div className={`mb-12 ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.2s' }}>
-            <div className="flex items-center gap-3 mb-4">
-              <Filter className="w-5 h-5 text-primary" />
-              <span className="text-sm font-medium text-muted-foreground">Filter by topic</span>
-            </div>
-            
-            <div className="flex flex-wrap gap-3">
-              {allTags.map((tag) => (
-                <button
-                  key={tag}
-                  onClick={() => setSelectedTag(tag)}
-                  className={`group relative px-5 py-2.5 rounded-xl text-sm font-medium transition-all transform hover:scale-105 ${
-                    selectedTag === tag
-                      ? 'text-white'
-                      : 'glass-card text-muted-foreground hover:text-primary border border-primary/20 hover:border-primary/40'
-                  }`}
-                >
-                  {selectedTag === tag && (
-                    <>
-                      <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-xl opacity-75 blur-lg" />
-                      <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-xl" />
-                    </>
-                  )}
-                  <span className="relative z-10 flex items-center gap-2">
-                    {tag}
-                    {selectedTag === tag && <Sparkles className="w-3 h-3 animate-pulse" />}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Blogs Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredBlogs.map((blog, index) => (
-              <div
-                key={blog.id}
-                className={`group relative ${isInView ? 'animate-fade-in' : 'opacity-0'}`}
-                style={{ 
-                  animationDelay: `${0.3 + index * 0.05}s`,
-                  perspective: '1000px',
-                }}
-              >
-                {/* Glow effect */}
-                <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 opacity-0 group-hover:opacity-75 blur-xl transition-all duration-500" />
-
-                {/* Card */}
-                <div className="relative glass-card rounded-2xl overflow-hidden backdrop-blur-xl bg-background/40 border border-primary/20 transition-all duration-500 group-hover:bg-background/60 group-hover:border-primary/40 transform group-hover:scale-105">
-                  {/* Shimmer effect */}
-                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" />
-                  
-                  {/* Image */}
-                  <div className="relative h-48 overflow-hidden">
-                    <img
-                      src={blog.image}
-                      alt={blog.title}
-                      className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-2"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
-                    
-                    {/* Stats overlay */}
-                    <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                      <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-background/80 backdrop-blur-sm border border-primary/20">
-                        <Clock className="w-3 h-3 text-primary" />
-                        <span className="text-xs text-foreground/80">{blog.readTime}</span>
-                      </div>
-                      <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-background/80 backdrop-blur-sm border border-primary/20">
-                        <Eye className="w-3 h-3 text-primary" />
-                        <span className="text-xs text-foreground/80">{blog.views}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="relative p-6">
-                    <Link to={'/blog/' + blog.slug}>
-                      <h3 className="text-lg font-bold text-foreground mb-3 line-clamp-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-purple-400 group-hover:to-pink-400 transition-all duration-300 cursor-pointer">
-                        {blog.title}
-                      </h3>
-                    </Link>
-
-                    <p className="text-sm text-muted-foreground mb-4 line-clamp-3 leading-relaxed">
-                      {blog.excerpt}
-                    </p>
-
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {blog.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors"
-                        >
-                          #{tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Read more link */}
-                    <Link
-                      to={`/blog/${blog.id}`}
-                      className="flex items-center gap-2 text-sm text-primary opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0"
-                    >
-                      <span className="font-medium">Read article</span>
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {filteredBlogs.length === 0 && (
-            <div className={`text-center py-20 ${isInView ? 'animate-fade-in' : 'opacity-0'}`}>
-              <div className="inline-flex items-center gap-3 px-6 py-3 rounded-2xl glass-card border border-primary/20">
-                <Sparkles className="w-5 h-5 text-primary" />
-                <p className="text-muted-foreground">No blogs found with the selected filter.</p>
-              </div>
-            </div>
-          )}
+        <div className="mb-12 flex flex-wrap gap-2" role="group" aria-label="Filter by topic">
+          {filterTags.map((t) => (
+            <button key={t} type="button" className="chip" aria-pressed={selectedTag === t} onClick={() => setSelectedTag(t)}>
+              {t === 'All' ? 'All' : t}
+            </button>
+          ))}
         </div>
-      </main>
 
-      <Footer />
-
-      <style>{`
-        @keyframes gradient-x {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        .animate-gradient-x {
-          background-size: 200% auto;
-          animation: gradient-x 3s ease infinite;
-        }
-      `}</style>
-    </div>
+        {lead ? (
+          <>
+            <LeadPost post={lead} />
+            {rest.length > 0 && (
+              <div className="mt-16 grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+                {rest.map((post, i) => (
+                  <PostCard key={post.slug} post={post} tilt={[-1, 1.2, -0.6][i % 3]} />
+                ))}
+              </div>
+            )}
+          </>
+        ) : (
+          <p className="hand py-16 text-center text-3xl">No entries with that tag — yet.</p>
+        )}
+      </div>
     </>
   );
 };

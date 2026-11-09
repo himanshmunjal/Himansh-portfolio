@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#222">
+<defs>
+<marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#2f6f8f"/></marker>
+<marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#222"/></marker>
+</defs>
+<rect width="1600" height="900" fill="#fff"/>
+
+<!-- layers -->
+<g fill="none" stroke="#222" stroke-width="2">
+<rect x="30" y="60" width="240" height="680" rx="8"/>
+<rect x="400" y="60" width="590" height="680" rx="8"/>
+<rect x="1130" y="60" width="430" height="340" rx="8"/>
+<rect x="1130" y="430" width="430" height="310" rx="8"/>
+</g>
+<g font-weight="bold" font-size="20">
+<text x="50" y="95">Client (browser)</text>
+<text x="420" y="95">Server (Go, Gin)</text>
+<text x="1150" y="95">Storage</text>
+<text x="1150" y="465">External tools</text>
+</g>
+
+<!-- boxes: neutral -->
+<g fill="#fff" stroke="#222" stroke-width="2">
+<rect x="50" y="300" width="200" height="80" rx="6"/>
+<rect x="430" y="300" width="530" height="360" rx="6"/>
+<rect x="1160" y="300" width="370" height="80" rx="6"/>
+<rect x="1160" y="500" width="370" height="80" rx="6"/>
+<rect x="1160" y="620" width="370" height="80" rx="6"/>
+</g>
+<!-- boxes: main path -->
+<g fill="#fff" stroke="#2f6f8f" stroke-width="3.5">
+<rect x="50" y="130" width="200" height="80" rx="6"/>
+<rect x="430" y="130" width="190" height="80" rx="6"/>
+<rect x="770" y="130" width="190" height="80" rx="6"/>
+<rect x="1160" y="130" width="370" height="100" rx="6"/>
+</g>
+
+<!-- box text -->
+<g text-anchor="middle" font-size="19" font-weight="bold">
+<text x="150" y="162">SyncClient</text>
+<text x="150" y="332">Editor UI</text>
+<text x="525" y="162">Hub</text>
+<text x="865" y="162">Room</text>
+<text x="1345" y="165">PostgreSQL</text>
+<text x="695" y="334">REST API</text>
+<text x="1345" y="332">Image storage</text>
+<text x="1345" y="532">Converters</text>
+<text x="1345" y="652">SMTP</text>
+</g>
+<g text-anchor="middle" font-size="15">
+<text x="150" y="186">local CRDT replica</text>
+<text x="150" y="203">outbox in localStorage</text>
+<text x="150" y="356">React, CodeMirror, Quill</text>
+<text x="525" y="186">routes by document id</text>
+<text x="865" y="186">in-memory RGA copy</text>
+<text x="1345" y="190">ops log, snapshots</text>
+<text x="1345" y="210">users, comments, sharing</text>
+<text x="695" y="358">login, sign-up, password reset</text>
+<text x="695" y="384">documents, folders, teams</text>
+<text x="695" y="410">sharing links and roles</text>
+<text x="695" y="436">comments, notifications</text>
+<text x="695" y="462">version history, revert</text>
+<text x="695" y="488">image uploads, export, import</text>
+<text x="1345" y="356">local disk or S3 / R2</text>
+<text x="1345" y="556">pandoc, typst</text>
+<text x="1345" y="676">sign-up and reset email</text>
+</g>
+
+<!-- main path arrows -->
+<g stroke="#2f6f8f" stroke-width="3" fill="none">
+<line x1="250" y1="155" x2="428" y2="155" marker-end="url(#a)"/>
+<line x1="428" y1="190" x2="252" y2="190" marker-end="url(#a)"/>
+<line x1="620" y1="155" x2="768" y2="155" marker-end="url(#a)"/>
+<line x1="768" y1="190" x2="622" y2="190" marker-end="url(#a)"/>
+<line x1="960" y1="170" x2="1158" y2="170" marker-end="url(#a)"/>
+</g>
+<g stroke="#222" stroke-width="2" fill="none">
+<line x1="150" y1="298" x2="150" y2="212" marker-start="url(#g)" marker-end="url(#g)"/>
+<line x1="250" y1="340" x2="428" y2="340" marker-end="url(#g)"/>
+<line x1="960" y1="340" x2="1158" y2="340" marker-end="url(#g)"/>
+<polyline points="960,310 1070,310 1070,215 1158,215" marker-end="url(#g)"/>
+<line x1="960" y1="540" x2="1158" y2="540" marker-end="url(#g)"/>
+<line x1="960" y1="660" x2="1158" y2="660" marker-end="url(#g)"/>
+</g>
+
+<!-- arrow labels -->
+<g font-size="15" text-anchor="middle">
+<text x="339" y="145" fill="#2f6f8f">WebSocket: ops</text>
+<text x="339" y="214" fill="#2f6f8f">ack, ops, state</text>
+<text x="694" y="145" fill="#2f6f8f">ops by doc id</text>
+<text x="694" y="214" fill="#2f6f8f">ack, broadcast</text>
+<text x="1059" y="160" fill="#2f6f8f">commit ops</text>
+<text x="1059" y="188" fill="#2f6f8f">(before ack)</text>
+<text x="339" y="330">HTTP / JSON</text>
+<text x="1059" y="330">uploads</text>
+<text x="1096" y="260">SQL</text>
+<text x="1059" y="530">export, import</text>
+<text x="1059" y="650">email</text>
+<text x="165" y="262" text-anchor="start">edits, renders</text>
+</g>
+
+<!-- legend -->
+<line x1="50" y1="800" x2="110" y2="800" stroke="#2f6f8f" stroke-width="3" marker-end="url(#a)"/>
+<text x="125" y="805">Edit path: acknowledged only after the database commit</text>
+<line x1="700" y1="800" x2="760" y2="800" stroke="#222" stroke-width="2" marker-end="url(#g)"/>
+<text x="775" y="805">Request / response</text>
+</svg>

@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#222"/>
+    </marker>
+    <marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2f6f9f"/>
+    </marker>
+    <style>
+      text { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; fill: #222; }
+      .title { font-size: 26px; font-weight: 700; }
+      .layer { font-size: 16px; font-weight: 700; fill: #555; }
+      .name { font-size: 17px; font-weight: 700; text-anchor: middle; }
+      .sub { font-size: 14px; text-anchor: middle; fill: #444; }
+      .lbl { font-size: 14px; text-anchor: middle; }
+      .legend { font-size: 14px; }
+      .layerbox { fill: none; stroke: #999; stroke-width: 1.5; stroke-dasharray: 6 5; }
+      .box { fill: #fff; stroke: #222; stroke-width: 1.8; }
+      .g { fill: none; stroke: #222; stroke-width: 1.8; marker-end: url(#ag); }
+      .a { fill: none; stroke: #2f6f9f; stroke-width: 3; marker-end: url(#aa); }
+      .bg { fill: #fff; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" fill="#fff"/>
+  <text x="20" y="60" class="title">JCache architecture</text>
+
+  <!-- Layers -->
+  <rect x="20" y="110" width="220" height="500" rx="10" class="layerbox"/>
+  <text x="36" y="140" class="layer">Clients</text>
+  <rect x="306" y="110" width="688" height="760" rx="10" class="layerbox"/>
+  <text x="322" y="140" class="layer">Server node (Netty), one of N</text>
+  <rect x="1060" y="110" width="222" height="630" rx="10" class="layerbox"/>
+  <text x="1074" y="140" class="layer">Cache stack (cache-core)</text>
+  <rect x="1346" y="590" width="234" height="280" rx="10" class="layerbox"/>
+  <text x="1362" y="620" class="layer">Storage and monitoring</text>
+
+  <!-- Arrows (drawn before boxes and labels) -->
+  <line x1="222" y1="236" x2="322" y2="352" class="a"/>
+  <line x1="222" y1="370" x2="322" y2="370" class="g"/>
+  <line x1="222" y1="504" x2="322" y2="388" class="g"/>
+
+  <line x1="489" y1="352" x2="564" y2="272" class="a"/>
+  <line x1="489" y1="388" x2="564" y2="468" class="g"/>
+
+  <line x1="706" y1="260" x2="794" y2="260" class="a"/>
+  <line x1="706" y1="470" x2="794" y2="290" class="g"/>
+
+  <line x1="976" y1="248" x2="1074" y2="248" class="a"/>
+  <line x1="1170" y1="298" x2="1170" y2="360" class="a"/>
+  <line x1="1170" y1="438" x2="1170" y2="500" class="a"/>
+
+  <polyline points="976,284 1027,284 1027,678 1074,678" class="g"/>
+  <line x1="1264" y1="664" x2="1360" y2="664" class="g"/>
+  <line x1="1362" y1="696" x2="1266" y2="696" class="g" stroke-dasharray="7 5"/>
+
+  <line x1="886" y1="298" x2="886" y2="770" class="g"/>
+  <line x1="976" y1="810" x2="1360" y2="810" class="g"/>
+
+  <!-- Arrow labels -->
+  <rect x="256" y="281" width="34" height="22" class="bg"/><text x="273" y="297" class="lbl">text</text>
+  <rect x="256" y="359" width="34" height="22" class="bg"/><text x="273" y="375" class="lbl">text</text>
+  <rect x="253" y="436" width="40" height="22" class="bg"/><text x="273" y="452" class="lbl">RESP</text>
+
+  <rect x="493" y="301" width="68" height="22" class="bg"/><text x="527" y="317" class="lbl">text lines</text>
+  <rect x="486" y="417" width="82" height="22" class="bg"/><text x="527" y="433" class="lbl">RESP arrays</text>
+
+  <rect x="719" y="249" width="62" height="22" class="bg"/><text x="750" y="265" class="lbl">Command</text>
+  <rect x="719" y="369" width="62" height="22" class="bg"/><text x="750" y="385" class="lbl">Command</text>
+
+  <rect x="996" y="237" width="60" height="22" class="bg"/><text x="1026" y="253" class="lbl">get / put</text>
+  <rect x="1132" y="319" width="76" height="22" class="bg"/><text x="1170" y="335" class="lbl">live keys</text>
+  <rect x="1124" y="459" width="92" height="22" class="bg"/><text x="1170" y="475" class="lbl">by key hash</text>
+
+  <rect x="1004" y="560" width="46" height="22" class="bg"/><text x="1027" y="576" class="lbl">writes</text>
+  <rect x="1286" y="640" width="54" height="20" class="bg"/><text x="1313" y="655" class="lbl">append</text>
+  <rect x="1286" y="701" width="54" height="20" class="bg"/><text x="1313" y="716" class="lbl">replay</text>
+
+  <rect x="846" y="524" width="80" height="22" class="bg"/><text x="886" y="540" class="lbl">counters</text>
+  <rect x="1114" y="799" width="112" height="22" class="bg"/><text x="1170" y="815" class="lbl">HTTP /metrics</text>
+
+  <!-- Clients -->
+  <rect x="38" y="192" width="184" height="76" rx="8" class="box"/>
+  <text x="130" y="225" class="name">CacheClient</text><text x="130" y="248" class="sub">+ ConnectionPool</text>
+  <rect x="38" y="332" width="184" height="76" rx="8" class="box"/>
+  <text x="130" y="365" class="name">ClusterCacheClient</text><text x="130" y="388" class="sub">consistent hash ring</text>
+  <rect x="38" y="472" width="184" height="76" rx="8" class="box"/>
+  <text x="130" y="505" class="name">Redis clients</text><text x="130" y="528" class="sub">redis-cli, Jedis</text>
+
+  <!-- Server -->
+  <rect x="324" y="332" width="165" height="76" rx="8" class="box"/>
+  <text x="406" y="365" class="name">ProtocolDetector</text><text x="406" y="388" class="sub">reads first byte</text>
+  <rect x="566" y="222" width="140" height="76" rx="8" class="box"/>
+  <text x="636" y="255" class="name">Text handler</text><text x="636" y="278" class="sub">+ rate limit</text>
+  <rect x="566" y="442" width="140" height="76" rx="8" class="box"/>
+  <text x="636" y="475" class="name">RESP handler</text><text x="636" y="498" class="sub">+ rate limit</text>
+  <rect x="796" y="222" width="180" height="76" rx="8" class="box"/>
+  <text x="886" y="255" class="name">CommandExecutor</text><text x="886" y="278" class="sub">shared by both</text>
+  <rect x="796" y="772" width="180" height="76" rx="8" class="box"/>
+  <text x="886" y="805" class="name">ServerMetrics</text><text x="886" y="828" class="sub">counts, p50 / p99</text>
+
+  <!-- Cache stack -->
+  <rect x="1076" y="222" width="188" height="76" rx="8" class="box"/>
+  <text x="1170" y="255" class="name">TTLCache</text><text x="1170" y="278" class="sub">lazy + swept expiry</text>
+  <rect x="1076" y="362" width="188" height="76" rx="8" class="box"/>
+  <text x="1170" y="395" class="name">SegmentedCache</text><text x="1170" y="418" class="sub">16 locked segments</text>
+  <rect x="1076" y="502" width="188" height="76" rx="8" class="box"/>
+  <text x="1170" y="535" class="name">LRU / LFU / ARC</text><text x="1170" y="558" class="sub">O(1) policy per segment</text>
+  <rect x="1076" y="640" width="188" height="76" rx="8" class="box"/>
+  <text x="1170" y="673" class="name">PersistenceManager</text><text x="1170" y="696" class="sub">AOF lock, snapshots</text>
+
+  <!-- Storage and monitoring -->
+  <rect x="1362" y="640" width="200" height="76" rx="8" class="box"/>
+  <text x="1462" y="673" class="name">AOF + snapshot</text><text x="1462" y="696" class="sub">files in /data</text>
+  <rect x="1362" y="772" width="200" height="76" rx="8" class="box"/>
+  <text x="1462" y="805" class="name">Prometheus + Grafana</text><text x="1462" y="828" class="sub">monitoring profile</text>
+
+  <!-- Legend -->
+  <line x1="38" y1="700" x2="88" y2="700" class="a"/>
+  <text x="100" y="705" class="legend">main request path</text>
+  <line x1="38" y1="736" x2="88" y2="736" class="g"/>
+  <text x="100" y="741" class="legend">other traffic</text>
+  <line x1="38" y1="772" x2="88" y2="772" class="g" stroke-dasharray="7 5"/>
+  <text x="100" y="777" class="legend">start-up replay</text>
+</svg>

@@ -1,8 +1,14 @@
 import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
-import { Github, Linkedin, Instagram, FileText } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { Github, Linkedin, Instagram, FileText, ArrowDown } from 'lucide-react';
+import Annotation from '@/components/notebook/Annotation';
+import { allProjects } from '@/data/projects';
+import { allBlogs } from '@/data/blogs';
+import { technologies } from '@/data/technologies';
 
-// Lazy load the whole 3D scene (three.js, fiber, drei) — none of it is in the initial bundle
+// three.js + fiber + drei (~900 KB) live in this chunk. It's only requested once the
+// intro has finished, the figure is near the viewport and the browser is idle, so it never
+// competes with first paint. On phones the figure sits below the text, so it loads on scroll.
 const Hero3DScene = lazy(() => import('../common/Hero3DScene'));
 
 const socialLinks = [
@@ -12,28 +18,68 @@ const socialLinks = [
 ];
 
 const roles = [
-  { title: 'DATA', subtitle: 'SCIENTIST' },
-  { title: 'DATA', subtitle: 'ANALYST' },
-  { title: 'FULL STACK', subtitle: 'DEVELOPER' },
+  { title: 'Data', subtitle: 'Scientist' },
+  { title: 'Data', subtitle: 'Analyst' },
+  { title: 'Full Stack', subtitle: 'Developer' },
 ];
 
-const CanvasLoader = () => (
-  <div className="w-full h-full flex items-center justify-center" aria-hidden="true">
-    <div className="w-12 h-12 border-4 border-purple-500/30 border-t-purple-500 rounded-full animate-spin" />
-  </div>
+const readings = [
+  { value: '8.58', label: 'CGPA at VIT Vellore', href: '/#journey', color: 'var(--c-gold)' },
+  { value: String(technologies.length), label: 'tools in the kit', href: '/#toolkit', color: 'var(--c-teal)' },
+  { value: String(allProjects.length), label: 'experiments logged', href: '/projects/all', color: 'var(--accent)' },
+  { value: String(allBlogs.length), label: 'notebook entries', href: '/blogs/all', color: 'var(--c-violet)' },
+];
+
+/** WebGL can be missing (hardware acceleration off, old devices, locked-down browsers) */
+const supportsWebGL = () => {
+  try {
+    const c = document.createElement('canvas');
+    return Boolean(c.getContext('webgl2') || c.getContext('webgl'));
+  } catch {
+    return false;
+  }
+};
+
+/** If the 3D scene still throws (lost context, driver bugs), show the placeholder instead of
+    letting the error reach the router, which would replace the whole page with the 404 screen */
+class FigureBoundary extends React.Component<{ children: React.ReactNode }, { failed: boolean }> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  render() {
+    return this.state.failed ? <FigurePlaceholder label="figure unavailable" /> : this.props.children;
+  }
+}
+
+const hasIdle = typeof window !== 'undefined' && typeof window.requestIdleCallback === 'function';
+const idle = (cb: () => void): number => (hasIdle ? window.requestIdleCallback(cb, { timeout: 2500 }) : window.setTimeout(cb, 800));
+const cancelIdle = (id: number) => (hasIdle ? window.cancelIdleCallback(id) : window.clearTimeout(id));
+
+/** Crop marks + caption around the 3D figure */
+const FigureFrame: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <figure className="relative h-full w-full">
+    {(['left-0 top-0 border-l-2 border-t-2', 'right-0 top-0 border-r-2 border-t-2', 'bottom-8 left-0 border-b-2 border-l-2', 'bottom-8 right-0 border-b-2 border-r-2'] as const).map((c) => (
+      <span key={c} aria-hidden="true" className={`absolute h-5 w-5 border-[var(--ink-3)] ${c}`} />
+    ))}
+    <div className="absolute inset-x-0 bottom-8 top-0">{children}</div>
+    <figcaption className="meta absolute inset-x-0 bottom-0 flex justify-between">
+      <span><span className="accent">Fig. 0</span> · the author, rendered in three.js</span>
+      <span className="hidden sm:inline">drag to rotate</span>
+    </figcaption>
+  </figure>
 );
 
-const HeroSection: React.FC = () => {
+const HeroSection: React.FC<{ introDone?: boolean }> = ({ introDone = true }) => {
   const heroRef = useRef<HTMLElement>(null);
-  const rafRef = useRef<number | null>(null);
-  const scrollYRef = useRef(0);
-
   const [roleIndex, setRoleIndex] = useState(0);
+  const [roleVisible, setRoleVisible] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [show3D, setShow3D] = useState(false);
-  const [scrollOpacity, setScrollOpacity] = useState(1);
+  const [onScreen, setOnScreen] = useState(true);
+  const figureRef = useRef<HTMLDivElement>(null);
+  const [figureNear, setFigureNear] = useState(false);
 
-  // ── Detect mobile ──────────────────────────────────────────────────
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 767px)');
     setIsMobile(mq.matches);
@@ -42,235 +88,164 @@ const HeroSection: React.FC = () => {
     return () => mq.removeEventListener('change', handler);
   }, []);
 
-  // ── Defer 3D canvas ────────────────────────────────────────────────
+  // Is the figure on (or about to come on) screen? Once true, it stays true.
   useEffect(() => {
-    const id = setTimeout(() => setShow3D(true), isMobile ? 1500 : 200);
-    return () => clearTimeout(id);
-  }, [isMobile]);
+    const el = figureRef.current;
+    if (!el || figureNear) return;
+    // Phones: the figure starts low in the first screen, so wait until half of it is visible
+    // (one small scroll) instead of spending ~900 KB of 3D on first load. Larger screens: load a bit early.
+    const phone = window.matchMedia('(max-width: 767px)').matches;
+    const io = new IntersectionObserver(
+      ([e]) => e.isIntersecting && setFigureNear(true),
+      phone ? { threshold: 0.5 } : { rootMargin: '200px 0px' }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [figureNear]);
 
-  // ── Passive scroll listener ────────────────────────────────────────
+  // Defer the 3D chunk until the intro is done, the figure is near and the main thread is free
   useEffect(() => {
-    const onScroll = () => {
-      if (rafRef.current) return;
-      rafRef.current = requestAnimationFrame(() => {
-        rafRef.current = null;
-        const el = heroRef.current;
-        if (!el) return;
-        const progress = Math.min(window.scrollY / el.offsetHeight, 1);
-        const opacity = Math.max(1 - progress * 2, 0);
-        if (Math.abs(progress - scrollYRef.current) > 0.005) {
-          scrollYRef.current = progress;
-          setScrollOpacity(opacity);
-        }
-      });
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
+    if (!introDone || !figureNear || show3D || !supportsWebGL()) return;
+    const id = idle(() => setShow3D(true));
+    return () => cancelIdle(id);
+  }, [introDone, figureNear, show3D]);
+
+  // Stop rendering the canvas while the hero is off screen
+  useEffect(() => {
+    const el = heroRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setOnScreen(e.isIntersecting), { threshold: 0.05 });
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
-  // ── Role cycling ───────────────────────────────────────────────────
+  // Role cycling: fade out, swap, fade in
   useEffect(() => {
-    const id = setInterval(() => setRoleIndex(p => (p + 1) % roles.length), 4000);
+    const id = setInterval(() => {
+      setRoleVisible(false);
+      setTimeout(() => {
+        setRoleIndex((p) => (p + 1) % roles.length);
+        setRoleVisible(true);
+      }, 350);
+    }, 4000);
     return () => clearInterval(id);
   }, []);
 
-  const fadeStyle = { opacity: scrollOpacity };
+  const role = roles[roleIndex];
 
   return (
-    <section
-      ref={heroRef}
-      id="hero"
-      className="min-h-screen bg-background w-full flex items-center justify-center relative overflow-hidden"
-    >
-      {/* ── Background glow ─────────────────────────────────────────── */}
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-                   w-[400px] h-[400px] md:w-[800px] md:h-[800px]
-                   bg-purple-600/20 md:bg-purple-600/30
-                   rounded-full blur-[80px] md:blur-[100px]
-                   pointer-events-none will-change-opacity"
-        style={fadeStyle}
-        aria-hidden="true"
-      />
+    <section ref={heroRef} id="hero" className="relative flex min-h-[100svh] flex-col justify-center pb-10 pt-24">
+      <div className="wrap grid items-center gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-6">
+        {/* ── Text ── */}
+        <div className="relative z-10">
+          <p className="eyebrow animate-fade-up flex items-center gap-3">
+            <span className="accent">Entry 001</span>
+            <span className="h-px w-8 bg-[var(--rule-strong)]" aria-hidden="true" />
+            <span>Hello! I&apos;m</span>
+          </p>
 
-      {/* ── Social icons ────────────────────────────────────────────────
-          Mobile : horizontal row pinned bottom-left (clear of all text)
-          md+    : vertical column centered on left edge (original)
-      ── */}
-      <div className="
-        absolute z-50
-        bottom-8 left-4 flex flex-row gap-5
-        md:bottom-auto md:top-1/2 md:-translate-y-1/2
-        md:left-6 lg:left-12 md:flex-col md:gap-6
-      ">
-        {socialLinks.map(({ icon: Icon, href, label }) => (
-          <a
-            key={label}
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-white/50 hover:text-white transition-colors duration-300 hover:scale-110 transform"
-            aria-label={label}
-          >
-            <Icon className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
-          </a>
-        ))}
-      </div>
+          <h1 className="serif animate-fade-up mt-4 text-[clamp(3.6rem,10vw,8.2rem)] leading-[0.88] text-ink" style={{ animationDelay: '80ms' }}>
+            Himansh
+            <br />
+            <em className="text-accent">Munjal</em>
+          </h1>
 
-      {/* ── z-0: Blurred role TITLE (behind model) ──────────────────────
-          Mobile : top-right corner, right-aligned, shifted up
-          md+    : original centered-right layout
-      ── */}
-      <div
-        className="
-          absolute z-0 pointer-events-none select-none
-          top-[20%] right-5 text-right
-          md:top-1/2 md:right-0 md:-translate-y-1/2 md:text-left
-          md:w-full md:max-w-[500px] lg:max-w-[600px] md:px-0
-        "
-        style={fadeStyle}
-        aria-hidden="true"
-      >
-        <p className="text-[11px] md:text-lg lg:text-2xl text-[#c084fc] mb-1 md:mb-2 font-medium">
-          A Creative
-        </p>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={roleIndex}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="
-              font-black leading-[1] tracking-tighter whitespace-nowrap
-              text-white/20 blur-[2px] md:blur-[3px]
-              text-[2rem] md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl
-            ">
-              {roles[roleIndex].title}
-            </h2>
-            {/* Invisible height spacer */}
-            <h2 className="
-              font-black leading-[1] tracking-tighter opacity-0 whitespace-nowrap mt-1 md:mt-2
-              text-[2rem] md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl
-            ">
-              {roles[roleIndex].subtitle}
-            </h2>
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* ── z-10: 3D Canvas (deferred) ──────────────────────────────── */}
-      {show3D ? (
-        <div className="absolute inset-0 z-10 pointer-events-none sm:pointer-events-auto">
-          <Suspense fallback={<CanvasLoader />}>
-            <Hero3DScene
-              isMobile={isMobile}
-              paused={scrollOpacity === 0}
-              scrollProgress={scrollYRef.current}
-            />
-          </Suspense>
-        </div>
-      ) : (
-        <div
-          className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none"
-          aria-hidden="true"
-        >
-          <div className="w-64 h-64 md:w-96 md:h-96 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded-full blur-3xl" />
-        </div>
-      )}
-
-      {/* ── z-20: Name — LCP element ────────────────────────────────────
-          Mobile : top-left, pushed well above character (~20% from top)
-          md+    : original vertically-centered left position
-      ── */}
-      <div
-        className="
-          absolute z-20 pointer-events-none
-          top-[20%] left-4
-          md:top-1/2 md:left-[5%] lg:left-[10%] xl:left-[15%] md:-translate-y-1/2
-        "
-        style={fadeStyle}
-      >
-        <p className="text-[11px] md:text-lg lg:text-2xl text-[#c084fc] mb-1 md:mb-2 font-medium">
-          Hello! I'm
-        </p>
-        <h1 className="
-          font-black text-white leading-[1] tracking-tighter drop-shadow-2xl
-          text-[2.1rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl
-        ">
-          HIMANSH<br />MUNJAL
-        </h1>
-      </div>
-
-      {/* ── z-20: Crisp role SUBTITLE (in front of model) ───────────────
-          Mobile : aligned with blurred title block in top-right
-          md+    : original layout
-      ── */}
-      <div
-        className="
-          absolute z-20 pointer-events-none
-          top-[20%] right-5 text-right
-          md:top-1/2 md:right-0 md:-translate-y-1/2 md:text-left
-          md:w-full md:max-w-[500px] lg:max-w-[600px] md:px-0
-        "
-        style={fadeStyle}
-      >
-        {/* Spacer matches label height */}
-        <p className="text-[11px] md:text-lg mb-1 md:mb-2 opacity-0 select-none" aria-hidden="true">
-          A Creative
-        </p>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={roleIndex}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5 }}
-          >
-            {/* Spacer matches blurred title height */}
-            <h2
-              className="
-                font-black leading-[1] tracking-tighter opacity-0 whitespace-nowrap select-none
-                text-[2rem] md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl
-              "
-              aria-hidden="true"
+          <div className="animate-fade-up mt-6 flex flex-wrap items-baseline gap-x-3 text-2xl sm:text-3xl" style={{ animationDelay: '160ms' }}>
+            <span className="hand text-3xl sm:text-4xl">a creative</span>
+            <span
+              aria-live="polite"
+              className="serif text-ink transition-all duration-300"
+              style={{ opacity: roleVisible ? 1 : 0, transform: roleVisible ? 'none' : 'translateY(8px)' }}
             >
-              {roles[roleIndex].title}
-            </h2>
-            {/* Visible crisp subtitle */}
-            <h2 className="
-              font-black text-white leading-[1] tracking-tighter whitespace-nowrap
-              drop-shadow-[0_4px_32px_rgba(0,0,0,1)]
-              mt-1 md:mt-2
-              text-[2rem] md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl
-            ">
-              {roles[roleIndex].subtitle}
-            </h2>
-          </motion.div>
-        </AnimatePresence>
+              <span className="highlight">{role.title} {role.subtitle}</span>
+            </span>
+          </div>
+
+          <p className="animate-fade-up mt-6 max-w-[48ch] text-[1.0625rem] leading-relaxed" style={{ animationDelay: '240ms' }}>
+            Data Science student at VIT Vellore. I build machine-learning pipelines, predictive models and the
+            systems underneath them, and I log every project like an experiment: <em>question, method, result</em>.
+          </p>
+
+          <div className="animate-fade-up mt-8 flex flex-wrap items-center gap-3" style={{ animationDelay: '320ms' }}>
+            <a href="#projects" className="btn">
+              See the experiments <ArrowDown className="h-4 w-4" />
+            </a>
+            <a href="/resume/Himansh_Munjal_Resume.pdf" download className="btn-ghost" aria-label="Download Resume">
+              Resume <FileText className="h-4 w-4" />
+            </a>
+            <div className="ml-1 flex items-center gap-1">
+              {socialLinks.map(({ icon: Icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="grid h-10 w-10 place-items-center rounded-full text-ink-3 transition-colors hover:text-accent"
+                >
+                  <Icon className="h-5 w-5" />
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* ── Fig. 0: the 3D author ── */}
+        <div ref={figureRef} className="relative h-[52vh] min-h-[340px] sm:h-[60vh] lg:h-[68vh]">
+          <FigureFrame>
+            {show3D ? (
+              <div className="h-full w-full pointer-events-none sm:pointer-events-auto">
+                <FigureBoundary>
+                  <Suspense fallback={<FigurePlaceholder label="loading model…" />}>
+                    <Hero3DScene isMobile={isMobile} paused={!onScreen} scrollProgress={0} />
+                  </Suspense>
+                </FigureBoundary>
+              </div>
+            ) : (
+              <FigurePlaceholder label="specimen arriving…" />
+            )}
+          </FigureFrame>
+          <Annotation dir="down-left" className="absolute -top-2 right-0 hidden text-2xl lg:inline-flex" arrowFirst={false} rotate={4}>
+            yes, that&apos;s me
+          </Annotation>
+        </div>
       </div>
 
-      {/* ── Resume button ─────────────────────────────────────────────── */}
-      {/* On mobile, nudge left so it doesn't crowd the social icons     */}
-      <div className="absolute bottom-6 md:bottom-8 right-6 md:right-8 z-50">
-        <a
-          href="/resume/Himansh_Munjal_Resume_Full_Stack.pdf"
-          download
-          className="flex items-center gap-2 md:gap-3
-                     text-xs md:text-sm lg:text-base font-bold uppercase
-                     tracking-[0.15em] md:tracking-[0.2em]
-                     text-white/50 hover:text-white transition-colors duration-300 cursor-pointer"
-          aria-label="Download Resume"
-        >
-          Resume <FileText className="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5" />
-        </a>
+      {/* ── Readings strip ── */}
+      <div className="wrap mt-10 lg:mt-4">
+        <dl className="grid grid-cols-2 border-y rule sm:grid-cols-4">
+          {/* dt/dd must sit directly in a <dl> or a <div> inside it, so the link lives in the <dd>
+              and its ::after stretches over the whole cell to keep the full click target */}
+          {readings.map((r, i) => (
+            <div
+              key={r.label}
+              className={`group relative flex flex-col-reverse px-1 py-4 sm:px-5 ${i > 0 ? 'sm:border-l sm:border-dashed rule' : ''} ${i % 2 ? 'border-l border-dashed rule pl-4 sm:pl-5' : ''}`}
+            >
+              <dt className="meta flex items-center gap-2">
+                <span aria-hidden="true" className="h-0.5 w-3 transition-all duration-300 group-hover:w-6" style={{ background: r.color }} />
+                {r.label}
+              </dt>
+              <dd className="serif mb-1 text-4xl leading-none transition-opacity group-hover:opacity-80" style={{ color: r.color }}>
+                <Link to={r.href} viewTransition className="after:absolute after:inset-0" aria-label={`${r.value} ${r.label}`}>
+                  {r.value}
+                </Link>
+              </dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </section>
   );
 };
+
+const FigurePlaceholder: React.FC<{ label: string }> = ({ label }) => (
+  <div className="grid h-full w-full place-items-center" aria-hidden="true">
+    <div className="relative grid h-40 w-40 place-items-center rounded-full border border-dashed border-[var(--rule-strong)]">
+      <span className="absolute inset-x-0 top-1/2 border-t border-dashed rule" />
+      <span className="absolute inset-y-0 left-1/2 border-l border-dashed rule" />
+      <span className="meta relative bg-paper px-2">{label}</span>
+    </div>
+  </div>
+);
 
 export default HeroSection;

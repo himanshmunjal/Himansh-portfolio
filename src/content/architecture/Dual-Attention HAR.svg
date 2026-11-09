@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" font-family="-apple-system, 'Helvetica Neue', Helvetica, Arial, sans-serif" fill="#222">
+  <defs>
+    <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#222"/>
+    </marker>
+    <marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#3d7a8a"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="900" fill="#ffffff"/>
+
+  <text x="40" y="52" font-size="26" font-weight="700">Dual-Attention HAR: architecture</text>
+  <line x1="1110" y1="45" x2="1160" y2="45" stroke="#3d7a8a" stroke-width="3"/>
+  <text x="1172" y="50" font-size="15">accuracy path</text>
+  <line x1="1310" y1="45" x2="1360" y2="45" stroke="#222" stroke-width="1.6"/>
+  <text x="1372" y="50" font-size="15">cost path</text>
+
+  <!-- Groups -->
+  <g fill="none" stroke="#222" stroke-width="1.2" stroke-dasharray="6 5">
+    <rect x="30" y="120" width="190" height="640" rx="10"/>
+    <rect x="290" y="120" width="210" height="640" rx="10"/>
+    <rect x="570" y="120" width="260" height="640" rx="10"/>
+    <rect x="900" y="120" width="180" height="640" rx="10"/>
+    <rect x="1150" y="120" width="180" height="640" rx="10"/>
+    <rect x="1400" y="120" width="170" height="640" rx="10"/>
+  </g>
+  <g font-size="15" font-weight="700" letter-spacing="1.5">
+    <text x="46" y="150">INPUT</text>
+    <text x="306" y="150">PREPARE</text>
+    <text x="586" y="150">TRAIN</text>
+    <text x="916" y="150">STORAGE</text>
+    <text x="1166" y="150">ANALYSIS</text>
+    <text x="1416" y="150">OUTPUT</text>
+  </g>
+
+  <!-- Boxes -->
+  <g fill="#ffffff" stroke="#222" stroke-width="1.8">
+    <rect x="45" y="250" width="160" height="410" rx="8"/>
+    <rect x="305" y="230" width="180" height="140" rx="8"/>
+    <rect x="305" y="530" width="180" height="140" rx="8"/>
+    <rect x="585" y="230" width="230" height="440" rx="8"/>
+    <rect x="915" y="330" width="150" height="240" rx="8"/>
+    <rect x="1165" y="230" width="150" height="140" rx="8"/>
+    <rect x="1165" y="530" width="150" height="140" rx="8"/>
+    <rect x="1415" y="330" width="140" height="240" rx="8"/>
+  </g>
+
+  <!-- Input -->
+  <text x="125" y="410" font-size="17" font-weight="700" text-anchor="middle">Raw sensor</text>
+  <text x="125" y="432" font-size="17" font-weight="700" text-anchor="middle">data</text>
+  <text x="125" y="460" font-size="14" text-anchor="middle">UCI-HAR (30 subj)</text>
+  <text x="125" y="480" font-size="14" text-anchor="middle">WISDM (36 subj)</text>
+  <text x="125" y="500" font-size="14" text-anchor="middle">PAMAP2 (8 subj)</text>
+
+  <!-- Prepare -->
+  <text x="395" y="275" font-size="17" font-weight="700" text-anchor="middle">Preprocessing</text>
+  <text x="395" y="300" font-size="14" text-anchor="middle">2.56 s windows,</text>
+  <text x="395" y="320" font-size="14" text-anchor="middle">50% overlap,</text>
+  <text x="395" y="340" font-size="14" text-anchor="middle">one label map</text>
+  <text x="395" y="575" font-size="17" font-weight="700" text-anchor="middle">LOSO fold builder</text>
+  <text x="395" y="600" font-size="14" text-anchor="middle">10 / 12 / 8 folds,</text>
+  <text x="395" y="620" font-size="14" text-anchor="middle">subject-wise val,</text>
+  <text x="395" y="640" font-size="14" text-anchor="middle">train-only scaling</text>
+
+  <!-- Train -->
+  <text x="700" y="330" font-size="18" font-weight="700" text-anchor="middle">Training runner</text>
+  <text x="700" y="356" font-size="14" text-anchor="middle">264 parallel jobs, 1,320 runs</text>
+  <text x="700" y="376" font-size="14" text-anchor="middle">smoke test, resume, retry</text>
+  <line x1="610" y1="398" x2="790" y2="398" stroke="#222" stroke-width="1"/>
+  <text x="700" y="425" font-size="14" font-weight="700" text-anchor="middle">8 models x 5 seeds</text>
+  <text x="700" y="450" font-size="14" text-anchor="middle">SG-DA-BiGRU (proposed)</text>
+  <text x="700" y="470" font-size="14" text-anchor="middle">DA-BiGRU, channel-only,</text>
+  <text x="700" y="490" font-size="14" text-anchor="middle">temporal-only</text>
+  <text x="700" y="510" font-size="14" text-anchor="middle">BiGRU, BiLSTM + attn</text>
+  <text x="700" y="530" font-size="14" text-anchor="middle">CNN + BiGRU, DeepConvLSTM</text>
+  <text x="700" y="560" font-size="14" text-anchor="middle">select on val macro-F1</text>
+
+  <!-- Storage -->
+  <text x="990" y="425" font-size="17" font-weight="700" text-anchor="middle">Results table</text>
+  <text x="990" y="451" font-size="14" text-anchor="middle">raw_results.csv,</text>
+  <text x="990" y="471" font-size="14" text-anchor="middle">predictions</text>
+
+  <!-- Analysis -->
+  <text x="1240" y="272" font-size="17" font-weight="700" text-anchor="middle">Efficiency</text>
+  <text x="1240" y="294" font-size="17" font-weight="700" text-anchor="middle">profiling</text>
+  <text x="1240" y="320" font-size="14" text-anchor="middle">params, FLOPs,</text>
+  <text x="1240" y="340" font-size="14" text-anchor="middle">CPU / GPU latency</text>
+  <text x="1240" y="572" font-size="17" font-weight="700" text-anchor="middle">Statistics</text>
+  <text x="1240" y="594" font-size="17" font-weight="700" text-anchor="middle">engine</text>
+  <text x="1240" y="620" font-size="14" text-anchor="middle">Wilcoxon + Holm,</text>
+  <text x="1240" y="640" font-size="14" text-anchor="middle">Bayesian ROPE</text>
+
+  <!-- Output -->
+  <text x="1485" y="430" font-size="17" font-weight="700" text-anchor="middle">Paper and</text>
+  <text x="1485" y="452" font-size="17" font-weight="700" text-anchor="middle">figures</text>
+  <text x="1485" y="478" font-size="14" text-anchor="middle">LaTeX, tables,</text>
+  <text x="1485" y="498" font-size="14" text-anchor="middle">22-slide deck</text>
+
+  <!-- Arrows -->
+  <line x1="205" y1="300" x2="301" y2="300" stroke="#3d7a8a" stroke-width="3" marker-end="url(#aa)"/>
+  <text x="255" y="272" font-size="14" text-anchor="middle">raw</text>
+  <text x="255" y="290" font-size="14" text-anchor="middle">files</text>
+  <line x1="395" y1="370" x2="395" y2="526" stroke="#3d7a8a" stroke-width="3" marker-end="url(#aa)"/>
+  <text x="407" y="445" font-size="14">X, y, subject</text>
+  <line x1="485" y1="600" x2="581" y2="600" stroke="#3d7a8a" stroke-width="3" marker-end="url(#aa)"/>
+  <text x="535" y="572" font-size="14" text-anchor="middle">folds,</text>
+  <text x="535" y="590" font-size="14" text-anchor="middle">scalers</text>
+  <line x1="815" y1="450" x2="911" y2="450" stroke="#3d7a8a" stroke-width="3" marker-end="url(#aa)"/>
+  <text x="865" y="420" font-size="14" text-anchor="middle">one row</text>
+  <text x="865" y="438" font-size="14" text-anchor="middle">per run</text>
+  <polyline points="1065,550 1110,550 1110,600 1161,600" fill="none" stroke="#3d7a8a" stroke-width="3" marker-end="url(#aa)"/>
+  <text x="1115" y="510" font-size="14" text-anchor="middle">fold</text>
+  <text x="1115" y="528" font-size="14" text-anchor="middle">macro-F1</text>
+  <polyline points="700,230 700,190 1240,190 1240,226" fill="none" stroke="#222" stroke-width="1.6" marker-end="url(#ag)"/>
+  <text x="990" y="180" font-size="14" text-anchor="middle">model definitions</text>
+  <line x1="1315" y1="350" x2="1411" y2="350" stroke="#222" stroke-width="1.6" marker-end="url(#ag)"/>
+  <text x="1365" y="322" font-size="14" text-anchor="middle">cost</text>
+  <text x="1365" y="340" font-size="14" text-anchor="middle">table</text>
+  <line x1="1315" y1="550" x2="1411" y2="550" stroke="#3d7a8a" stroke-width="3" marker-end="url(#aa)"/>
+  <text x="1365" y="522" font-size="14" text-anchor="middle">tests,</text>
+  <text x="1365" y="540" font-size="14" text-anchor="middle">CIs</text>
+
+  <text x="800" y="820" font-size="16" text-anchor="middle">scripts/run_all.sh runs every stage: venv, download, preprocess, smoke, train, profile, stats, evaluate</text>
+</svg>

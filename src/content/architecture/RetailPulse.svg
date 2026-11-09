@@ -1,0 +1,171 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#222"/>
+    </marker>
+    <marker id="ahA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2f7a80"/>
+    </marker>
+  </defs>
+  <rect width="1600" height="900" fill="#ffffff"/>
+
+  <!-- Title -->
+  <text x="24" y="50" font-size="26" font-weight="700" fill="#222">RetailPulse architecture</text>
+  <text x="24" y="78" font-size="16" fill="#222">Power BI Desktop report in a single .pbix, refreshed from two local Excel workbooks</text>
+
+  <!-- Group backgrounds -->
+  <g fill="#f4f4f2">
+    <rect x="24" y="100" width="200" height="640" rx="12"/>
+    <rect x="322" y="100" width="230" height="640" rx="12"/>
+    <rect x="650" y="100" width="280" height="640" rx="12"/>
+    <rect x="1028" y="100" width="230" height="640" rx="12"/>
+    <rect x="1356" y="100" width="220" height="640" rx="12"/>
+  </g>
+  <g font-size="15" font-weight="700" fill="#222" letter-spacing="1.5">
+    <text x="40" y="130">SOURCES</text>
+    <text x="338" y="130">TRANSFORM</text>
+    <text x="666" y="130">DATA MODEL</text>
+    <text x="1044" y="130">CALCULATION</text>
+    <text x="1372" y="130">OUTPUT</text>
+  </g>
+
+  <!-- Boxes -->
+  <g fill="#ffffff" stroke="#222" stroke-width="1.5">
+    <rect x="40" y="340" width="168" height="145" rx="8" stroke="#2f7a80" stroke-width="2.5"/>
+    <rect x="40" y="560" width="168" height="120" rx="8"/>
+    <rect x="338" y="150" width="198" height="550" rx="8"/>
+    <rect x="666" y="160" width="248" height="140" rx="8"/>
+    <rect x="666" y="345" width="248" height="130" rx="8" stroke="#2f7a80" stroke-width="2.5"/>
+    <rect x="666" y="560" width="118" height="120" rx="8"/>
+    <rect x="796" y="560" width="118" height="120" rx="8"/>
+    <rect x="1044" y="150" width="198" height="550" rx="8"/>
+    <rect x="1372" y="150" width="188" height="350" rx="8" stroke="#2f7a80" stroke-width="2.5"/>
+    <rect x="1372" y="560" width="188" height="120" rx="8"/>
+  </g>
+  <g stroke="#c8c8c4" stroke-width="1">
+    <line x1="350" y1="310" x2="524" y2="310"/>
+    <line x1="350" y1="520" x2="524" y2="520"/>
+    <line x1="1056" y1="310" x2="1230" y2="310"/>
+    <line x1="1056" y1="520" x2="1230" y2="520"/>
+  </g>
+
+  <!-- Box text -->
+  <g fill="#222" font-size="15">
+    <!-- Sources -->
+    <text x="56" y="372" font-size="18" font-weight="700">Orders</text>
+    <text x="56" y="394" font-size="18" font-weight="700">workbook</text>
+    <text x="56" y="420">Orders-Table 1.xlsx</text>
+    <text x="56" y="442">9,994 order lines,</text>
+    <text x="56" y="464">2018 to 2021</text>
+    <text x="56" y="598" font-size="18" font-weight="700">Returns</text>
+    <text x="56" y="620" font-size="18" font-weight="700">workbook</text>
+    <text x="56" y="646">800 rows,</text>
+    <text x="56" y="668">296 order IDs</text>
+
+    <!-- Power Query -->
+    <text x="354" y="182" font-size="18" font-weight="700">Power Query</text>
+    <text x="354" y="228" font-weight="700">Build dimensions</text>
+    <text x="354" y="252">select columns,</text>
+    <text x="354" y="274">dedupe on key</text>
+    <text x="354" y="396" font-weight="700">Clean orders</text>
+    <text x="354" y="420">promote headers,</text>
+    <text x="354" y="442">drop Row ID</text>
+    <text x="354" y="590" font-weight="700">Merge returns</text>
+    <text x="354" y="614">left join on Order ID,</text>
+    <text x="354" y="636">nulls become "No",</text>
+    <text x="354" y="658">dedupe</text>
+
+    <!-- Data model -->
+    <text x="682" y="192" font-size="18" font-weight="700">Dimension tables</text>
+    <text x="682" y="220">Dim-Customer (793)</text>
+    <text x="682" y="242">Dim-Product (1,862)</text>
+    <text x="682" y="264">Dim-Region</text>
+    <text x="682" y="377" font-size="18" font-weight="700">Orders-Table</text>
+    <text x="682" y="404">fact table, 9,994 rows</text>
+    <text x="682" y="426">+ DAX columns: CLV</text>
+    <text x="682" y="448">Segment, Customer Status</text>
+    <text x="680" y="594" font-size="17" font-weight="700">Returned</text>
+    <text x="680" y="620">Yes / No</text>
+    <text x="680" y="642">per Order ID</text>
+    <text x="810" y="594" font-size="17" font-weight="700">Dim-Date</text>
+    <text x="810" y="620">built in DAX</text>
+    <text x="810" y="642">from Order</text>
+    <text x="810" y="664">Date range</text>
+
+    <!-- DAX -->
+    <text x="1060" y="182" font-size="18" font-weight="700">DAX measures</text>
+    <text x="1060" y="228" font-weight="700">Core KPIs</text>
+    <text x="1060" y="252">Total Sales, Profit,</text>
+    <text x="1060" y="274">Margin, Return Rate</text>
+    <text x="1060" y="396" font-weight="700">Time intelligence</text>
+    <text x="1060" y="420">YoY Growth, QoQ</text>
+    <text x="1060" y="442">Change, Rolling 12M</text>
+    <text x="1060" y="590" font-weight="700">Customer metrics</text>
+    <text x="1060" y="614">CLV, Customer %,</text>
+    <text x="1060" y="636">Revenue</text>
+    <text x="1060" y="658">Contribution %</text>
+
+    <!-- Output -->
+    <text x="1388" y="182" font-size="18" font-weight="700">Report pages</text>
+    <text x="1388" y="216">Main Page</text>
+    <text x="1388" y="246">Performance</text>
+    <text x="1388" y="276">Product</text>
+    <text x="1388" y="306">Customer</text>
+    <text x="1388" y="326">Intelligence</text>
+    <text x="1388" y="356">Data Page</text>
+    <text x="1388" y="386">Conclusion</text>
+    <text x="1388" y="430">6 pages with a</text>
+    <text x="1388" y="452">page navigator</text>
+    <text x="1388" y="594" font-size="18" font-weight="700">Slicers</text>
+    <text x="1388" y="620">Year, Category,</text>
+    <text x="1388" y="642">Segment,</text>
+    <text x="1388" y="664">Sub-Category</text>
+  </g>
+
+  <!-- Main path arrows (accent) -->
+  <g stroke="#2f7a80" stroke-width="3" fill="none" marker-end="url(#ahA)">
+    <line x1="208" y1="410" x2="336" y2="410"/>
+    <line x1="536" y1="410" x2="664" y2="410"/>
+    <line x1="914" y1="410" x2="1042" y2="410"/>
+    <line x1="1242" y1="325" x2="1370" y2="325"/>
+  </g>
+  <!-- Secondary arrows -->
+  <g stroke="#222" stroke-width="1.75" fill="none" marker-end="url(#ah)">
+    <line x1="208" y1="620" x2="336" y2="620"/>
+    <line x1="536" y1="230" x2="664" y2="230"/>
+    <line x1="536" y1="620" x2="664" y2="620"/>
+    <line x1="790" y1="300" x2="790" y2="343"/>
+    <line x1="725" y1="560" x2="725" y2="477"/>
+    <line x1="855" y1="560" x2="855" y2="477"/>
+    <path d="M1466,680 L1466,800 L790,800 L790,742"/>
+  </g>
+
+  <!-- Arrow labels -->
+  <g fill="#222" font-size="15" text-anchor="middle">
+    <text x="272" y="400">order rows</text>
+    <text x="272" y="610">returned</text>
+    <text x="272" y="644">order IDs</text>
+    <text x="600" y="220">key + attribute</text>
+    <text x="600" y="254">rows</text>
+    <text x="600" y="400">typed order</text>
+    <text x="600" y="434">lines</text>
+    <text x="600" y="610">return flag</text>
+    <text x="600" y="644">per order</text>
+    <text x="978" y="400">filtered</text>
+    <text x="978" y="434">rows</text>
+    <text x="1306" y="315">measure</text>
+    <text x="1306" y="349">values</text>
+  </g>
+  <g fill="#222" font-size="14">
+    <text x="800" y="327">1:* filters</text>
+    <text x="731" y="530">1:*</text>
+    <text x="861" y="530">1:*</text>
+  </g>
+  <text x="1128" y="828" font-size="15" fill="#222" text-anchor="middle">filter context from slicer selections</text>
+
+  <!-- Legend -->
+  <line x1="24" y1="860" x2="74" y2="860" stroke="#2f7a80" stroke-width="3"/>
+  <text x="84" y="865" font-size="15" fill="#222">main data path</text>
+  <line x1="240" y1="860" x2="290" y2="860" stroke="#222" stroke-width="1.75"/>
+  <text x="300" y="865" font-size="15" fill="#222">supporting flow</text>
+</svg>

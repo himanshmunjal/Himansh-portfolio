@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" font-family="-apple-system, 'Helvetica Neue', Helvetica, Arial, sans-serif" fill="#222">
+  <defs>
+    <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#222"/>
+    </marker>
+    <marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#3d7a8a"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="900" fill="#ffffff"/>
+
+  <!-- Title + legend -->
+  <text x="40" y="52" font-size="26" font-weight="700">Ephemeral Share: architecture</text>
+  <line x1="1150" y1="45" x2="1200" y2="45" stroke="#3d7a8a" stroke-width="3"/>
+  <text x="1212" y="50" font-size="15">content path</text>
+  <line x1="1340" y1="45" x2="1390" y2="45" stroke="#222" stroke-width="1.6"/>
+  <text x="1402" y="50" font-size="15">control and events</text>
+
+  <!-- Layer boxes -->
+  <g fill="none" stroke="#222" stroke-width="1.2" stroke-dasharray="6 5">
+    <rect x="40" y="90" width="300" height="700" rx="10"/>
+    <rect x="560" y="90" width="420" height="700" rx="10"/>
+    <rect x="1200" y="90" width="360" height="700" rx="10"/>
+  </g>
+  <g font-size="15" font-weight="700" letter-spacing="1.5">
+    <text x="60" y="122">CLIENT</text>
+    <text x="580" y="122">API (GO SERVICE)</text>
+    <text x="1220" y="122">STORAGE</text>
+  </g>
+
+  <!-- Components -->
+  <g fill="#ffffff" stroke="#222" stroke-width="1.8">
+    <rect x="70" y="150" width="240" height="610" rx="8"/>
+    <rect x="90" y="520" width="200" height="120" rx="6"/>
+    <rect x="590" y="150" width="360" height="210" rx="8"/>
+    <rect x="590" y="410" width="360" height="80" rx="8"/>
+    <rect x="590" y="540" width="360" height="200" rx="8"/>
+    <rect x="1230" y="150" width="300" height="80" rx="8"/>
+    <rect x="1230" y="300" width="300" height="280" rx="8"/>
+    <rect x="1230" y="650" width="300" height="80" rx="8"/>
+  </g>
+
+  <!-- React client -->
+  <text x="190" y="390" font-size="20" font-weight="700" text-anchor="middle">React client</text>
+  <text x="190" y="416" font-size="15" text-anchor="middle">React + Vite + Tailwind</text>
+  <text x="190" y="438" font-size="15" text-anchor="middle">web, iOS, Android</text>
+  <text x="190" y="460" font-size="15" text-anchor="middle">(Capacitor)</text>
+  <text x="190" y="556" font-size="17" font-weight="700" text-anchor="middle">Web Crypto</text>
+  <text x="190" y="582" font-size="14" text-anchor="middle">PBKDF2 key from code</text>
+  <text x="190" y="604" font-size="14" text-anchor="middle">AES-GCM-256</text>
+  <text x="190" y="626" font-size="14" text-anchor="middle">encrypt / decrypt</text>
+
+  <!-- Gin REST API -->
+  <text x="770" y="235" font-size="20" font-weight="700" text-anchor="middle">Gin REST API</text>
+  <text x="770" y="262" font-size="15" text-anchor="middle">sessions, content, presigning</text>
+  <text x="770" y="284" font-size="15" text-anchor="middle">two-phase upload check</text>
+  <text x="770" y="306" font-size="15" text-anchor="middle">per-IP rate limit</text>
+
+  <!-- WebSocket hub -->
+  <text x="770" y="446" font-size="20" font-weight="700" text-anchor="middle">WebSocket hub</text>
+  <text x="770" y="472" font-size="15" text-anchor="middle">one hub per session code</text>
+
+  <!-- Cleanup worker -->
+  <text x="770" y="618" font-size="20" font-weight="700" text-anchor="middle">Cleanup worker</text>
+  <text x="770" y="644" font-size="15" text-anchor="middle">listens for expired keys</text>
+  <text x="770" y="666" font-size="15" text-anchor="middle">marks analytics row ended</text>
+  <text x="770" y="688" font-size="15" text-anchor="middle">60 s analytics sweep</text>
+
+  <!-- Storage -->
+  <text x="1380" y="186" font-size="20" font-weight="700" text-anchor="middle">PostgreSQL</text>
+  <text x="1380" y="211" font-size="15" text-anchor="middle">analytics only</text>
+
+  <text x="1380" y="420" font-size="20" font-weight="700" text-anchor="middle">Redis</text>
+  <text x="1380" y="446" font-size="15" text-anchor="middle">live session state</text>
+  <text x="1380" y="468" font-size="15" text-anchor="middle">one TTL, never extended</text>
+  <text x="1380" y="490" font-size="15" text-anchor="middle">pub/sub, expiry events</text>
+
+  <text x="1380" y="686" font-size="20" font-weight="700" text-anchor="middle">Object storage</text>
+  <text x="1380" y="711" font-size="15" text-anchor="middle">MinIO / S3 / R2, ciphertext</text>
+
+  <!-- Arrows: client <-> API -->
+  <line x1="310" y1="200" x2="588" y2="200" stroke="#3d7a8a" stroke-width="3" marker-end="url(#aa)"/>
+  <text x="450" y="174" font-size="15" text-anchor="middle">REST / JSON:</text>
+  <text x="450" y="192" font-size="15" text-anchor="middle">code, encrypted text</text>
+
+  <line x1="590" y1="300" x2="312" y2="300" stroke="#222" stroke-width="1.6" marker-end="url(#ag)"/>
+  <text x="450" y="290" font-size="15" text-anchor="middle">pre-signed URLs, feed</text>
+
+  <line x1="590" y1="450" x2="312" y2="450" stroke="#222" stroke-width="1.6" marker-end="url(#ag)"/>
+  <text x="450" y="440" font-size="15" text-anchor="middle">WebSocket events</text>
+
+  <!-- Arrows: API <-> storage -->
+  <line x1="950" y1="190" x2="1228" y2="190" stroke="#222" stroke-width="1.6" marker-end="url(#ag)"/>
+  <text x="1090" y="180" font-size="15" text-anchor="middle">async analytics writes</text>
+
+  <line x1="950" y1="330" x2="1228" y2="330" stroke="#3d7a8a" stroke-width="3" marker-end="url(#aa)"/>
+  <text x="1090" y="302" font-size="15" text-anchor="middle">session + content keys</text>
+  <text x="1090" y="320" font-size="15" text-anchor="middle">(remaining TTL), PUBLISH</text>
+
+  <line x1="1230" y1="450" x2="952" y2="450" stroke="#222" stroke-width="1.6" marker-end="url(#ag)"/>
+  <text x="1090" y="440" font-size="15" text-anchor="middle">pub/sub events</text>
+
+  <line x1="1230" y1="565" x2="952" y2="565" stroke="#222" stroke-width="1.6" marker-end="url(#ag)"/>
+  <text x="1090" y="555" font-size="15" text-anchor="middle">key expired events</text>
+
+  <line x1="950" y1="690" x2="1228" y2="690" stroke="#222" stroke-width="1.6" marker-end="url(#ag)"/>
+  <text x="1090" y="680" font-size="15" text-anchor="middle">delete session prefix</text>
+
+  <!-- Cleanup worker -> WebSocket hub (in process) -->
+  <line x1="770" y1="540" x2="770" y2="492" stroke="#222" stroke-width="1.6" marker-end="url(#ag)"/>
+  <text x="782" y="521" font-size="14">session_expired</text>
+
+  <!-- Direct encrypted bytes path -->
+  <polyline points="190,762 190,850 1380,850 1380,732" fill="none" stroke="#3d7a8a" stroke-width="3" marker-start="url(#aa)" marker-end="url(#aa)"/>
+  <text x="785" y="838" font-size="15" text-anchor="middle">encrypted file bytes: PUT / GET direct to storage via pre-signed URL</text>
+</svg>

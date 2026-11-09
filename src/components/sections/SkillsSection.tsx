@@ -1,24 +1,11 @@
-import React, { useState } from 'react';
-import { Code, Brain, BarChart3, Rocket, Calculator, Wrench, Sparkles, Zap, TrendingUp } from 'lucide-react';
-import { useInView } from '@/hooks/useInView';
-import { useMousePosition } from '@/hooks/useMousePosition';
-import ParticleCanvas from '@/components/common/ParticleCanvas';
-
-const PARTICLE_COLORS = [
-  'rgba(168, 85, 247, 0.6)',
-  'rgba(59, 130, 246, 0.6)',
-  'rgba(16, 185, 129, 0.6)',
-  'rgba(249, 115, 22, 0.6)',
-  'rgba(236, 72, 153, 0.6)',
-];
-const PARTICLE_SIZE: [number, number] = [1, 3];
+import React from 'react';
+import { Code, Brain, BarChart3, Rocket, Calculator, Wrench } from 'lucide-react';
+import SectionHeading from '@/components/notebook/SectionHeading';
 
 const skillCategories = [
   {
     title: 'Programming Languages',
     icon: Code,
-    color: 'from-purple-500 to-pink-500',
-    glowColor: 'rgba(168, 85, 247, 0.3)',
     skills: [
       { name: 'Python', level: 90 },
       { name: 'Java', level: 85 },
@@ -31,8 +18,6 @@ const skillCategories = [
   {
     title: 'Data Science',
     icon: Brain,
-    color: 'from-blue-500 to-cyan-500',
-    glowColor: 'rgba(59, 130, 246, 0.3)',
     skills: [
       { name: 'Machine Learning', level: 88 },
       { name: 'Scikit-learn', level: 85 },
@@ -45,8 +30,6 @@ const skillCategories = [
   {
     title: 'Data Analysis & Visualization',
     icon: BarChart3,
-    color: 'from-emerald-500 to-teal-500',
-    glowColor: 'rgba(16, 185, 129, 0.3)',
     skills: [
       { name: 'NumPy', level: 88 },
       { name: 'Pandas', level: 90 },
@@ -59,8 +42,6 @@ const skillCategories = [
   {
     title: 'Full Stack Development',
     icon: Rocket,
-    color: 'from-orange-500 to-red-500',
-    glowColor: 'rgba(249, 115, 22, 0.3)',
     skills: [
       { name: 'React.js', level: 82 },
       { name: 'Tailwind CSS', level: 85 },
@@ -74,22 +55,18 @@ const skillCategories = [
   {
     title: 'Mathematics & Algorithms',
     icon: Calculator,
-    color: 'from-pink-500 to-rose-500',
-    glowColor: 'rgba(236, 72, 153, 0.3)',
     skills: [
       { name: 'Linear Algebra', level: 80 },
       { name: 'Statistics', level: 82 },
       { name: 'Probability', level: 78 },
       { name: 'Multivariable Calculus', level: 72 },
       { name: 'Differential Equations', level: 70 },
-      { name: 'Complex Variables', level: 80},
+      { name: 'Complex Variables', level: 80 },
     ],
   },
   {
     title: 'Other Skills',
     icon: Wrench,
-    color: 'from-indigo-500 to-purple-500',
-    glowColor: 'rgba(99, 102, 241, 0.3)',
     skills: [
       { name: 'Git', level: 85 },
       { name: 'GitHub', level: 88 },
@@ -101,313 +78,49 @@ const skillCategories = [
   },
 ];
 
-const SkillCard: React.FC<{
-  category: typeof skillCategories[0];
-  index: number;
-  isInView: boolean;
-  mousePosition: { x: number; y: number };
-}> = ({ category, index, isInView, mousePosition }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [activeSkill, setActiveSkill] = useState<number | null>(null);
-  const { ref: cardRef, isInView: cardInView } = useInView({ threshold: 0.3 });
+const SkillsSection: React.FC = () => (
+  <section id="skills" className="relative scroll-mt-16 py-24 sm:py-32">
+    <div className="wrap">
+      <SectionHeading n="03" kicker="Skills" title={<>Technical <em className="text-accent">specimens</em></>} note="six families, one bar each, with honest levels">
+        A breakdown of what I work with, grouped the way I actually use it, from languages to the maths underneath.
+      </SectionHeading>
 
-  const shouldAnimate = isHovered || cardInView;
+      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        {skillCategories.map((cat, ci) => (
+          <article key={cat.title} className="index-card reveal relative p-6 pt-0">
+            <header className="flex h-[2.6rem] items-center justify-between">
+              <p className="eyebrow">
+                <span className="accent">Specimen {String.fromCharCode(65 + ci)}</span>
+              </p>
+              <cat.icon className="h-4 w-4 text-accent" aria-hidden="true" />
+            </header>
+            <h3 className="serif mt-4 text-[1.75rem] leading-tight">{cat.title}</h3>
 
-  // Calculate tilt based on mouse position relative to card
-  const getTilt = () => {
-    if (!cardRef.current || !isHovered) return { x: 0, y: 0 };
-    
-    const rect = cardRef.current.getBoundingClientRect();
-    const cardCenterX = rect.left + rect.width / 2;
-    const cardCenterY = rect.top + rect.height / 2;
-    
-    const deltaX = (mousePosition.x - cardCenterX) / (rect.width / 2);
-    const deltaY = (mousePosition.y - cardCenterY) / (rect.height / 2);
-    
-    return { x: deltaY * -10, y: deltaX * 10 };
-  };
-
-  const tilt = getTilt();
-
-  return (
-    <div
-      ref={cardRef}
-      className={`group relative ${isInView ? 'animate-fade-in' : 'opacity-0'}`}
-      style={{ 
-        animationDelay: `${0.2 + index * 0.1}s`,
-        perspective: '1000px',
-      }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => {
-        setIsHovered(false);
-        setActiveSkill(null);
-      }}
-    >
-      {/* Animated glow effect */}
-      <div 
-        className={`absolute -inset-1 rounded-2xl bg-gradient-to-r ${category.color} opacity-0 group-hover:opacity-75 blur-xl transition-all duration-500`}
-        style={{
-          boxShadow: isHovered ? `0 0 60px ${category.glowColor}` : 'none',
-        }}
-      />
-
-      {/* Floating particles on hover */}
-      {isHovered && (
-        <>
-          <div className="absolute -top-2 -left-2 w-2 h-2 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 animate-ping" />
-          <div className="absolute -top-2 -right-2 w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-cyan-400 animate-ping" style={{ animationDelay: '0.3s' }} />
-          <div className="absolute -bottom-2 -left-2 w-2 h-2 rounded-full bg-gradient-to-r from-emerald-400 to-teal-400 animate-ping" style={{ animationDelay: '0.6s' }} />
-          <div className="absolute -bottom-2 -right-2 w-2 h-2 rounded-full bg-gradient-to-r from-orange-400 to-red-400 animate-ping" style={{ animationDelay: '0.9s' }} />
-        </>
-      )}
-
-      {/* Card */}
-      <div
-        className="relative glass-card rounded-2xl p-6 backdrop-blur-xl bg-background/40 border border-primary/20 overflow-hidden transition-all duration-500 group-hover:bg-background/60 group-hover:border-primary/40"
-        style={{
-          transform: isHovered 
-            ? `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(1.02)` 
-            : 'rotateX(0deg) rotateY(0deg) scale(1)',
-          transition: 'all 0.3s ease-out',
-        }}
-      >
-        {/* Animated gradient border */}
-        <div className={`absolute inset-0 bg-gradient-to-r ${category.color} opacity-0 group-hover:opacity-20 transition-opacity duration-500`} />
-        
-        {/* Shimmer effect */}
-        <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-        
-        {/* Header */}
-        <div className="relative z-10 mb-6">
-          <div className="flex items-center gap-3 mb-3">
-            {/* Icon with animated background */}
-            <div className="relative">
-              <div className={`absolute inset-0 bg-gradient-to-r ${category.color} blur-lg opacity-0 group-hover:opacity-50 transition-opacity duration-500 rounded-xl`} />
-              <div className={`relative w-12 h-12 rounded-xl bg-gradient-to-r ${category.color} flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-500`}>
-                <category.icon className="w-6 h-6 text-white" />
-              </div>
-            </div>
-            
-            <div className="flex-1">
-              <h3 className="text-lg font-bold group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-purple-400 group-hover:to-pink-400 transition-all duration-300">
-                {category.title}
-              </h3>
-              <div className="flex items-center gap-1 mt-1">
-                <Sparkles className="w-3 h-3 text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse" />
-                <span className="text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  {category.skills.length} skills
-                </span>
-              </div>
-            </div>
-          </div>
-          
-          {/* Decorative line */}
-          <div className="relative h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent">
-            <div className={`absolute inset-0 bg-gradient-to-r ${category.color} opacity-0 group-hover:opacity-50 transition-opacity duration-500`} />
-          </div>
-        </div>
-
-        {/* Skills */}
-        <div className="relative z-10 space-y-4">
-          {category.skills.map((skill, skillIndex) => (
-            <div 
-              key={skill.name}
-              onMouseEnter={() => setActiveSkill(skillIndex)}
-              onMouseLeave={() => setActiveSkill(null)}
-              className="group/skill"
-            >
-              {/* Skill name and percentage */}
-              <div className="flex justify-between items-center mb-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-foreground/80 group-hover/skill:text-foreground transition-colors duration-300">
-                    {skill.name}
+            <ul className="mt-5 space-y-3.5">
+              {cat.skills.map((s) => (
+                <li key={s.name} className="grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-1.5">
+                  <span className="text-sm text-ink">{s.name}</span>
+                  <span className="meta">{s.level}</span>
+                  <span className="relative col-span-2 h-1.5 rounded-full bg-paper-2" aria-hidden="true">
+                    <span
+                      className="bar-grow absolute inset-y-0 left-0 rounded-full"
+                      style={{ width: `${s.level}%`, background: s.level >= 85 ? 'var(--accent-mark)' : 'var(--baseline-mark)' }}
+                    />
                   </span>
-                  {activeSkill === skillIndex && (
-                    <Zap className="w-3 h-3 text-yellow-400 animate-pulse" />
-                  )}
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className={`text-xs font-medium transition-all duration-300 ${
-                    activeSkill === skillIndex 
-                      ? `bg-gradient-to-r ${category.color} bg-clip-text text-transparent` 
-                      : 'text-muted-foreground'
-                  }`}>
-                    {skill.level}%
-                  </span>
-                  {skill.level >= 85 && (
-                    <TrendingUp className="w-3 h-3 text-green-400 opacity-0 group-hover/skill:opacity-100 transition-opacity duration-300" />
-                  )}
-                </div>
-              </div>
-              
-              {/* Skill bar container */}
-              <div className="relative h-2 bg-background/60 rounded-full overflow-hidden border border-primary/10 group-hover/skill:border-primary/30 transition-all duration-300">
-                {/* Background gradient */}
-                <div className={`absolute inset-0 bg-gradient-to-r ${category.color} opacity-10`} />
-                
-                {/* Animated fill */}
-                <div
-                  className={`relative h-full bg-gradient-to-r ${category.color} rounded-full transition-all duration-1000 ease-out shadow-lg`}
-                  style={{
-                    width: shouldAnimate ? `${skill.level}%` : '0%',
-                    transitionDelay: shouldAnimate ? `${0.2 + skillIndex * 0.1}s` : '0s',
-                    boxShadow: activeSkill === skillIndex 
-                      ? `0 0 20px ${category.glowColor}, 0 0 40px ${category.glowColor}` 
-                      : `0 0 10px ${category.glowColor}`,
-                  }}
-                >
-                  {/* Shimmer effect on bar */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover/skill:translate-x-full transition-transform duration-1000" />
-                  
-                  {/* Pulse dot at the end */}
-                  {shouldAnimate && (
-                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-lg animate-pulse">
-                      <div className={`absolute inset-0 rounded-full bg-gradient-to-r ${category.color} animate-ping`} />
-                    </div>
-                  )}
-                </div>
-                
-                {/* Progress glow */}
-                <div 
-                  className={`absolute inset-y-0 left-0 bg-gradient-to-r ${category.color} blur-md opacity-0 group-hover/skill:opacity-30 transition-all duration-500`}
-                  style={{ width: shouldAnimate ? `${skill.level}%` : '0%' }}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Bottom stats */}
-        <div className="relative z-10 mt-6 pt-4 border-t border-primary/10 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-gradient-to-r from-green-400 to-emerald-400 animate-pulse" />
-            <span className="text-xs text-muted-foreground">
-              Avg: {Math.round(category.skills.reduce((acc, s) => acc + s.level, 0) / category.skills.length)}%
-            </span>
-          </div>
-          <div className="flex items-center gap-1">
-            {[...Array(Math.ceil(category.skills.reduce((acc, s) => acc + s.level, 0) / category.skills.length / 20))].map((_, i) => (
-              <div 
-                key={i} 
-                className={`w-1 h-3 rounded-full bg-gradient-to-t ${category.color}`}
-                style={{ 
-                  animationDelay: `${i * 0.1}s`,
-                  opacity: 0.5 + (i * 0.1),
-                }}
-              />
-            ))}
-          </div>
-        </div>
+                </li>
+              ))}
+            </ul>
+          </article>
+        ))}
       </div>
+
+      <p className="meta mt-6 flex items-center gap-2">
+        <span className="inline-block h-1.5 w-4 rounded-full" style={{ background: 'var(--accent-mark)' }} /> 85 and above
+        <span className="ml-4 inline-block h-1.5 w-4 rounded-full" style={{ background: 'var(--baseline-mark)' }} /> below 85
+        <span className="ml-4">· levels are self-assessed, out of 100</span>
+      </p>
     </div>
-  );
-};
-
-const SkillsSection: React.FC = () => {
-  const { ref, isInView } = useInView({ threshold: 0.1 });
-  const mousePosition = useMousePosition(ref);
-
-  return (
-    <section className="py-20 relative overflow-hidden" ref={ref}>
-      {/* Particle Canvas */}
-      <ParticleCanvas count={30} colors={PARTICLE_COLORS} size={PARTICLE_SIZE} speed={0.5} linkDistance={150} />
-
-      {/* Background */}
-      <div className="absolute inset-0 bg-[image:var(--gradient-mesh)] opacity-40" />
-      
-      {/* Dynamic Gradient Orbs */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div 
-          className="gradient-orb gradient-orb-primary w-[600px] h-[600px] -top-40 -left-40 blur-3xl"
-          style={{
-            transform: `translate(${mousePosition.x * 0.02}px, ${mousePosition.y * 0.02}px)`,
-            transition: 'transform 0.3s ease-out',
-          }}
-        />
-        <div 
-          className="gradient-orb gradient-orb-purple w-[500px] h-[500px] top-1/3 -right-40 blur-3xl"
-          style={{ 
-            animationDelay: '2s',
-            transform: `translate(${-mousePosition.x * 0.015}px, ${-mousePosition.y * 0.015}px)`,
-            transition: 'transform 0.3s ease-out',
-          }}
-        />
-        <div 
-          className="gradient-orb gradient-orb-pink w-[550px] h-[550px] bottom-0 left-1/4 blur-3xl"
-          style={{ 
-            animationDelay: '4s',
-            transform: `translate(${mousePosition.x * 0.025}px, ${mousePosition.y * 0.025}px)`,
-            transition: 'transform 0.3s ease-out',
-          }}
-        />
-      </div>
-      
-      <div className="container mx-auto px-4 relative z-10">
-        {/* Section Heading with Enhanced Animation */}
-        <div className={`text-center mb-16 ${isInView ? 'animate-fade-in' : 'opacity-0'}`}>
-          <div className="inline-flex items-center gap-3 mb-4">
-            <div className="h-px w-12 bg-gradient-to-r from-transparent via-purple-500 to-transparent animate-pulse" />
-            <Code className="w-6 h-6 text-primary animate-bounce" style={{ animationDelay: '0.1s' }} />
-            <Brain className="w-6 h-6 text-primary animate-bounce" style={{ animationDelay: '0.2s' }} />
-            <Rocket className="w-6 h-6 text-primary animate-bounce" style={{ animationDelay: '0.3s' }} />
-            <div className="h-px w-12 bg-gradient-to-r from-transparent via-pink-500 to-transparent animate-pulse" />
-          </div>
-          
-          <h2 className="section-heading relative inline-block">
-            <span className="gradient-text-vibrant relative">
-              Skills & Expertise
-              {/* Animated underline */}
-              <span className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-full animate-gradient-x" />
-              {/* Glow effect */}
-              <span className="absolute inset-0 blur-2xl bg-gradient-to-r from-purple-500/30 via-pink-500/30 to-blue-500/30 -z-10 animate-pulse" />
-            </span>
-          </h2>
-          
-          <p className="mt-6 text-muted-foreground max-w-2xl mx-auto">
-            A comprehensive toolkit of technologies and frameworks I've mastered through hands-on experience
-          </p>
-        </div>
-
-        {/* Skills Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {skillCategories.map((category, index) => (
-            <SkillCard
-              key={category.title}
-              category={category}
-              index={index}
-              isInView={isInView}
-              mousePosition={mousePosition}
-            />
-          ))}
-        </div>
-
-        {/* Bottom decoration */}
-        <div className={`mt-16 flex items-center justify-center gap-4 ${isInView ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '1s' }}>
-          <div className="h-px flex-1 max-w-xs bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-          <Sparkles className="w-5 h-5 text-primary animate-pulse" />
-          <span className="text-sm text-muted-foreground">Continuously learning and growing</span>
-          <Sparkles className="w-5 h-5 text-primary animate-pulse" style={{ animationDelay: '0.5s' }} />
-          <div className="h-px flex-1 max-w-xs bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-        </div>
-      </div>
-
-      <style>{`
-        @keyframes gradient-x {
-          0%, 100% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-        }
-
-        .animate-gradient-x {
-          background-size: 200% auto;
-          animation: gradient-x 3s ease infinite;
-        }
-      `}</style>
-    </section>
-  );
-};
+  </section>
+);
 
 export default SkillsSection;
